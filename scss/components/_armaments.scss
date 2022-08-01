@@ -1,0 +1,136 @@
+.armament-container{
+  .armament-name{
+    font-weight: bold;
+    display: flex;
+    text-align: left;
+    align-items: center;
+  }
+}
+.armament{
+  max-height: unset;
+}
+.trash{
+  padding-right: 12px;
+  justify-content: end;
+}
+.expand-controller:hover {
+  text-shadow: 0 0 10px red;
+  cursor: pointer;
+}
+.expandable {
+  max-height: 0px;
+  transition: max-height .3s cubic-bezier(0.4, 0, 1, 1);
+  overflow: auto;
+}
+
+.expand-controller-nested:hover {
+  text-shadow: 0 0 10px red;
+  cursor: pointer;
+}
+
+.power-container{
+  .armament-name{
+    font-weight: bold;
+    display: flex;
+    text-align: left;
+    align-items: center;
+  }
+  .armament-powers {
+    display: none;
+  }
+  .expanded{
+    display: block;
+  }
+}
+.container-header{
+  font-weight: bold;
+}
+.power {
+  border-radius: 4px;
+  border: 1px solid var(--color-border-light-tertiary);
+  .header {
+    display: flex;
+    justify-content: space-between;
+    color: var(--color-text-light-2);
+    font-size: 12px;
+    .name{
+      font-weight: bold;
+      padding: 3px;
+    }
+    .type{
+      padding: 3px;
+    }
+  }
+  .subheader{
+    border-bottom: 1px solid var(--color-border-light-primary);
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    .cost {
+      padding: 3px;
+    }
+    .target {
+      padding: 3px;
+    }
+    border-bottom: 1px solid var(--color-border-light-primary);
+  }
+  .description {
+    background-color: #BFAC8C;
+    p {
+      margin: 0;
+    }
+  }
+}
+.unused-power{
+  border-radius: 4px;
+  border: 1px solid var(--color-border-light-tertiary);
+  .header {
+    color: var(--color-text-light-2);
+    font-size: 12px;
+    .name{
+      font-weight: bold;
+      padding: 3px;
+      text-align: left;
+    }
+    .type{
+      padding: 3px;
+    }
+  }
+  .subheader{
+    border-bottom: 1px solid var(--color-border-light-primary);
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    .cost {
+      padding: 3px;
+    }
+    .target {
+      padding: 3px;
+    }
+    border-bottom: 1px solid var(--color-border-light-primary);
+  }
+  .description {
+    background-color: #BFAC8C;
+    p {
+      margin: 0;
+    }
+  }
+}
+
+.At-Will {
+  background-color: #51632C;
+  color: var(--color-text-light-2);
+}
+.Encounter {
+  background-color: #423151;
+  color: var(--color-text-light-2);
+}
+.Weekly {
+  background-color: #642422;
+  color: var(--color-text-light-2);
+}
+
+.dragover{
+  font-weight: bold;
+  background-color: aquamarine;
+}

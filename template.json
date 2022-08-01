@@ -1,0 +1,301 @@
+{
+  "Actor": {
+    "types": ["character", "npc", "largenpc"],
+    "templates": {
+      "derived": {
+        "derived": {
+          "hp": {
+            "value": 0,
+            "max": 0,
+            "label": "Hit Points",
+            "abrev": "HP"
+          },
+          "tempHp": {
+            "value": 0,
+            "max": 0,
+            "label": "Temporary Hit Points",
+            "abrev": "Temp. HP"
+          },
+          "ap": {
+            "value": 0,
+            "max": 0,
+            "label": "Action Points",
+            "abrev": "AP"
+          },
+          "bloodied": {
+            "value": 0,
+            "label": "Bloodied"
+          },
+          "absorption": {
+            "value": 0,
+            "max": 0,
+            "armor": 0,
+            "total": 0,
+            "label": "Absorption"
+          },
+          "movement": {
+            "value": 0,
+            "label": "Movement"
+          },
+          "encumbrance": {
+            "value": 0,
+            "label": "Encumbrance",
+            "abrev": "Enc."
+          }
+        }
+      },
+      "stats": {
+        "stats":{
+          "ws": {
+            "label": "CHAR.WS",
+            "abrev": "CHAR.WSAbbrev",
+            "initial": 20,
+            "modifier": 0,
+            "improvements": 0,
+            "bonus": 0,
+            "value": 0
+          },
+          "str": {
+            "label": "CHAR.Str",
+            "abrev": "CHAR.StrAbbrev",
+            "initial": 20,
+            "modifier": 0,
+            "improvements": 0,
+            "bonus": 0,
+            "value": 0
+          },
+          "con": {
+            "label": "CHAR.Con",
+            "abrev": "CHAR.ConAbbrev",
+            "initial": 20,
+            "modifier": 0,
+            "improvements": 0,
+            "bonus": 0,
+            "value": 0
+          },
+          "agi": {
+            "label": "CHAR.Agi",
+            "abrev": "CHAR.AgiAbbrev",
+            "initial": 20,
+            "modifier": 0,
+            "improvements": 0,
+            "bonus": 0,
+            "value": 0
+          },
+          "dex": {
+            "label": "CHAR.Dex",
+            "abrev": "CHAR.DexAbbrev",
+            "initial": 20,
+            "modifier": 0,
+            "improvements": 0,
+            "bonus": 0,
+            "value": 0
+          },
+          "int": {
+            "label": "CHAR.Int",
+            "abrev": "CHAR.IntAbbrev",
+            "initial": 20,
+            "modifier": 0,
+            "improvements": 0,
+            "bonus": 0,
+            "value": 0
+          },
+          "will": {
+            "label": "CHAR.Will",
+            "abrev": "CHAR.WillAbbrev",
+            "initial": 20,
+            "modifier": 0,
+            "improvements": 0,
+            "bonus": 0,
+            "value": 0
+          },
+          "cha": {
+            "label": "CHAR.Cha",
+            "abrev": "CHAR.ChaAbbrev",
+            "initial": 20,
+            "modifier": 0,
+            "improvements": 0,
+            "bonus": 0,
+            "value": 0
+          }
+        }
+      },
+      "details": {
+          "details": {
+          "species" :{
+            "label":"CHAR.Species",
+            "value": "Select One"
+          },
+          "gender": {
+            "label": "CHAR.Gender",
+            "value": ""
+          },
+          "biography": {
+            "label": "CHAR.Biography",
+            "value": ""
+          }
+        }
+      },
+      "flags": {
+        "autocalc": {
+          "hp": true,
+          "thp": true,
+          "bloodied": true,
+          "movement": true,
+          "ap": true,
+          "absorption": true
+        }
+      }
+    },
+    "character": {
+      "templates": ["stats", "derived", "details", "flags"],
+      "info": {
+        "resolve": {
+          "label": "CHAR.Resolve",
+          "value": 3,
+          "max": 3
+        },
+        "fates": {
+          "label": "CHAR.Fates",
+          "fate1": {
+            "type": "",
+            "value": ""
+          },
+          "fate2": {
+            "type": "",
+            "value": ""
+          },
+          "fate3": {
+            "type": "",
+            "value": ""
+          }
+        },
+        "xp": {
+          "label":"CHAR.XP",
+          "abbrev":"CHAR.XPAbbrev",
+          "earned": 0,
+          "spent": 0,
+          "value": 0,
+          "log": []
+        },
+        "aspirations":{
+          "short-term": "",
+          "long-term": "",
+          "party": ""
+        },
+        "profession":{
+          "label": "CHAR.Profession",
+          "value": ""
+        },
+        "hobby":{
+          "label": "CHAR.Hobby",
+          "value": ""
+        },
+        "appearance":{
+          "age": {
+            "label": "CHAR.Age",
+            "value": ""
+          },
+          "height": {
+            "label": "CHAR.Height",
+            "value": ""
+          },
+          "weight": {
+            "label": "CHAR.Weight",
+            "value": ""
+          },
+          "skin-color": {
+            "label": "CHAR.SkinColor",
+            "value": ""
+          },
+          "eye-color": {
+            "label": "CHAR.EyeColor",
+            "value": ""
+          },
+          "hair-color": {
+            "label": "CHAR.HairColor",
+            "value": ""
+          },
+          "distinguishing-features": {
+            "label": "CHAR.DistinguishingFeatures",
+            "value": ""
+          }
+        }
+      }
+    },
+    "npc": {
+      "templates": ["stats"],
+      "cr": 0
+    },
+    "largenpc": {
+      "templates": ["stats"],
+      "cr": 0
+    }
+  },
+  "Item": {
+    "types": ["item", "skill", "armament", "power"],
+    "templates": {
+      "base": {
+        "description": ""
+      }
+    },
+    "item": {
+      "templates": ["base"],
+      "quantity": 1,
+      "weight": 0,
+      "formula": "d20 + @str.mod + ceil(@lvl / 2)"
+    },
+    "skill": {
+      "templates": ["base"],
+      "stat": "ws",
+      "advanced": false,
+      "grouped": false,
+      "trained": "",
+      "improvements": 0,
+      "total": 0
+    },
+    "armament": {
+      "templates": ["base"],
+      "type": "",
+      "skill": "",
+      "damage": {
+        "base": 0,
+        "upgrades": 0,
+        "value": 0
+      },
+      "elementDamage": {
+        "base": 0,
+        "upgrades": 0,
+        "value": 0
+      },
+      "selectedElement": {
+        "fire": true,
+        "elec": false,
+        "dragon": false,
+        "ice": false,
+        "water": false,
+        "display": "Fire"
+      },
+      "overloadPoints": 0,
+      "enc": 0,
+      "capacity": {
+        "power": 4,
+        "misc": 3
+      },
+      "powers": [],
+      "upgrades": []
+    },
+    "power": {
+      "type": "atWill",
+      "apCost": 0,
+      "target": "",
+      "damageMod": 0,
+      "elementDamageMod": 0,
+      "parent": {
+        "hasParent": false,
+        "id": ""
+      },
+      "armamentType": ""
+    }
+  }
+}

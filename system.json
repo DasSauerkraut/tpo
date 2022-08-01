@@ -1,0 +1,28 @@
+{
+  "name": "tpo",
+  "title": "The Pillars of Old",
+  "description": "The The Pillars of Old system for FoundryVTT!",
+  "version": "1.0.0",
+  "minimumCoreVersion": "0.8.6",
+  "compatibleCoreVersion": "9",
+  "author": "Michael Sebelski",
+  "esmodules": ["module/tpo.mjs"],
+  "styles": ["css/tpo.css"],
+  "scripts": [],
+  "packs": [],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "gridDistance": 1,
+  "gridUnits": "yd",
+  "primaryTokenAttribute": "hp",
+  "secondaryTokenAttribute": "ap",
+  "url": "",
+  "manifest": "",
+  "download": "",
+  "license": "LICENSE.txt"
+}

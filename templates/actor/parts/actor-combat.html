@@ -1,0 +1,88 @@
+<div>
+  <div>
+    <ol class="items-list">
+      <h2>Armaments</h2>
+      <li class="grid grid-13col skill-header-container">
+        <div class="skill-item-name-header grid-span-4">Name</div>
+        <div class="skill-item-header grid-span-2">Damage</div>
+        <div class="skill-item-header grid-span-2">Elemental Damage</div>
+        <div class="skill-item-header grid-span-2">Element</div>
+        <div class="skill-item-header grid-span-2">Overload Points</div>
+        <div class="skill-item-header-controls">&nbsp;</div>
+      </li>
+      <div class="skill-container armament">
+      {{#each data.armaments as |armament id|}}
+        <li class="armament-container item-container expand-container" data-item-id="{{armament._id}}">
+          <div class="grid grid-13col skill-item-container ">
+            <div class="grid-span-4 armament-name expand-controller">{{armament.name}}</div>
+            <div class="skill-item grid-span-2">StrB+{{armament.data.damage.value}}</div>
+            <div class="skill-item grid-span-2">+{{armament.data.elementDamage.value}}</div>
+            <div class="skill-item grid-span-2">{{armament.data.selectedElement.display}}</div>
+            <div class="skill-item grid-span-2">{{armament.data.overloadPoints}}</div>
+            <div class="skill-item">
+              <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+            </div>
+          </div>
+          <div class="expandable" style="max-height: 200px">
+            <div class="container-header">Powers ({{armament.data.capacity.currentPowers}}/{{armament.data.capacity.power}})</div>
+            {{#each armament.data.powers as |power id|}}
+            <div class="power expand-container-nested power-draggable" data-item-id="{{power._id}}">
+              <div class="header {{power.data.type}} expand-controller-nested">
+                <span class="name">{{power.name}}</span>
+                <span class="type">{{power.data.type}}</span>
+              </div>
+              <div class="expandable">
+                <div class="subheader" data-power-id="{{power._id}}">
+                  <span class="cost"><i title="Use Power" class="fas fa-dice-d20 powerRoll rollable"></i> {{power.data.apCost}} AP</span>
+                  <span class="target">Target {{power.data.target}} <i title="Delete Power" class="fas fa-trash powerDelete rollable"></i></span>
+                </div>
+                <div class="description">{{{power.data.description}}}</div>
+              </div>
+            </div>
+            {{/each}}
+          </div>
+        </li>
+      {{/each}}
+      </div>
+    </ol>
+  </div>
+  <div>
+    <ol class="items-list unequipped-powers">
+      <div class="unequipped-powers-dragmask"></div>
+      <h3>Unequipped Powers</h3>
+      <li class="grid grid-7col skill-header-container ">
+        <div class="skill-item-name-header grid-span-2">Name</div>
+        <div class="skill-item-header grid-span-2">Type</div>
+        <div class="skill-item-header grid-span-2">Armament</div>
+        <div class="skill-item-header-controls">&nbsp;</div>
+      </li>
+      <div class="skill-container">
+      {{#each data.unsortedPowers as |power id|}}
+        <li class="unused-power item-container expand-container power-draggable" data-item-id="{{power._id}}">
+          <div class="header expand-controller grid grid-7col skill-item-container {{power.data.type}}">
+            <div class="grid-span-2 name">{{power.name}}</div>
+            <div class="skill-item grid-span-2">{{power.data.type}}</div>
+            <div class="skill-item grid-span-2">{{power.data.armamentType}}</div>
+            <div class="skill-item trash">
+              <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+            </div>
+          </div>
+          <div class="expandable">
+            <div class="subheader">
+              <span class="cost">{{power.data.apCost}} AP</span>
+              <span class="target">Target {{power.data.target}} </span>
+            </div>
+            <div class="description">{{{power.data.description}}}</div>
+          </div>
+        </li>
+      {{/each}}
+      </div>
+    </ol>
+  </div>
+  <div>
+    <h2>Relics</h2>
+  </div>
+  <div>
+    <h2>Mundane Weapons</h2>
+  </div>
+</div>

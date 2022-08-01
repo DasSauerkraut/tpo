@@ -1,0 +1,130 @@
+<div>
+  <div class="grid grid-9col stats">
+    <div class="stat-container">
+      <div class="stat-header">&nbsp</div>
+      <div class="stat-header-row">Initial</div>
+      <div class="stat-header-row">Imp.</div>
+      <div class="stat-header-row">Mod.</div>
+      <div class="stat-header-row">Value</div>
+    </div>
+    {{#each data.stats as |stat s|}}
+    <div class="stat-container">
+      <div class="stat-header" title="Improve Stat | Cost: {{stat.cost}} XP" data-improve="{{s}}">{{localize stat.abrev}}<span class="stat-improvement">+</span>
+      </div>
+      <input class="stat-item" type="text" name="data.stats.{{s}}.initial" value="{{stat.initial}}" data-dtype="Number"/>
+      <input class="stat-item" type="text" name="data.stats.{{s}}.improvements" value="{{stat.improvements}}" data-dtype="Number"/>
+      <input class="stat-item" type="text" name="data.stats.{{s}}.modifier" value="{{stat.modifier}}" data-dtype="Number"/>
+      <div class="stat-total rollable" data-stat="{{s}}">{{stat.value}}</div>
+    </div>
+    {{/each}}
+  </div>
+  <div class="grid grid-4col fate-xp">
+    <div class="fate">
+      <input type="text" name="data.info.fates.fate1.value" value="{{data.info.fates.fate1.value}}" placeholder="Fate"/>
+      <select name="data.info.fates.fate1.type" type="text" value="{{data.info.fates.fate1.type}}">
+        {{#select data.info.fates.fate1.type}}
+        <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
+        <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
+        {{/select}}
+      </select>
+    </div>
+    <div class="fate">
+      <input type="text" name="data.info.fates.fate2.value" value="{{data.info.fates.fate2.value}}" placeholder="Fate"/>
+      <select name="data.info.fates.fate2.type" type="text" value="{{data.info.fates.fate2.type}}">
+        {{#select data.info.fates.fate2.type}}
+        <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
+        <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
+        {{/select}}
+      </select>
+    </div>
+    <div class="fate">
+      <input type="text" name="data.info.fates.fate3.value" value="{{data.info.fates.fate3.value}}" placeholder="Fate"/>
+      <select name="data.info.fates.fate3.type" type="text" value="{{data.info.fates.fate3.type}}">
+        {{#select data.info.fates.fate3.type}}
+        <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
+        <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
+        {{/select}}
+      </select>
+    </div>
+    <div>
+      <div class="grid grid-3col xp">
+        <input class="xp-item" type="text" name="data.info.xp.earned" value="{{data.info.xp.earned}}" placeholder="Earned" data-dtype="Number"/>
+        <input class="xp-item" type="text" name="data.info.xp.spent" value="{{data.info.xp.spent}}" placeholder="Spent" data-dtype="Number"/>
+        <div class="xp-item">{{data.info.xp.value}}</div>
+        <div class="xp-header">Earned</div>
+        <div class="xp-header">Spent</div>
+        <div class="xp-header">Left</div>
+        <div class="grid-span-3">{{localize data.info.xp.label}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="grid grid-2col">
+    <ol class="items-list">
+      <h2>Basic Skills</h2>
+      <li class="grid grid-8col skill-header-container">
+        <div class="skill-item-name-header grid-span-3">Name</div>
+        <div class="skill-item-header">Stat</div>
+        <div class="skill-item-header">Init.</div>
+        <div class="skill-item-header">Imp.</div>
+        <div class="skill-item-header">Total</div>
+        <div class="skill-item-header-controls">&nbsp;</div>
+
+      </li>
+      <div class="skill-container">
+      {{#each data.basicSkills as |skill id|}}
+        <li class="grid grid-8col skill-item-container item-container" data-item-id="{{skill._id}}">
+          <div class="skill-item-name rollable grid-span-3" data-roll-type="item" title="{{localize 'SYS.RollOrEdit'}}">
+            {{#ifEquals skill.data.trained 'Major'}}
+            <span>⬥</span>
+            {{/ifEquals}}
+            {{#ifEquals skill.data.trained 'Minor'}}
+            <span>⬦</span>
+            {{/ifEquals}}
+            {{skill.name}}
+          </div>
+          <div class="skill-item">{{skill.data.statAbrev}}</div>
+          <div class="skill-item">{{skill.data.initial}}</div>
+          <input class="skill-item-input" type="text" data-item-id="{{skill._id}}" value="{{skill.data.improvements}}" data-dtype="Number"/>
+          <div class="skill-item-total" title="Improve Skill | Cost: {{skill.data.cost}} XP" data-improve="{{skill._id}}">{{skill.data.total}}<span class="skill-item-improve">+</span></div>
+          <div class="skill-item">
+            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+          </div>
+        </li>
+      {{/each}}
+      </div>
+    </ol>
+    <ol class="items-list">
+      <h2>Advanced Skills</h2>
+      <li class="grid grid-8col skill-header-container">
+        <div class="skill-item-name-header grid-span-3">Name</div>
+        <div class="skill-item-header">Stat</div>
+        <div class="skill-item-header">Init.</div>
+        <div class="skill-item-header">Imp.</div>
+        <div class="skill-item-header">Total</div>
+        <div class="skill-item-header-controls">&nbsp;</div>
+      </li>
+      <div class="skill-container">
+      {{#each data.advancedOrGroupedSkills as |skill id|}}
+        <li class="grid grid-8col skill-item-container" data-item-id="{{skill._id}}">
+          <div class="skill-item-name rollable grid-span-3" data-id="{{skill._id}}" data-roll-type="skill" title="{{localize 'SYS.RollOrEdit'}}">
+            {{#ifEquals skill.data.trained 'Major'}}
+            <span>⬥</span>
+            {{/ifEquals}}
+            {{#ifEquals skill.data.trained 'Minor'}}
+            <span>⬦</span>
+            {{/ifEquals}}
+            {{skill.name}}
+          </div>
+          <div class="skill-item">{{skill.data.statAbrev}}</div>
+          <div class="skill-item">{{skill.data.initial}}</div>
+          <input class="skill-item-input" type="text" value="{{skill.data.improvements}}" data-item-id="{{skill._id}}" data-dtype="Number"/>
+          <div class="skill-item-total" title="Improve Skill | Cost: {{skill.data.cost}} XP" data-improve="{{skill._id}}">{{skill.data.total}}<span class="skill-item-improve">+</span></div>
+          <div class="skill-item">
+            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+          </div>
+        </li>
+      {{/each}}
+      </div>
+    </ol>
+  </div>
+</div>

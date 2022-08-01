@@ -1,0 +1,641 @@
+import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
+import { DiceTPO } from "../helpers/utilities.mjs";
+
+/**
+ * Extend the basic ActorSheet with some very simple modifications
+ * @extends {ActorSheet}
+ */
+export class tpoActorSheet extends ActorSheet {
+
+  /** @override */
+  static get defaultOptions() {
+    return mergeObject(super.defaultOptions, {
+      classes: ["tpo", "sheet", "actor"],
+      template: "systems/tpo/templates/actor/actor-sheet.html",
+      width: 600,
+      height: 710,
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
+    });
+  }
+
+  /** @override */
+  get template() {
+    return `systems/tpo/templates/actor/actor-${this.actor.data.type}-sheet.html`;
+  }
+
+  /* -------------------------------------------- */
+
+  /** @override */
+  getData() {
+    // Retrieve the data structure from the base sheet. You can inspect or log
+    // the context variable to see the structure, but some key properties for
+    // sheets are the actor object, the data object, whether or not it's
+    // editable, the items array, and the effects array.
+    const context = super.getData();
+
+    // Use a safe clone of the actor data for further operations.
+    const actorData = this.actor.data.toObject(false);
+
+    // Add the actor's data to context.data for easier access, as well as flags.
+    context.data = actorData.data;
+    context.flags = actorData.flags;
+
+    // Prepare character data and items.
+    if (actorData.type == 'character') {
+      this._prepareItems(context);
+      this._prepareCharacterData(context);
+    }
+
+    // Prepare NPC data and items.
+    if (actorData.type == 'npc') {
+      this._prepareItems(context);
+    }
+
+    // Add roll data for TinyMCE editors.
+    context.rollData = context.actor.getRollData();
+
+    // Prepare active effects
+    context.effects = prepareActiveEffectCategories(this.actor.effects);
+
+    return context;
+  }
+
+  /**
+   * Organize and classify Items for Character sheets.
+   *
+   * @param {Object} actorData The actor to prepare.
+   *
+   * @return {undefined}
+   */
+  _prepareCharacterData(context) {
+  }
+
+  /**
+   * Organize and classify Items for Character sheets.
+   *
+   * @param {Object} actorData The actor to prepare.
+   *
+   * @return {undefined}
+   */
+  _prepareItems(context) {
+    // Initialize containers.
+    const gear = [];
+    const features = [];
+
+    // Iterate through items, allocating to containers
+    for (let i of context.items) {
+      i.img = i.img || DEFAULT_TOKEN;
+      // Append to gear.
+      if (i.type === 'item') {
+        gear.push(i);
+      }
+      // Append to features.
+      else if (i.type === 'feature') {
+        features.push(i);
+      }
+    }
+
+    // Assign and return
+    context.gear = gear;
+    context.features = features;
+   }
+
+  /* -------------------------------------------- */
+
+  /** @override */
+  activateListeners(html) {
+    super.activateListeners(html);
+
+    // Render the item sheet for viewing/editing prior to the editable check.
+    html.find('.item-edit').click(ev => {
+      const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.items.get(li.data("itemId"));
+      item.sheet.render(true);
+    });
+
+    // -------------------------------------------------------------
+    // Everything below here is only needed if the sheet is editable
+    if (!this.isEditable) return;
+
+    // Add Inventory Item
+    html.find('.item-create').click(this._onItemCreate.bind(this));
+
+    // Delete Inventory Item
+    html.find('.item-delete').click(ev => {
+      const li = $(ev.currentTarget).parents(".item-container");
+      const item = this.actor.items.get(li.data("itemId"));
+      item.delete();
+      li.slideUp(200, () => this.render(false));
+    });
+
+    //Save skill changes
+    html.find('.skill-item-input').focusout(this._onSkillFocusOut.bind(this));
+
+    //Improve skill
+    html.find('.skill-item-total').mousedown(this._onSkillImprove.bind(this));
+
+    //Edit skill/Roll Skill
+    html.find('.skill-item-name').mousedown(this._onSkillClick.bind(this));
+
+    // Active Effect management
+    html.find(".effect-control").click(ev => onManageActiveEffect(ev, this.actor));
+
+    html.find('.stat-header').mousedown(this._onStatImprove.bind(this))
+    html.find('.stat-total').click(this._onStatRoll.bind(this))
+
+    html.find('.resolve').click(this._onResolveToggle.bind(this));
+
+    html.find('.expand-controller').click(this._onArmamentExpand.bind(this));
+    html.find('.expand-controller-nested').click(this._onArmamentExpandNested.bind(this));
+
+    html.find('#hp-max').click(event => {
+      event.preventDefault();
+      this.actor.update({[`data.autocalc.hp`]: !this.actor.data.data.autocalc.hp })
+    })
+
+    html.find('#ap-max').click(event => {
+      event.preventDefault();
+      this.actor.update({[`data.autocalc.ap`]: !this.actor.data.data.autocalc.ap })
+    })
+
+    html.find('#thp-max').click(event => {
+      event.preventDefault();
+      this.actor.update({[`data.autocalc.thp`]: !this.actor.data.data.autocalc.thp })
+    })
+
+    html.find('#bloodied').click(event => {
+      event.preventDefault();
+      this.actor.update({[`data.autocalc.bloodied`]: !this.actor.data.data.autocalc.bloodied })
+    })
+
+    html.find('#movement').click(event => {
+      event.preventDefault();
+      this.actor.update({[`data.autocalc.movement`]: !this.actor.data.data.autocalc.movement })
+    })
+
+    html.find('#absorption').click(event => {
+      event.preventDefault();
+      this.actor.update({[`data.autocalc.absorption`]: !this.actor.data.data.autocalc.absorption })
+    })
+
+    html.find('.powerDelete').click(this._onPowerDelete.bind(this))
+    html.find('.powerRoll').click(this._onPowerRoll.bind(this))
+    html.find('.power-draggable').mousedown(this._onPowerOrArmamentEdit.bind(this))
+    html.find('.armament-container').mousedown(this._onPowerOrArmamentEdit.bind(this))
+
+    //select whole input field on click
+    $("input[type=text]").focusin(function() {
+      $(this).select();
+    });
+
+    // Drag events for macros.
+    let handler = ev => this._onDragItemStart.bind(this);
+    html.find('.power-draggable').each((i, li) => {
+      li.setAttribute("draggable", true);
+      li.addEventListener("dragstart", (ev) => {this._onDragItemStart(ev)}, false);
+    });
+
+    html.on("dragenter", ".armament-container", ev => {
+      ev.target.classList.add("dragover")
+    })
+    html.on("dragleave", ".armament-container", ev => {
+      ev.target.classList.remove("dragover")
+    })
+    html.on("drop", ".armament-container", ev => {
+      ev.target.classList.remove("dragover")
+      this._onArmamentDrop(ev, JSON.parse(ev.originalEvent.dataTransfer.getData("text/plain")).data)
+    })
+
+    html.on("dragenter", ".unequipped-powers", ev => {
+      $(".unequipped-powers").addClass("dragover");
+    })
+    html.on("dragleave", ".unequipped-powers", ev => {
+      $(".unequipped-powers").removeClass("dragover");
+    })
+    html.on("drop", ".unequipped-powers", ev => {
+      $(".unequipped-powers").removeClass("dragover");
+      this._onPowerUnequip(ev, JSON.parse(ev.originalEvent.dataTransfer.getData("text/plain")).data)
+    })
+  }
+
+  _onPowerOrArmamentEdit(event) {
+    if(event.button !== 0){
+      this.actor.items.get(event.currentTarget.getAttribute("data-item-id")).sheet.render(true);
+    }
+  }
+
+  _onDragItemStart(ev) {
+    let itemId = ev.currentTarget.getAttribute("data-item-id");
+    if (!itemId)
+      return
+    const item = this.actor.items.get(itemId).toObject()
+    ev.dataTransfer.setData("text/plain", JSON.stringify({
+      type: "Item",
+      sheetTab: this.actor.data.flags["_sheetTab"],
+      actorId: this.actor.id,
+      data: item,
+      root: ev.currentTarget.getAttribute("root")
+    }));
+  }
+
+  async _onArmamentDrop(event, item){
+    event.preventDefault();
+    if(item.type === "power"){
+      const armamentDiv = $(event.target).parents(".armament-container");
+      const armament = duplicate(this.actor.items.get(armamentDiv.data("itemId")));
+
+      if (armament.data.powers.some(power => power._id === item._id)) {
+        console.log('Contains dupe, bailing out');
+        return;
+      }
+
+      item.data.parent.hasParent = true;
+      item.data.parent.id = armament._id;
+      
+      armament.data.powers.push(item);
+      armament.data.capacity.currentPowers = armament.data.powers.length;
+      await this.actor.updateEmbeddedDocuments("Item", [item]);
+      await this.actor.updateEmbeddedDocuments("Item", [armament]);
+    }
+  }
+
+  async _onPowerUnequip(event, item){
+    event.preventDefault();
+    if(item.type === "power"){
+      if (this.actor.data.data.unsortedPowers.some(power => power._id === item._id)) {
+        console.log('Contains dupe, bailing out');
+        return;
+      }
+
+      const armament = duplicate(this.actor.items.get(item.data.parent.id));
+      armament.data.powers = armament.data.powers.filter(( pwr ) => {
+        return pwr._id !== item._id;
+      });
+
+      item.data.parent.hasParent = false;
+      item.data.parent.id = null;
+
+      armament.data.capacity.currentPowers = armament.data.powers.length;
+      await this.actor.updateEmbeddedDocuments("Item", [item]);
+      await this.actor.updateEmbeddedDocuments("Item", [armament]);
+    }
+  }
+
+  _onPowerDelete(event){
+    event.preventDefault();
+    const container = $(event.target).parents(".subheader");
+    const power = this.actor.items.get(container.data("power-id"));
+    power.delete();
+  }
+
+  _onStatRoll(event){
+    event.preventDefault();
+    const stat = event.currentTarget.getAttribute("data-stat");
+    console.log(stat);
+
+    let testData = {
+      advantage: 0,
+      disadvantage: 0,
+      modifier: 0,
+      risk: false,
+      difficulty: 0,
+      hasDamage: false
+    }
+    
+    const statOut = {
+        name: game.i18n.localize(this.actor.data.data.stats[stat].label),
+        data: {
+          data: {
+            total: this.actor.data.data.stats[stat].value
+          },
+        }
+      }
+      
+    this._performTest(statOut, testData);
+  }
+
+  _onPowerRoll(event){
+    event.preventDefault();
+    const container = $(event.target).parents(".subheader");
+    const power = this.actor.items.get(container.data("power-id")).data;
+    console.log(power);
+    const armament = this.actor.items.get(power.data.parent.id).data;
+    console.log(armament);
+    
+    let skill = this.actor.items.getName(`Weapon (${armament.data.skill})`);
+
+    let testData = {
+      advantage: 0,
+      disadvantage: 0,
+      modifier: 0,
+      risk: false,
+      difficulty: 0,
+      hasDamage: true,
+      damage: power.data.damageMod,
+      element: armament.data.selectedElement.display,
+      elementDamage: power.data.elementDamageMod
+    }
+
+    if(skill === undefined){
+      skill = {
+        name: "Weapon Skill",
+        data: {
+          data: {
+            total: this.actor.data.data.stats.ws.value
+          },
+        }
+      }
+      testData.disadvantage = 1;
+    }
+
+    this._performTest(skill, testData, armament.data.damage.value, armament.data.elementDamage.value, power.name);
+  }
+
+  /**
+   * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset
+   * @param {Event} event   The originating click event
+   * @private
+   */
+  async _onItemCreate(event) {
+    event.preventDefault();
+    const header = event.currentTarget;
+    // Get the type of item to create.
+    const type = header.dataset.type;
+    // Grab any data associated with this control.
+    const data = duplicate(header.dataset);
+    // Initialize a default name.
+    const name = `New ${type.capitalize()}`;
+    // Prepare the item object.
+    const itemData = {
+      name: name,
+      type: type,
+      data: data
+    };
+    // Remove the type from the dataset since it's in the itemData.type prop.
+    delete itemData.data["type"];
+
+    // Finally, create the item!
+    return await Item.create(itemData, {parent: this.actor});
+  }
+
+  /**
+   * Handle clickable rolls.
+   * @param {Event} event   The originating click event
+   * @private
+   */
+  _onRoll(event) {
+    event.preventDefault();
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+
+    // Handle item rolls.
+    if (dataset.rollType) {
+      if (dataset.rollType == 'item') {
+        const itemId = element.closest('.item').dataset.itemId;
+        const item = this.actor.items.get(itemId);
+        if (item) return item.roll();
+      }
+    }
+
+    // Handle rolls that supply the formula directly.
+    if (dataset.roll) {
+      let label = dataset.label ? `[roll] ${dataset.label}` : '';
+      let roll = new Roll(dataset.roll, this.actor.getRollData());
+      roll.toMessage({
+        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+        flavor: label,
+        rollMode: game.settings.get('core', 'rollMode'),
+      });
+      return roll;
+    }
+  }
+
+  /**
+   * Handle calculating stat improvement costs and xp spend.
+   * @param {Event} event   The originating click event
+   * @private
+   */
+  _onStatImprove(event) {
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+
+    const IMPROVEMENT_CAP = 20;
+
+    const improvements = this.actor.data.data.stats[dataset.improve].improvements;
+    const xpSpent = this.actor.data.data.info.xp.spent;
+
+    if(event.button === 0){
+      const cost = 4 + Math.floor(improvements / 5) * 2;
+
+      if(improvements >= IMPROVEMENT_CAP){
+        ui.notifications.error(game.i18n.format("ERROR.StatImpCap"));
+        return;
+      }
+      if((this.actor.data.data.info.xp.earned - (this.actor.data.data.info.xp.spent + cost)) < 0 ) {
+        ui.notifications.error(game.i18n.format("ERROR.StatNoXp"));
+        return;
+      }
+      
+      this.actor.update({[`data.stats.${dataset.improve}.improvements`]: improvements + 1 })
+      this.actor.update({[`data.info.xp.spent`]: cost + xpSpent })
+
+    } else {
+      const cost = 4 + Math.floor((improvements - 1) / 5) * 2;
+
+      if(improvements <= 0){
+        ui.notifications.error(game.i18n.format("ERROR.StatLessThanZero"));
+        return;
+      }
+
+      this.actor.update({[`data.stats.${dataset.improve}.improvements`]: improvements - 1 })
+      this.actor.update({[`data.info.xp.spent`]: xpSpent - cost })
+    }
+  }
+
+  /**
+   * Handle manually improving a stat.
+   * @param {Event} event   The originating click event
+   * @private
+   */
+  async _onSkillFocusOut(event) {
+    event.preventDefault();
+
+    let itemId = event.target.attributes["data-item-id"].value;
+    let itemToEdit = duplicate(this.actor.items.get(itemId));
+    itemToEdit.data.improvements = Number(event.target.value);
+
+    await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
+  }
+
+  /**
+   * Handle improving a stat and spending XP.
+   * @param {Event} event   The originating click event
+   * @private
+   */
+   async _onSkillImprove(event) {
+    event.preventDefault();
+
+    const IMPROVEMENT_CAP = 30;
+
+    // const itemId = event.target.attributes["data-item-id"].value;
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const xpSpent = this.actor.data.data.info.xp.spent;
+
+    let itemToEdit = duplicate(this.actor.items.get(dataset.improve));
+    const improvements = itemToEdit.data.improvements;
+
+    if(event.button === 0){
+      // const cost = 4 + Math.floor(improvements / 5) * 2;
+      let cost = 0;
+      if(itemToEdit.data.trained === "Major")
+        cost = 1 + Math.floor(improvements / 5);
+      else if(itemToEdit.data.trained === "Minor")
+        cost = 2 + Math.floor(improvements / 5) * 2;
+      else
+        cost = 4 + Math.floor(improvements / 5) * 4;
+
+      // itemToEdit.data.cost = cost;
+
+      if(improvements >= IMPROVEMENT_CAP){
+        ui.notifications.error(game.i18n.format("ERROR.SkillImpCap"));
+        return;
+      }
+      if((this.actor.data.data.info.xp.earned - (this.actor.data.data.info.xp.spent + cost)) < 0 ) {
+        ui.notifications.error(game.i18n.format("ERROR.SkillNoXp"));
+        return;
+      }
+
+      if(itemToEdit.data.trained === "Major" && (improvements + 1) % 5 === 0)
+        ui.notifications.info(game.i18n.format('SYS.FreeStat'));
+
+      itemToEdit.data.improvements += 1;
+      await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
+      this.actor.update({[`data.info.xp.spent`]: cost + xpSpent })
+    } else {
+      let cost = 0;
+      if(itemToEdit.data.trained === "Major")
+        cost = 1 + Math.floor((improvements - 1) / 5);
+      else if(itemToEdit.data.trained === "Minor")
+        cost = 2 + Math.floor((improvements - 1) / 5) * 2;
+      else
+        cost = 4 + Math.floor((improvements - 1) / 5) * 4;
+
+      if(improvements <= 0){ 
+        ui.notifications.error(game.i18n.format("ERROR.SkillLessThanZero"));
+        return;
+      }
+
+      itemToEdit.data.improvements -= 1;
+      await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
+      this.actor.update({[`data.info.xp.spent`]: xpSpent - cost })
+    }
+  }
+
+  /**
+   * Handle a click event on a skill name.
+   * @param {Event} event   The originating click event
+   * @private
+   */
+  _onSkillClick(event) {
+    event.preventDefault();
+    const li = $(event.currentTarget).parents(".skill-item-container");
+    const skill = this.actor.items.get(li.data("itemId"));
+
+    if(event.button === 0){
+      this._performTest(skill);
+    } else {
+      skill.sheet.render(true);
+    }
+  }
+
+  async _performTest(skill, testData = {}, armamentDmg = 0, armamentEleDmg = 0, name = null){
+    if(Object.keys(testData).length === 0){
+      testData = {
+        hasDamage: false,
+        advantage: 0,
+        disadvantage: 0,
+        modifier: 0,
+        risk: false,
+        difficulty: 20,
+        damage: 0,
+        name: null
+      }
+    }
+
+    if(name) testData.name = name;
+    testData.target = skill.data.data.total;
+
+    let callback = (html) => {
+      testData.advantage = Number(html.find('[name="advantage"]').val());
+      testData.disadvantage = Number(html.find('[name="disadvantage"]').val());
+      testData.modifier = Number(html.find('[name="modifier"]').val());
+      testData.risk = html.find('[name="risk"]').is(':checked');
+      testData.difficulty = Number(html.find('[name="difficulty"]').val());
+      testData.damage = Number(html.find('[name="damage"]').val()) + this.actor.data.data.stats.str.bonus + armamentDmg;
+      testData.elementDamage = Number(html.find('[name="elementDamage"]').val()) + armamentEleDmg;
+      return testData;
+    }
+
+    renderTemplate('systems/tpo/templates/dialog/rollTest.html', testData).then(dlg => {
+      new Dialog({
+        title: game.i18n.localize("SYS.PerformTest"),
+        content: dlg,
+        buttons: {
+          rollButton: {
+            label: game.i18n.localize("SYS.PerformTest"),
+            callback: html => {
+              callback(html);
+              DiceTPO.rollTest(skill, testData).then(result => {DiceTPO.outputTest(result)});
+            }
+          },
+        },
+        default: "rollButton"
+      }).render(true);
+    });
+  }
+
+  _onArmamentExpand(event) {
+    event.preventDefault();
+    let li = $(event.currentTarget).parents(".expand-container");
+    let expand = li.find('.expandable:first')[0];
+
+    if(expand.style.maxHeight)
+      expand.style.maxHeight = null;
+    else
+      expand.style.maxHeight = "220px";
+  }
+
+  _onArmamentExpandNested(event) {
+    event.preventDefault();
+    let li = $(event.currentTarget).parents(".expand-container-nested");
+    let expand = li.find('.expandable')[0];
+
+    if(expand.style.maxHeight){
+      expand.style.maxHeight = null;
+    } else {
+      expand.style.maxHeight = expand.scrollHeight + "px";
+    }
+  }
+
+  /**
+   * Handle resolve clicks.
+   * @param {Event} event   The originating click event
+   * @private
+   */
+  _onResolveToggle(event){
+    // event.preventDefault();
+    const element = event.currentTarget;
+    if(element.checked){
+      this.actor.data.data.info.resolve.value += 1;
+    } else {
+      this.actor.data.data.info.resolve.value -= 1;
+    }
+
+    if(this.actor.data.data.info.resolve.value < 0)
+      this.actor.data.data.info.resolve.value = 0;
+
+    if(this.actor.data.data.info.resolve.value > this.actor.data.data.info.resolve.max)
+      this.actor.data.data.info.resolve.value = this.actor.data.data.info.resolve.max
+  }
+}

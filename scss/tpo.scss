@@ -1,0 +1,26 @@
+// Add custom fonts by visiting and search https://fonts.google.com
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap');
+@font-face {
+  font-family: TypographerRotunda;
+  src: url(../scss/fonts/TypographerRotunda.ttf)
+}
+
+// Import utilities.
+@import 'utils/typography';
+@import 'utils/colors';
+@import 'utils/mixins';
+@import 'utils/variables';
+
+/* Global styles */
+@import 'global/window';
+@import 'global/grid';
+@import 'global/flex';
+
+/* Styles limited to tpo sheets */
+.tpo {
+  @import 'components/forms';
+  @import 'components/resource';
+  @import 'components/items';
+  @import 'components/effects';
+  @import 'components/armaments';
+}

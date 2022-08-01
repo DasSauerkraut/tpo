@@ -1,0 +1,201 @@
+
+export class DiceTPO {
+  static async rollTest(skill, rollData) {
+    //calculate target
+    const target = skill.data.data.total + rollData.modifier + rollData.difficulty;
+
+    //calculate advantages
+    const advantages = rollData.advantage - rollData.disadvantage;
+
+    //roll dice
+    let dice = [];
+    let selectedRoll = 0;
+    let didCrit = false;
+    let autoSuccess = false;
+    let SLs = 0;
+    let result = "";
+
+    if(rollData.risk){
+      let riskTarget = 50 + advantages * 10;
+      let roll1 = await new Roll("1d100").evaluate()
+      let roll2 = await new Roll("1d100").evaluate()
+      dice.push(roll1.total);
+      dice.push(roll2.total);
+
+      if(Math.abs(roll1.total - riskTarget) > Math.abs(roll2.total - riskTarget))
+        selectedRoll = roll1.total;
+      else
+        selectedRoll = roll2.total;
+
+      if(selectedRoll % 11 === 0)
+        didCrit = true;
+
+    } else {
+      if(advantages !== 0){
+        for(let i = 0; i < Math.abs(advantages) + 1; i++){
+          let roll = await new Roll("1d100").evaluate()
+          dice.push(roll.total);
+        }
+      } else {
+        let roll = await new Roll("1d100").evaluate()
+        dice.push(roll.total);
+      }
+      dice.sort((a, b) => {return a - b});
+
+      if(advantages > 0) {
+        //Advantage
+        let selectedCrit = 2000;
+        let crits = [];
+        dice.forEach(roll => {
+          if(roll % 11 === 0) {
+            crits.push(roll);
+          }
+        })
+        if(crits.length !== 0){
+          selectedCrit = Math.min(...crits);
+        }
+        if(selectedCrit <= target) {
+          selectedRoll = selectedCrit;
+          didCrit = true;
+        }
+        else
+          selectedRoll = Math.min(...dice);
+      } else if (advantages < 0) {
+        //Disadvantage
+        let selectedCrit = -2000;
+        let crits = [];
+        dice.forEach(roll => {
+          if(roll % 11 === 0) {
+            crits.push(roll);
+          }
+        })
+        if(crits.length !== 0){
+          selectedCrit = Math.max(...crits);
+        }
+        if(selectedCrit > target) {
+          selectedRoll = selectedCrit;
+          didCrit = true;
+        }
+        else
+          selectedRoll = Math.max(...dice);
+      } else {
+        //Normal
+        selectedRoll = dice[0];
+      }
+    }
+    
+
+    //compare vs target
+    let didTestSucceed = selectedRoll <= target;
+    // Auto success/failure
+    if(selectedRoll <= 5){
+      didTestSucceed = true;
+      autoSuccess = true;
+    }else if (selectedRoll >= 95){
+      didTestSucceed = false;
+      autoSuccess = true;
+    }
+
+    //get SLs
+    if(didCrit && didTestSucceed && !autoSuccess)
+      SLs = Math.floor((target - 1) / 10);
+    else if (didCrit && !didTestSucceed && !autoSuccess)
+      SLs = Math.floor((target - 100) / 10);
+    else if (!autoSuccess)
+      SLs = Math.floor((target - selectedRoll) / 10);
+    else 
+      SLs = didTestSucceed ? 1 : -1;
+
+    switch (Math.abs(SLs)) {
+      case 0:
+      case 1:
+        result = game.i18n.localize("ROLL.Marginal") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
+        break;
+      case 2:
+      case 3:
+        result = didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure");
+        break;
+      case 4:
+      case 5:
+        result = game.i18n.localize("ROLL.Impressive") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
+        break;
+      case 6:
+        result = game.i18n.localize("ROLL.Astounding") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
+        break;
+    
+      default:
+        if(Math.abs(SLs) > 6)
+          result = game.i18n.localize("ROLL.Astounding") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
+        break;
+    }
+
+    if(didCrit)
+      result = game.i18n.localize("ROLL.Crit") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
+
+    //output
+    return {
+      result: result,
+      skill: skill,
+      name: rollData.name ? rollData.name : skill.name,
+      risk: rollData.risk,
+      selectedRoll: selectedRoll,
+      target: target,
+      SLs: SLs,
+      dice: dice,
+      hasDamage: rollData.hasDamage,
+      damage: rollData.damage,
+      strB: rollData.strB,
+      element: rollData.element,
+      elementDamage: rollData.elementDamage
+    }
+  }
+
+  static outputTest(testData){
+    let damageString;
+    if(testData.hasDamage)
+      damageString = `
+        <hr>
+        <b>Damage:</b>
+        <div style="display:flex;justify-content: space-between;">
+          <span>
+            Raw <div style="text-align:center">${testData.damage + testData.SLs}</div>
+          </span>
+          &nbsp+&nbsp 
+          <span>
+            ${testData.element}<div style="text-align:center">${testData.elementDamage}</div>
+          </span>
+          &nbsp=&nbsp
+          <b style="color:#642422">
+            Strong
+            <div style="text-align:center">${testData.damage + testData.SLs}</div>
+            &nbsp
+          </b>
+          &nbsp
+          <b>
+            Neutral
+            <div style="text-align:center">${testData.damage + testData.SLs + testData.elementDamage}</div>
+          </b>
+          &nbsp
+          <b style="color:#51632C">
+            Weak
+            <div style="text-align:center">${testData.damage + testData.SLs + testData.elementDamage * 3}</div>
+          </b>
+        </div>
+      `
+    else
+     damageString = '';
+    let chatContent = `
+      <b>${testData.name}</b><br>
+      <h3> ${testData.result} </h3>
+      <hr>
+      <b>Roll${testData.risk ? ` with Risk` : ''}:</b> ${testData.selectedRoll} vs ${testData.target} <br>
+      <b>SLs:</b> ${testData.SLs} <br>
+      <b>Dice:</b> ${testData.dice.join(', ')}
+     ${damageString}`
+    let chatData = {
+      content: chatContent,
+      user: game.user._id,
+    };
+    ChatMessage.create(chatData, {});
+  }
+}

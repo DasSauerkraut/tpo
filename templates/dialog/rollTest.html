@@ -1,0 +1,53 @@
+<div>
+  <div class="grid grid-2col">
+    <div>
+      <span>Advantage</span>
+      <input type="text" name="advantage" value="{{advantage}}" data-dtype="Number"/>
+    </div>
+    <div>
+      <span>Disadvantage</span>
+      <input type="text" name="disadvantage" value="{{disadvantage}}" data-dtype="Number"/>
+    </div>
+    <div>
+      <span>Modifier</span>
+      <input type="text" name="modifier" value="{{modifier}}" data-dtype="Number"/>
+    </div>
+    <div>
+      {{#if hasDamage}}
+      <div>
+        <span>Damage</span>
+        <input type="text" name="damage" value="{{damage}}" data-dtype="Number"/>
+      </div>
+      <div>
+        <span>Elemental Damage</span>
+        <input type="text" name="elementDamage" value="{{elementDamage}}" data-dtype="Number"/>
+      </div>
+      {{/if}}
+      <div>
+        <span>Risk</span>
+        {{#if risk}}
+          <input name="risk" type="checkbox" checked/>
+        {{else}}
+          <input name="risk" type="checkbox"/>
+        {{/if}}
+      </div>
+      <span>Target {{target}}</span>
+    </div>
+  </div>
+  <div>
+    <span>Difficulty</span>
+    <select name="difficulty">
+      {{#select difficulty}}
+      <option value="60">Very Easy (+60)</option>
+      <option value="40">Easy  (+40)</option>
+      <option value="20" selected>Average  (+20)</option>
+      <option value="10">Demanding  (+10)</option>
+      <option value="0">Challenging (+0)</option>
+      <option value="-10">Difficult (-10)</option>
+      <option value="-20">Hard (-20))</option>
+      <option value="-40">Very Hard  (-40)</option>
+      <option value="-60">Impossible (-60)</option>
+      {{/select}}
+    </select>
+  </div>
+</div>
