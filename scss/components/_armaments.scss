@@ -1,3 +1,16 @@
+.combat-actions{
+  display: flex;
+  justify-content: space-between;
+  .action{
+    border-radius: 3px;
+    padding: 3px;
+  }
+  .action:hover{
+    background: rgba(255, 0, 0, 0.15);
+    box-shadow: 0 0 5px 0px var(--color-shadow-primary);
+  }
+}
+
 .armament-container{
   .armament-name{
     font-weight: bold;

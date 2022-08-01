@@ -799,6 +799,26 @@
   border: none;
 }
 
+.tpo .combat-actions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.tpo .combat-actions .action {
+  border-radius: 3px;
+  padding: 3px;
+}
+
+.tpo .combat-actions .action:hover {
+  background: rgba(255, 0, 0, 0.15);
+  -webkit-box-shadow: 0 0 5px 0px var(--color-shadow-primary);
+  box-shadow: 0 0 5px 0px var(--color-shadow-primary);
+}
+
 .tpo .armament-container .armament-name {
   font-weight: bold;
   display: -webkit-box;
