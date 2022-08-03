@@ -1002,3 +1002,131 @@
   font-weight: bold;
   background-color: aquamarine;
 }
+
+.tpo .abilities {
+  text-align: center;
+  margin-top: 3px;
+  border-radius: 3px;
+}
+
+.tpo .abilities .name {
+  text-align: left;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-left: 3px;
+}
+
+.tpo .abilities .header {
+  font-weight: bold;
+}
+
+.tpo .abilities .input {
+  border: 0px;
+  width: auto;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.15);
+  color: inherit;
+}
+
+.tpo .abilities .field {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.tpo .abilities .field .improvement {
+  display: none;
+}
+
+.tpo .abilities .ability-imp-btn:hover {
+  text-shadow: 0 0 10px red;
+  cursor: pointer;
+}
+
+.tpo .abilities .ability-imp-btn:hover .improvement {
+  display: block;
+}
+
+.tpo .abilities .ability-imp-btn {
+  font-family: "TypographerRotunda";
+  color: var(--color-underline-active);
+  font-size: 18px;
+}
+
+.tpo .abilities .controls {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: right;
+  -ms-flex-pack: right;
+  justify-content: right;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-right: 3px;
+}
+
+.tpo .abilities .level {
+  font-family: "TypographerRotunda";
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.tpo .abilities .expandable {
+  text-align: initial;
+  border-radius: 4px;
+  background-color: #BFAC8C;
+}
+
+.tpo .abilities .expandable .description {
+  padding-inline: 3px;
+}
+
+.tpo .level--3 {
+  background-color: #642422;
+  border-radius: 3px;
+  color: var(--color-text-light-2);
+}
+
+.tpo .level--2 {
+  background-color: #64242296;
+  border-radius: 3px;
+  color: var(--color-text-dark-1);
+}
+
+.tpo .level--1 {
+  border-radius: 3px;
+  background-color: #6424224a;
+}
+
+.tpo .level-0 {
+  border-radius: 3px;
+  border: 1px solid var(--color-border-light-tertiary);
+}
+
+.tpo .level-1 {
+  border-radius: 3px;
+  background-color: #51632c4a;
+}
+
+.tpo .level-2 {
+  border-radius: 3px;
+  background-color: #51632c96;
+  color: var(--color-text-dark-1);
+}
+
+.tpo .level-3 {
+  border-radius: 3px;
+  background-color: #51632C;
+  color: var(--color-text-light-2);
+}

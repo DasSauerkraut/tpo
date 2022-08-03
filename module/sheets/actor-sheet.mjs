@@ -80,7 +80,7 @@ export class tpoActorSheet extends ActorSheet {
   _prepareItems(context) {
     // Initialize containers.
     const gear = [];
-    const features = [];
+    const abilities = [];
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
@@ -89,15 +89,10 @@ export class tpoActorSheet extends ActorSheet {
       if (i.type === 'item') {
         gear.push(i);
       }
-      // Append to features.
-      else if (i.type === 'feature') {
-        features.push(i);
-      }
     }
 
     // Assign and return
     context.gear = gear;
-    context.features = features;
    }
 
   /* -------------------------------------------- */
@@ -128,14 +123,32 @@ export class tpoActorSheet extends ActorSheet {
       li.slideUp(200, () => this.render(false));
     });
 
+    html.find('.ability-delete').click(ev => {
+      const li = $(ev.currentTarget).parents(".expand-container");
+      const item = this.actor.items.get(li.data("itemId"));
+      item.delete();
+      li.slideUp(200, () => this.render(false));
+    });
+
     //Save skill changes
     html.find('.skill-item-input').focusout(this._onSkillFocusOut.bind(this));
+    html.find('.abilities-imp').focusout(this._onAbilityFocusOut.bind(this));
+    html.find('.abilities-mod').focusout(this._onAbilityFocusOut.bind(this));
+    html.find('.abilities-malus').focusout(this._onAbilityFocusOut.bind(this));
 
     //Improve skill
     html.find('.skill-item-total').mousedown(this._onSkillImprove.bind(this));
+    //Improve Ability
+    html.find('.ability-imp-btn').mousedown(this._onAbilityImprove.bind(this));
 
     //Edit skill/Roll Skill
     html.find('.skill-item-name').mousedown(this._onSkillClick.bind(this));
+    //Edit Ability
+    html.find('.ability-name').mousedown(event => {
+      if(event.button !== 0){
+        this.actor.items.get(event.currentTarget.getAttribute("data-item-id")).sheet.render(true);
+      }
+    });
 
     // Active Effect management
     html.find(".effect-control").click(ev => onManageActiveEffect(ev, this.actor));
@@ -181,7 +194,7 @@ export class tpoActorSheet extends ActorSheet {
     html.find('.powerDelete').click(this._onPowerDelete.bind(this))
     html.find('.powerRoll').click(this._onPowerRoll.bind(this))
     html.find('.power-draggable').mousedown(this._onPowerOrArmamentEdit.bind(this))
-    html.find('.armament-container').mousedown(this._onPowerOrArmamentEdit.bind(this))
+    html.find('.armament-name').mousedown(this._onPowerOrArmamentEdit.bind(this))
 
     //select whole input field on click
     $("input[type=text]").focusin(function() {
@@ -465,6 +478,60 @@ export class tpoActorSheet extends ActorSheet {
     itemToEdit.data.improvements = Number(event.target.value);
 
     await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
+  }
+
+  async _onAbilityFocusOut(event) {
+    event.preventDefault();
+
+    let itemId = event.target.attributes["data-item-id"].value;
+    let itemToEdit = duplicate(this.actor.items.get(itemId));
+    console.log(itemToEdit)
+    console.log(event.target.classList)
+    
+    if($(event.target).hasClass("abilities-imp"))
+      itemToEdit.data.improvements = Number(event.target.value);
+    else if($(event.target).hasClass("abilities-mod"))
+      itemToEdit.data.mod = Number(event.target.value);
+    else
+      itemToEdit.data.malus = Number(event.target.value);
+
+    await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
+  }
+
+  async _onAbilityImprove(event) {
+    event.preventDefault();
+
+    // const itemId = event.target.attributes["data-item-id"].value;
+    const element = event.currentTarget;
+    const dataset = element.dataset;
+    const xpSpent = this.actor.data.data.info.xp.spent;
+
+    let itemToEdit = duplicate(this.actor.items.get(dataset.improve));
+    const improvements = itemToEdit.data.improvements;
+    
+    let cost = 1;
+    if($(event.target).hasClass("level"))
+      cost = 20;
+
+    if(event.button === 0){
+      if((this.actor.data.data.info.xp.earned - (this.actor.data.data.info.xp.spent + cost)) < 0 ) {
+        ui.notifications.error(game.i18n.format("ERROR.AbilityNoXp"));
+        return;
+      }
+
+      itemToEdit.data.improvements += cost;
+      await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
+      this.actor.update({[`data.info.xp.spent`]: cost + xpSpent })
+    } else {
+      if(improvements - cost < 0){ 
+        ui.notifications.error(game.i18n.format("ERROR.AbilityLessThanZero"));
+        return;
+      }
+
+      itemToEdit.data.improvements -= cost;
+      await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
+      this.actor.update({[`data.info.xp.spent`]: xpSpent - cost })
+    }
   }
 
   /**

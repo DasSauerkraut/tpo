@@ -233,7 +233,7 @@
     }
   },
   "Item": {
-    "types": ["item", "skill", "armament", "power"],
+    "types": ["item", "skill", "armament", "power", "ability"],
     "templates": {
       "base": {
         "description": ""
@@ -296,6 +296,14 @@
         "id": ""
       },
       "armamentType": ""
+    },
+    "ability": {
+      "improvements": 0,
+      "mod": 0,
+      "malus": 0,
+      "value": 0,
+      "level": 0,
+      "malusTo": []
     }
   }
 }

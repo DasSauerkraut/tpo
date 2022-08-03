@@ -9,6 +9,7 @@
     // Actor partials.
     "systems/tpo/templates/actor/parts/actor-features.html",
     "systems/tpo/templates/actor/parts/actor-items.html",
+    "systems/tpo/templates/actor/parts/actor-abilities.html",
     "systems/tpo/templates/actor/parts/actor-effects.html",
     "systems/tpo/templates/actor/parts/actor-combat.html",
   ]);

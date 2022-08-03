@@ -21,6 +21,10 @@ export class tpoItem extends Item {
         })
       }
     }
+    if(this.data.type === "ability"){
+      this.data.data.value = this.data.data.improvements + this.data.data.mod - this.data.data.malus;
+      this.data.data.level = Math.floor(this.data.data.value / 20)
+    }
   }
 
   /**

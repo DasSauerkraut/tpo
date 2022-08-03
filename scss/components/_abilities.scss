@@ -1,0 +1,93 @@
+.abilities{
+  text-align: center;
+  margin-top: 3px;
+  border-radius: 3px;
+  .name{
+    text-align: left;
+    display: flex;
+    align-items: center;
+    padding-left: 3px;
+  }
+  .header{
+    font-weight: bold;
+  }
+  .input {
+    border: 0px;
+    width: auto;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.15);
+    color: inherit;
+  }
+  .field {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .improvement {
+      display: none;
+    }
+  }
+  .ability-imp-btn:hover {
+    text-shadow: 0 0 10px red;
+    cursor: pointer;
+    .improvement {
+      display: block;
+    }
+  }
+  .ability-imp-btn {
+    font-family: $font-secondary;
+    color: var(--color-underline-active);
+    font-size: 18px;
+  }
+  .controls {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    padding-right: 3px;
+  }
+  .level {
+    font-family: $font-secondary;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .expandable{
+    text-align: initial;
+    border-radius: 4px;
+    background-color: #BFAC8C;
+    .description {
+      padding-inline: 3px;
+    }
+  }
+}
+.level--3 {
+  background-color: #642422;
+  border-radius: 3px;
+  color: var(--color-text-light-2);
+}
+.level--2 {
+  background-color: #64242296;
+  border-radius: 3px;
+  color: var(--color-text-dark-1);
+}
+.level--1 {
+  border-radius: 3px;
+  background-color: #6424224a;
+}
+.level-0 {
+  border-radius: 3px;
+  border: 1px solid var(--color-border-light-tertiary);
+}
+.level-1 {
+  border-radius: 3px;
+  background-color: #51632c4a;
+}
+.level-2 {
+  border-radius: 3px;
+  background-color: #51632c96;
+  color: var(--color-text-dark-1);
+}
+.level-3 {
+  border-radius: 3px;
+  background-color: #51632C;
+  color: var(--color-text-light-2);
+}

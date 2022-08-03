@@ -126,6 +126,8 @@ export class tpoActor extends Actor {
     const basicSkills = [];
     const advancedOrGroupedSkills = [];
     const armaments = [];
+    const activeAbilities = [];
+    const inactiveAbilities = [];
     const unsortedPowers = [];
 
     actorData.items.forEach( i => { 
@@ -154,6 +156,13 @@ export class tpoActor extends Actor {
         armaments.push(i.data);
       } else if(i.type == "power" && !i.data.data.parent.hasParent){
         unsortedPowers.push(i.data);
+      } else if(i.type === "ability"){
+        i.data.data.value = i.data.data.improvements + i.data.data.mod - Math.abs(i.data.data.malus);
+        i.data.data.level = Math.sign(i.data.data.value) * Math.floor(Math.abs(i.data.data.value) / 20);
+        if(i.data.data.level !== 0)
+          activeAbilities.push(i.data);
+        else
+          inactiveAbilities.push(i.data);
       }
 
     })
@@ -184,10 +193,38 @@ export class tpoActor extends Actor {
       return 0;
     });
 
+    activeAbilities.sort((a, b) => {
+      let fa = a.name.toLowerCase(),
+          fb = b.name.toLowerCase();
+  
+      if (fa < fb) {
+          return -1;
+      }
+      if (fa > fb) {
+          return 1;
+      }
+      return 0;
+    });
+
+    inactiveAbilities.sort((a, b) => {
+      let fa = a.name.toLowerCase(),
+          fb = b.name.toLowerCase();
+  
+      if (fa < fb) {
+          return -1;
+      }
+      if (fa > fb) {
+          return 1;
+      }
+      return 0;
+    });
+
     actorData.data.basicSkills = basicSkills;
     actorData.data.advancedOrGroupedSkills = advancedOrGroupedSkills;
     actorData.data.armaments = armaments;
     actorData.data.unsortedPowers = unsortedPowers;
+    actorData.data.activeAbilities = activeAbilities;
+    actorData.data.inactiveAbilities = inactiveAbilities;
   }
 
   prepareSkill(skill, actorData) {
