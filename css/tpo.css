@@ -828,6 +828,9 @@
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  font-family: "TypographerRotunda";
+  font-size: 16px;
+  color: var(--color-underline-active);
 }
 
 .tpo .armament {
@@ -859,27 +862,9 @@
   cursor: pointer;
 }
 
-.tpo .power-container .armament-name {
-  font-weight: bold;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  text-align: left;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.tpo .power-container .armament-powers {
-  display: none;
-}
-
-.tpo .power-container .expanded {
-  display: block;
-}
-
 .tpo .container-header {
   font-weight: bold;
+  padding-top: 3px;
 }
 
 .tpo .power {
@@ -905,6 +890,23 @@
 
 .tpo .power .header .type {
   padding: 3px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.tpo .power .header .type .power-used {
+  height: auto;
+  margin: 0px;
+  -webkit-filter: grayscale(0%);
+}
+
+.tpo .power .header .type .Encounter-check {
+  accent-color: #423151;
+}
+
+.tpo .power .header .type .Weekly-check {
+  accent-color: #642422;
 }
 
 .tpo .power .subheader {
@@ -983,6 +985,16 @@
   margin: 0;
 }
 
+.tpo .upgradeDelete {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-right: 3px;
+}
+
 .tpo .At-Will {
   background-color: #51632C;
   color: var(--color-text-light-2);
@@ -995,6 +1007,16 @@
 
 .tpo .Weekly {
   background-color: #642422;
+  color: var(--color-text-light-2);
+}
+
+.tpo .Misc {
+  background-color: #984A21;
+  color: var(--color-text-light-2);
+}
+
+.tpo .Upgrade {
+  background-color: #12233D;
   color: var(--color-text-light-2);
 }
 

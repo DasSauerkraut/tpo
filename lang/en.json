@@ -1,5 +1,4 @@
 {
-
   "TPO.EffectCreate": "Create Effect",
   "TPO.EffectToggle": "Toggle Effect",
   "TPO.EffectEdit": "Edit Effect",
@@ -78,6 +77,8 @@
   "PWR.AtWill": "At-Will",
   "PWR.Encounter": "Encounter",
   "PWR.Weekly": "Weekly",
+  "PWR.Misc": "Misc",
+  "PWR.Upgrade": "Upgrade",
 
   "SYS.TrainedMaj": "Major",
   "SYS.TrainedMin": "Minor",
@@ -86,6 +87,8 @@
   "SYS.RollOrEdit": "Click to perform a test with this skill. Right click to edit the skill.",
   "SYS.ToggleAutocalc": "Toggle Autocalculation",
   "SYS.PerformTest": "Perform Test",
+  "SYS.PowerUsed": "This Power is still on cooldown. Do you wish to Overload your Armament?",
+  "SYS.ExceedsAP": "Using this Power will exceed your remaining AP.",
 
   "ROLL.Marginal": "Marginal",
   "ROLL.Impressive": "Impressive",

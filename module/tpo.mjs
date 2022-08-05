@@ -76,6 +76,11 @@ Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
   return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
 });
 
+Handlebars.registerHelper('ifNotEqual', function (a, b, options) {
+  if (a != b) { return options.fn(this); }
+  return options.inverse(this);
+});
+
 Handlebars.registerHelper('select', function(value, options) {
   var select = document.createElement('select'); // create a select element
   select.innerHTML = options.fn(this);           // populate it with the option HTML

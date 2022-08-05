@@ -1,5 +1,5 @@
 import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
-import { DiceTPO } from "../helpers/utilities.mjs";
+import { DiceTPO, UtilsTPO } from "../helpers/utilities.mjs";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -196,6 +196,15 @@ export class tpoActorSheet extends ActorSheet {
     html.find('.power-draggable').mousedown(this._onPowerOrArmamentEdit.bind(this))
     html.find('.armament-name').mousedown(this._onPowerOrArmamentEdit.bind(this))
 
+    html.find('.upgradeDelete').click(ev => {
+      const li = $(ev.currentTarget).parents(".expand-container-nested");
+      const item = this.actor.items.get(li.data("itemId"));
+      item.delete();
+      li.slideUp(200, () => this.render(false));
+    });
+
+    html.find('.power-used').click(this._onPowerCheck.bind(this));
+
     //select whole input field on click
     $("input[type=text]").focusin(function() {
       $(this).select();
@@ -251,6 +260,27 @@ export class tpoActorSheet extends ActorSheet {
     }));
   }
 
+  async _onPowerCheck(event){
+    const li = $(event.currentTarget).parents(".expand-container-nested");
+    const item = duplicate(this.actor.items.get(li.data("itemId")));
+    const armament = duplicate(this.actor.items.get(item.data.parent.id));
+
+    item.data.used = !item.data.used;
+
+    await this.actor.updateEmbeddedDocuments("Item", [item]);
+    await UtilsTPO.updateStoredPower(armament, item, this.actor);
+  }
+
+  async _usePower(powerId, armamentId){
+    const item = duplicate(this.actor.items.get(powerId));
+    const armament = duplicate(this.actor.items.get(armamentId));
+
+    item.data.used = !item.data.used;
+
+    await this.actor.updateEmbeddedDocuments("Item", [item]);
+    await UtilsTPO.updateStoredPower(armament, item, this.actor);
+  }
+
   async _onArmamentDrop(event, item){
     event.preventDefault();
     if(item.type === "power"){
@@ -265,8 +295,16 @@ export class tpoActorSheet extends ActorSheet {
       item.data.parent.hasParent = true;
       item.data.parent.id = armament._id;
       
-      armament.data.powers.push(item);
-      armament.data.capacity.currentPowers = armament.data.powers.length;
+      if(item.data.type === "Misc"){
+        armament.data.miscPowers.push(item);
+        armament.data.capacity.currentMisc = armament.data.powers.length;
+      } else if(item.data.type === "Upgrade"){
+        armament.data.upgrades.push(item);
+      } else {
+        armament.data.powers.push(item);
+        armament.data.capacity.currentPowers = armament.data.powers.length;
+      }
+      
       await this.actor.updateEmbeddedDocuments("Item", [item]);
       await this.actor.updateEmbeddedDocuments("Item", [armament]);
     }
@@ -281,14 +319,28 @@ export class tpoActorSheet extends ActorSheet {
       }
 
       const armament = duplicate(this.actor.items.get(item.data.parent.id));
-      armament.data.powers = armament.data.powers.filter(( pwr ) => {
-        return pwr._id !== item._id;
-      });
+
+      if(item.data.type === "Misc"){
+        armament.data.miscPowers = armament.data.miscPowers.filter(( pwr ) => {
+          return pwr._id !== item._id;
+        });
+      } else if(item.data.type === "Upgrade"){
+        armament.data.upgrades = armament.data.upgrades.filter(( pwr ) => {
+          return pwr._id !== item._id;
+        });
+      } else {
+        armament.data.powers = armament.data.powers.filter(( pwr ) => {
+          return pwr._id !== item._id;
+        });
+      }
 
       item.data.parent.hasParent = false;
       item.data.parent.id = null;
 
       armament.data.capacity.currentPowers = armament.data.powers.length;
+      armament.data.capacity.misc === 0 && armament.data.miscPowers.length === 0 ? armament.data.capacity.hasMisc = false : armament.data.capacity.hasMisc = true;
+      armament.data.capacity.currentMisc = armament.data.miscPowers.length;
+
       await this.actor.updateEmbeddedDocuments("Item", [item]);
       await this.actor.updateEmbeddedDocuments("Item", [armament]);
     }
@@ -331,10 +383,19 @@ export class tpoActorSheet extends ActorSheet {
     event.preventDefault();
     const container = $(event.target).parents(".subheader");
     const power = this.actor.items.get(container.data("power-id")).data;
-    console.log(power);
     const armament = this.actor.items.get(power.data.parent.id).data;
-    console.log(armament);
     
+    if(power.data.type === "Encounter" || power.data.type === "Weekly"){
+      if(power.data.used)
+        ui.notifications.info(game.i18n.format('SYS.PowerUsed'));
+      else 
+        this._usePower(power._id, armament._id);
+    }
+
+    if(power.data.apCost > this.actor.data.data.derived.ap.value)
+      ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
+    this.actor.update({[`data.derived.ap.value`]: this.actor.data.data.derived.ap.value - power.data.apCost })
+
     let skill = this.actor.items.getName(`Weapon (${armament.data.skill})`);
 
     let testData = {
@@ -670,7 +731,7 @@ export class tpoActorSheet extends ActorSheet {
     if(expand.style.maxHeight)
       expand.style.maxHeight = null;
     else
-      expand.style.maxHeight = "220px";
+      expand.style.maxHeight = "240px";
   }
 
   _onArmamentExpandNested(event) {

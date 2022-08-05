@@ -17,6 +17,9 @@
     display: flex;
     text-align: left;
     align-items: center;
+    font-family: $font-secondary;
+    font-size: 16px;
+    color: var(--color-underline-active);
   }
 }
 .armament{
@@ -41,22 +44,9 @@
   cursor: pointer;
 }
 
-.power-container{
-  .armament-name{
-    font-weight: bold;
-    display: flex;
-    text-align: left;
-    align-items: center;
-  }
-  .armament-powers {
-    display: none;
-  }
-  .expanded{
-    display: block;
-  }
-}
 .container-header{
   font-weight: bold;
+  padding-top: 3px;
 }
 .power {
   border-radius: 4px;
@@ -72,6 +62,18 @@
     }
     .type{
       padding: 3px;
+      display: flex;
+      .power-used {
+        height: auto;
+        margin: 0px;
+        -webkit-filter: grayscale(0%);
+      }
+      .Encounter-check {
+        accent-color: #423151;
+      }
+      .Weekly-check {
+        accent-color: #642422;
+      }
     }
   }
   .subheader{
@@ -130,6 +132,12 @@
   }
 }
 
+.upgradeDelete {
+  display: flex;
+  align-items: center;
+  padding-right: 3px;
+}
+
 .At-Will {
   background-color: #51632C;
   color: var(--color-text-light-2);
@@ -140,6 +148,14 @@
 }
 .Weekly {
   background-color: #642422;
+  color: var(--color-text-light-2);
+}
+.Misc {
+  background-color: #984A21;
+  color: var(--color-text-light-2);
+}
+.Upgrade {
+  background-color: #12233D;
   color: var(--color-text-light-2);
 }
 

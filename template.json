@@ -283,6 +283,7 @@
         "misc": 3
       },
       "powers": [],
+      "miscPowers": [],
       "upgrades": []
     },
     "power": {
@@ -291,6 +292,7 @@
       "target": "",
       "damageMod": 0,
       "elementDamageMod": 0,
+      "used": false,
       "parent": {
         "hasParent": false,
         "id": ""

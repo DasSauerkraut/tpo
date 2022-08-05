@@ -1,3 +1,5 @@
+import { UtilsTPO } from "../helpers/utilities.mjs";
+
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
@@ -123,12 +125,12 @@ export class tpoActor extends Actor {
    * Prepare Actor Item specific data.
    */
   _prepareItems(actorData) {
-    const basicSkills = [];
-    const advancedOrGroupedSkills = [];
-    const armaments = [];
-    const activeAbilities = [];
-    const inactiveAbilities = [];
-    const unsortedPowers = [];
+    let basicSkills = [];
+    let advancedOrGroupedSkills = [];
+    let armaments = [];
+    let activeAbilities = [];
+    let inactiveAbilities = [];
+    let unsortedPowers = [];
 
     actorData.items.forEach( i => { 
       if(i.type == "skill"){
@@ -138,6 +140,7 @@ export class tpoActor extends Actor {
         else
           basicSkills.push(skill);
       } else if(i.type == "armament"){
+        //------------------ACTIVE POWERS--------------------------//
         i.data.data.powers = i.data.data.powers.filter(pwr => {
           return actorData.items.get(pwr._id);
         });
@@ -151,11 +154,34 @@ export class tpoActor extends Actor {
             return sort[a.data.type] - sort[b.data.type];
           })
         }
-
         i.data.data.capacity.currentPowers = i.data.data.powers.length;
+
+        //------------------MISC POWERS--------------------------//
+        i.data.data.miscPowers = i.data.data.miscPowers.filter(pwr => {
+          return actorData.items.get(pwr._id);
+        });
+        i.data.data.miscPowers.forEach((pwr, idx) => {
+          i.data.data.miscPowers[idx] = actorData.items.get(pwr._id).data;
+        })
+
+        i.data.data.miscPowers = UtilsTPO.sortAlphabetically(i.data.data.miscPowers);
+
+        i.data.data.capacity.misc === 0 && i.data.data.miscPowers.length === 0 ? i.data.data.capacity.hasMisc = false : i.data.data.capacity.hasMisc = true;
+        i.data.data.capacity.currentMisc = i.data.data.miscPowers.length;
+
+        //------------------UPGRADES--------------------------//
+        i.data.data.upgrades = i.data.data.upgrades.filter(pwr => {
+          return actorData.items.get(pwr._id);
+        });
+        i.data.data.upgrades.forEach((pwr, idx) => {
+          i.data.data.upgrades[idx] = actorData.items.get(pwr._id).data;
+        })
+        i.data.data.upgrades = UtilsTPO.sortAlphabetically(i.data.data.upgrades);
+
         armaments.push(i.data);
       } else if(i.type == "power" && !i.data.data.parent.hasParent){
         unsortedPowers.push(i.data);
+
       } else if(i.type === "ability"){
         i.data.data.value = i.data.data.improvements + i.data.data.mod - Math.abs(i.data.data.malus);
         i.data.data.level = Math.sign(i.data.data.value) * Math.floor(Math.abs(i.data.data.value) / 20);
@@ -167,57 +193,10 @@ export class tpoActor extends Actor {
 
     })
 
-    basicSkills.sort((a, b) => {
-      let fa = a.name.toLowerCase(),
-          fb = b.name.toLowerCase();
-  
-      if (fa < fb) {
-          return -1;
-      }
-      if (fa > fb) {
-          return 1;
-      }
-      return 0;
-    });
-
-    advancedOrGroupedSkills.sort((a, b) => {
-      let fa = a.name.toLowerCase(),
-          fb = b.name.toLowerCase();
-  
-      if (fa < fb) {
-          return -1;
-      }
-      if (fa > fb) {
-          return 1;
-      }
-      return 0;
-    });
-
-    activeAbilities.sort((a, b) => {
-      let fa = a.name.toLowerCase(),
-          fb = b.name.toLowerCase();
-  
-      if (fa < fb) {
-          return -1;
-      }
-      if (fa > fb) {
-          return 1;
-      }
-      return 0;
-    });
-
-    inactiveAbilities.sort((a, b) => {
-      let fa = a.name.toLowerCase(),
-          fb = b.name.toLowerCase();
-  
-      if (fa < fb) {
-          return -1;
-      }
-      if (fa > fb) {
-          return 1;
-      }
-      return 0;
-    });
+    basicSkills = UtilsTPO.sortAlphabetically(basicSkills);
+    advancedOrGroupedSkills = UtilsTPO.sortAlphabetically(advancedOrGroupedSkills);
+    activeAbilities = UtilsTPO.sortAlphabetically(activeAbilities);
+    inactiveAbilities = UtilsTPO.sortAlphabetically(inactiveAbilities);
 
     actorData.data.basicSkills = basicSkills;
     actorData.data.advancedOrGroupedSkills = advancedOrGroupedSkills;
