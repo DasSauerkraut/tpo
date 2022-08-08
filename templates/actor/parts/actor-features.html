@@ -105,7 +105,7 @@
       </li>
       <div class="skill-container">
       {{#each data.advancedOrGroupedSkills as |skill id|}}
-        <li class="grid grid-8col skill-item-container" data-item-id="{{skill._id}}">
+        <li class="grid grid-8col skill-item-container item-container" data-item-id="{{skill._id}}">
           <div class="skill-item-name rollable grid-span-3" data-id="{{skill._id}}" data-roll-type="skill" title="{{localize 'SYS.RollOrEdit'}}">
             {{#ifEquals skill.data.trained 'Major'}}
             <span>⬥</span>

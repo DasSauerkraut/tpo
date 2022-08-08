@@ -9,6 +9,10 @@
   font-family: "EBGaramond";
 }
 
+.window-app .window-content {
+  overflow-y: hidden;
+}
+
 .rollable:hover, .rollable:focus {
   color: #000;
   text-shadow: 0 0 10px red;
@@ -1151,4 +1155,63 @@
   border-radius: 3px;
   background-color: #51632C;
   color: var(--color-text-light-2);
+}
+
+.tpo .appearance-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.tpo .appearance-container .item {
+  width: 25%;
+  padding-inline: 2px;
+  padding-bottom: 4px;
+}
+
+.tpo .appearance-container .item input {
+  border-radius: 0px;
+  border: 0px;
+  border-bottom: 1px solid var(--color-border-light-tertiary);
+  font-family: "TypographerRotunda";
+  font-size: 16px;
+}
+
+.tpo .appearance-container .item label {
+  color: var(--color-border-light-tertiary);
+}
+
+.tpo .appearance-container .small {
+  width: 8%;
+}
+
+.tpo .appearance-container .big {
+  width: 50%;
+}
+
+.tpo .aspiration-container .item input {
+  border-radius: 0px;
+  border: 0px;
+  border-bottom: 1px solid var(--color-border-light-tertiary);
+  font-family: "TypographerRotunda";
+  font-size: 16px;
+}
+
+.tpo .aspiration-container .item label {
+  color: var(--color-border-light-tertiary);
+}
+
+.tpo .notes-container {
+  height: 500px;
+  overflow: auto;
+}
+
+.tpo .about-editor {
+  height: -webkit-fill-available;
+  margin-top: -8px;
 }
