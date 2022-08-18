@@ -22,7 +22,7 @@
   "primaryTokenAttribute": "hp",
   "secondaryTokenAttribute": "ap",
   "url": "https://github.com/DasSauerkraut/tpo",
-  "manifest": "https://github.com/DasSauerkraut/tpo/latest/download/system.json",
-  "download": "https://github.com/DasSauerkraut/tpo/latest/download/1.0.0/tpo.zip",
+  "manifest": "https://github.com/DasSauerkraut/tpo/releases/latest/download/system.json",
+  "download": "https://github.com/DasSauerkraut/tpo/releases/download/1.0.0/tpo.zip",
   "license": "LICENSE.txt"
 }
