@@ -1025,8 +1025,7 @@
 }
 
 .tpo .dragover {
-  font-weight: bold;
-  background-color: aquamarine;
+  background-color: #5e5c52d1;
 }
 
 .tpo .abilities {
@@ -1214,4 +1213,85 @@
 .tpo .about-editor {
   height: -webkit-fill-available;
   margin-top: -8px;
+}
+
+.tpo .inventory-section h2 {
+  text-align: center;
+}
+
+.tpo .inventory-section h2 .containerDelete {
+  font-size: 14px;
+}
+
+.tpo .inventory-section .ap {
+  font-size: 12px;
+}
+
+.tpo .inventory-section .cap {
+  text-align: center;
+}
+
+.tpo .inventory-section .header {
+  font-weight: bold;
+}
+
+.tpo .inventory-section .header .field {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.tpo .inventory-section .inventory-item {
+  background-color: #b5b3a487;
+  border-radius: 3px;
+  margin-bottom: 3px;
+  padding: 1px;
+}
+
+.tpo .inventory-section .inventory-item .name {
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+}
+
+.tpo .inventory-section .inventory-item .field {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.tpo .inventory-section .inventory-item .expandable {
+  position: relative;
+}
+
+.tpo .inventory-section .inventory-item .expandable .itemDelete {
+  position: absolute;
+  font-size: 12px;
+  right: 3px;
+  top: 2px;
+}
+
+.tpo .inventory-section .inventory-item .expandable .description {
+  font-size: 12px;
+  border-top: 1px solid black;
+}
+
+.tpo .inventory-section .inventory-item:nth-child(2n) {
+  background-color: #a19f93d1;
+}
+
+.tpo .inventory-section ul {
+  list-style: none;
+  padding: 0px;
 }

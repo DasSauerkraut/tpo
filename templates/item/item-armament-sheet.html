@@ -5,6 +5,14 @@
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
       <div class="grid grid-2col">
         <div class="resource">
+          <input type="text" name="data.enc" value="{{data.enc}}" data-dtype="Number"/>
+          <label class="resource-label">Encumberence</label>
+        </div>
+        <div class="resource">
+          <input type="text" name="data.splendor" value="{{data.splendor}}" data-dtype="Number"/>
+          <label class="resource-label">Splendor</label>
+        </div>
+        <div class="resource">
           <input type="text" name="data.damage.base" value="{{data.damage.base}}" data-dtype="Number"/>
           <input type="text" name="data.damage.upgrades" value="{{data.damage.upgrades}}" data-dtype="Number"/>
           <span>StrB +{{data.damage.value}}</span>
@@ -89,10 +97,6 @@
         <div class="resource">
           <input type="text" name="data.overloadPoints" value="{{data.overloadPoints}}" data-dtype="Number"/>
           <label class="resource-label">Overload Points</label>
-        </div>
-        <div class="resource">
-          <input type="text" name="data.enc" value="{{data.enc}}" data-dtype="Number"/>
-          <label class="resource-label">Encumberence</label>
         </div>
         <div class="resource">
           <span>

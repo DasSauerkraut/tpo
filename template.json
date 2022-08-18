@@ -38,9 +38,53 @@
             "label": "Movement"
           },
           "encumbrance": {
-            "value": 0,
             "label": "Encumbrance",
-            "abrev": "Enc."
+            "abrev": "Enc.",
+            "locations": {
+              "lScabbard": {
+                "owned": false,
+                "used": false
+              },
+              "lThigh": {
+                "value": 0,
+                "max": 2
+              },
+              "lPouch": {
+                "owned": false,
+                "value": 0,
+                "max": 2
+              },
+              "lHip": {
+                "value": 0,
+                "max": 3
+              },
+              "chest": {
+                "value": 0,
+                "max": 3
+              },
+              "backpack": {
+                "owned": false,
+                "value": 0,
+                "max": 6
+              },
+              "rHip": {
+                "value": 0,
+                "max": 3
+              },
+              "rPouch": {
+                "owned": false,
+                "value": 0,
+                "max": 2
+              },
+              "rThigh": {
+                "value": 0,
+                "max": 2
+              },
+              "rScabbard": {
+                "owned": false,
+                "used": false
+              }
+            }
           }
         }
       },
@@ -237,13 +281,21 @@
     "templates": {
       "base": {
         "description": ""
+      },
+      "physical": {
+        "location": "chest",
+        "enc": 0,
+        "stack": {
+          "stackable": false,
+          "current": 0,
+          "max": 0
+        }
       }
     },
     "item": {
-      "templates": ["base"],
-      "quantity": 1,
-      "weight": 0,
-      "formula": "d20 + @str.mod + ceil(@lvl / 2)"
+      "templates": ["base", "physical"],
+      "type": "item",
+      "splendor": 0
     },
     "skill": {
       "templates": ["base"],
@@ -255,7 +307,7 @@
       "total": 0
     },
     "armament": {
-      "templates": ["base"],
+      "templates": ["base", "physical"],
       "type": "",
       "skill": "",
       "damage": {
@@ -277,7 +329,7 @@
         "display": "Fire"
       },
       "overloadPoints": 0,
-      "enc": 0,
+      "splendor": 0,
       "capacity": {
         "power": 4,
         "misc": 3
@@ -287,6 +339,7 @@
       "upgrades": []
     },
     "power": {
+      "templates": ["base", "physical"],
       "type": "atWill",
       "apCost": 0,
       "target": "",

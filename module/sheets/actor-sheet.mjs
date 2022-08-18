@@ -42,14 +42,14 @@ export class tpoActorSheet extends ActorSheet {
 
     // Prepare character data and items.
     if (actorData.type == 'character') {
-      this._prepareItems(context);
+      // this._prepareItems(context);
       this._prepareCharacterData(context);
     }
 
     // Prepare NPC data and items.
-    if (actorData.type == 'npc') {
-      this._prepareItems(context);
-    }
+    // if (actorData.type == 'npc') {
+    //   this._prepareItems(context);
+    // }
 
     // Add roll data for TinyMCE editors.
     context.rollData = context.actor.getRollData();
@@ -77,23 +77,23 @@ export class tpoActorSheet extends ActorSheet {
    *
    * @return {undefined}
    */
-  _prepareItems(context) {
-    // Initialize containers.
-    const gear = [];
-    const abilities = [];
+  // _prepareItems(context) {
+  //   // Initialize containers.
+  //   const gear = [];
+  //   const abilities = [];
 
-    // Iterate through items, allocating to containers
-    for (let i of context.items) {
-      i.img = i.img || DEFAULT_TOKEN;
-      // Append to gear.
-      if (i.type === 'item') {
-        gear.push(i);
-      }
-    }
+  //   // Iterate through items, allocating to containers
+  //   for (let i of context.items) {
+  //     i.img = i.img || DEFAULT_TOKEN;
+  //     // Append to gear.
+  //     if (i.type === 'item') {
+  //       gear.push(i);
+  //     }
+  //   }
 
-    // Assign and return
-    context.gear = gear;
-   }
+  //   // Assign and return
+  //   context.gear = gear;
+  //  }
 
   /* -------------------------------------------- */
 
@@ -210,13 +210,29 @@ export class tpoActorSheet extends ActorSheet {
       $(this).select();
     });
 
+    html.find('.itemDelete').click(this._onItemDelete.bind(this))
+    html.find('.inventory-item').each((i, li) => {
+      li.setAttribute("draggable", true);
+      li.addEventListener("dragstart", (ev) => {this._onDragItemStart(ev)}, false);
+    });
+    html.on("dragenter", ".inventory-section", ev => {
+      ev.target.classList.add("dragover")
+    })
+    html.on("dragleave", ".inventory-section", ev => {
+      ev.target.classList.remove("dragover")
+    })
+    html.on("drop", ".inventory-section", ev => {
+      ev.target.classList.remove("dragover")
+      this._onItemDrop(ev, JSON.parse(ev.originalEvent.dataTransfer.getData("text/plain")).data)
+    })
+    html.find('.containerDelete').click(this._onContainerDelete.bind(this))
+
     // Drag events for macros.
     let handler = ev => this._onDragItemStart.bind(this);
     html.find('.power-draggable').each((i, li) => {
       li.setAttribute("draggable", true);
       li.addEventListener("dragstart", (ev) => {this._onDragItemStart(ev)}, false);
     });
-
     html.on("dragenter", ".armament-container", ev => {
       ev.target.classList.add("dragover")
     })
@@ -279,6 +295,31 @@ export class tpoActorSheet extends ActorSheet {
 
     await this.actor.updateEmbeddedDocuments("Item", [item]);
     await UtilsTPO.updateStoredPower(armament, item, this.actor);
+  }
+
+  async _onItemDrop(event, item){
+    event.preventDefault();
+
+    //Trying to get location from header data rn
+    let location;
+
+    if($(event.target).hasClass("inventory-section")){
+      location = $(event.target).data("location");
+    } else {
+      const itemHeader = $(event.target).parents(".inventory-section");
+      location = itemHeader.data("location");
+    }
+    console.log(location);
+    console.log(this.actor.data.data.inventory[location]);
+
+    if (this.actor.data.data.inventory[location].some(itm => itm._id === item._id)) {
+      console.log('Contains dupe, bailing out');
+      return;
+    }
+
+    item.data.location = location;
+
+    await this.actor.updateEmbeddedDocuments("Item", [item]);
   }
 
   async _onArmamentDrop(event, item){
@@ -351,6 +392,40 @@ export class tpoActorSheet extends ActorSheet {
     const container = $(event.target).parents(".subheader");
     const power = this.actor.items.get(container.data("power-id"));
     power.delete();
+  }
+
+  _onItemDelete(event){
+    event.preventDefault();
+    const container = $(event.target).parents(".expandable");
+    const item = this.actor.items.get(container.data("id"));
+    item.delete();
+  }
+
+  async _onContainerDelete(event){
+    event.preventDefault();
+    const container = $(event.target).parents(".inventory-section:first");
+    const location = container.data("location")
+    const chestLoc = duplicate(this.actor.data.data.inventory.chest);
+
+    // console.log(this.actor.data.data.inventory[location]);
+    // for (let item in this.actor.data.data.inventory[location]){
+    //   console.log(item);
+    //   item.data.location = "chest"
+    //   await this.actor.updateEmbeddedDocuments("Item", [item]);
+    //   console.log(item)
+    //   chestLoc.push(item);
+    // }
+
+    console.log(chestLoc)
+    await this.actor.update({[`data.inventory.chest`]: chestLoc })
+    await this.actor.update({[`data.inventory.${location}`]: [] })
+
+    console.log(this.actor.data.data.inventory.chest)
+    console.log(this.actor.data.data.inventory[location])
+
+    const item = this.actor.items.getName(location);
+    console.log(item);
+    item.delete();
   }
 
   _onStatRoll(event){
@@ -728,10 +803,13 @@ export class tpoActorSheet extends ActorSheet {
     let li = $(event.currentTarget).parents(".expand-container");
     let expand = li.find('.expandable:first')[0];
 
-    if(expand.style.maxHeight)
+    if(expand.style.maxHeight){
       expand.style.maxHeight = null;
-    else
+      expand.style.minHeight = null;
+    } else {
       expand.style.maxHeight = "240px";
+      expand.style.minHeight = "15px";
+    }
   }
 
   _onArmamentExpandNested(event) {
@@ -741,8 +819,10 @@ export class tpoActorSheet extends ActorSheet {
 
     if(expand.style.maxHeight){
       expand.style.maxHeight = null;
+      expand.style.minHeight = null;
     } else {
       expand.style.maxHeight = expand.scrollHeight + "px";
+      expand.style.minHeight = "15px";
     }
   }
 

@@ -1,0 +1,56 @@
+.inventory-section{
+  h2 {
+    text-align: center;
+    .containerDelete {
+      font-size: 14px;
+    }
+  }
+  .ap {
+    font-size: 12px;
+  }
+  .cap {
+    text-align: center;
+  }
+  .header {
+    font-weight: bold;
+    .field{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  .inventory-item {
+    background-color: #b5b3a487;
+    border-radius: 3px;
+    margin-bottom: 3px;
+    padding: 1px;
+    .name{
+      text-overflow: ellipsis;
+    }
+    .field{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .expandable {
+      position: relative;
+      .itemDelete{
+        position: absolute;
+        font-size: 12px;
+        right: 3px;
+        top: 2px;
+      }
+      .description{
+        font-size: 12px;
+        border-top: 1px solid black;
+      }
+    }
+  }
+  .inventory-item:nth-child(2n){
+    background-color: #a19f93d1;
+  }
+  ul {
+    list-style: none;
+    padding: 0px;
+  }
+}

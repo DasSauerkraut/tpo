@@ -93,7 +93,7 @@ export class tpoActor extends Actor {
       }
     }
     //Enc Bonus
-    data.derived.encumbrance.value = data.stats.str.bonus + 1;
+    data.derived.encumbrance.locations.chest.max = data.stats.str.bonus + 1;
 
     //AP
     if(data.autocalc.ap)
@@ -131,6 +131,25 @@ export class tpoActor extends Actor {
     let activeAbilities = [];
     let inactiveAbilities = [];
     let unsortedPowers = [];
+    let inventory = {
+      lScabbard: [],
+      lThigh: [],
+      lHip: [],
+      lPouch: [],
+      chest: [],
+      backpack: [],
+      rScabbard: [],
+      rThigh: [],
+      rHip: [],
+      rPouch: [],
+      nonEnc: []
+    }
+
+    actorData.data.derived.encumbrance.locations.backpack.owned = false;
+    actorData.data.derived.encumbrance.locations.lPouch.owned = false;
+    actorData.data.derived.encumbrance.locations.lScabbard.owned = false;
+    actorData.data.derived.encumbrance.locations.rScabbard.owned = false;
+    actorData.data.derived.encumbrance.locations.rPouch.owned = false;
 
     actorData.items.forEach( i => { 
       if(i.type == "skill"){
@@ -179,8 +198,13 @@ export class tpoActor extends Actor {
         i.data.data.upgrades = UtilsTPO.sortAlphabetically(i.data.data.upgrades);
 
         armaments.push(i.data);
+
+        inventory[i.data.data.location].push(i.data)
+        actorData.data.derived.encumbrance.locations[i.data.data.location].value += i.data.data.enc;
+
       } else if(i.type == "power" && !i.data.data.parent.hasParent){
         unsortedPowers.push(i.data);
+        inventory.nonEnc.push(i.data)
 
       } else if(i.type === "ability"){
         i.data.data.value = i.data.data.improvements + i.data.data.mod - Math.abs(i.data.data.malus);
@@ -189,8 +213,36 @@ export class tpoActor extends Actor {
           activeAbilities.push(i.data);
         else
           inactiveAbilities.push(i.data);
-      }
+      } else if(i.type === "item"){
+        if(i.data.name === "Pouch"){
+          if(actorData.data.derived.encumbrance.locations.lPouch.owned){
+            actorData.data.derived.encumbrance.locations.rPouch.owned = true;
+            i.update({[`name`]: "rPouch"})
+          }else{
+            actorData.data.derived.encumbrance.locations.lPouch.owned = true;
+            i.update({[`name`]: "lPouch"})
+          }
+        } else if(i.data.name === "rPouch" || i.data.name === "lPouch"){
+          actorData.data.derived.encumbrance.locations[i.data.name].owned = true;
+        } else if(i.data.name === "Scabbard"){
+          if(actorData.data.derived.encumbrance.locations.lScabbard.owned){
+            actorData.data.derived.encumbrance.locations.rScabbard.owned = true;
+            i.update({[`name`]: "rScabbard"})
 
+          }else{
+            actorData.data.derived.encumbrance.locations.lScabbard.owned = true;
+            i.update({[`name`]: "lScabbard"})
+          }
+        } else if(i.data.name === "rScabbard" || i.data.name === "lScabbard"){
+          actorData.data.derived.encumbrance.locations[i.data.name].owned = true;
+        } else if(i.data.name === "Backpack" || i.data.name === "backpack"){
+          actorData.data.derived.encumbrance.locations.backpack.owned = true;
+          i.update({[`name`]: "backpack"})
+        } else {
+          inventory[i.data.data.location].push(i.data)
+          actorData.data.derived.encumbrance.locations[i.data.data.location].value += i.data.data.enc;
+        }
+      }
     })
 
     basicSkills = UtilsTPO.sortAlphabetically(basicSkills);
@@ -198,12 +250,24 @@ export class tpoActor extends Actor {
     activeAbilities = UtilsTPO.sortAlphabetically(activeAbilities);
     inactiveAbilities = UtilsTPO.sortAlphabetically(inactiveAbilities);
 
+    inventory.lScabbard = UtilsTPO.sortAlphabetically(inventory.lScabbard);
+    inventory.lThigh = UtilsTPO.sortAlphabetically(inventory.lThigh);
+    inventory.lHip = UtilsTPO.sortAlphabetically(inventory.lHip);
+    inventory.lPouch = UtilsTPO.sortAlphabetically(inventory.lPouch);
+    inventory.chest = UtilsTPO.sortAlphabetically(inventory.chest);
+    inventory.backpack = UtilsTPO.sortAlphabetically(inventory.backpack);
+    inventory.rScabbard = UtilsTPO.sortAlphabetically(inventory.rScabbard);
+    inventory.rThigh = UtilsTPO.sortAlphabetically(inventory.rThigh);
+    inventory.rHip = UtilsTPO.sortAlphabetically(inventory.rHip);
+    inventory.rPouch = UtilsTPO.sortAlphabetically(inventory.rPouch);
+
     actorData.data.basicSkills = basicSkills;
     actorData.data.advancedOrGroupedSkills = advancedOrGroupedSkills;
     actorData.data.armaments = armaments;
     actorData.data.unsortedPowers = unsortedPowers;
     actorData.data.activeAbilities = activeAbilities;
     actorData.data.inactiveAbilities = inactiveAbilities;
+    actorData.data.inventory = inventory;
   }
 
   prepareSkill(skill, actorData) {
