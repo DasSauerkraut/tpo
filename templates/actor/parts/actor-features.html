@@ -2,10 +2,10 @@
   <div class="grid grid-9col stats">
     <div class="stat-container">
       <div class="stat-header">&nbsp</div>
-      <div class="stat-header-row">Initial</div>
-      <div class="stat-header-row">Imp.</div>
-      <div class="stat-header-row">Mod.</div>
-      <div class="stat-header-row">Value</div>
+      <div title="{{localize 'TIP.StatInit'}}" class="stat-header-row">Initial</div>
+      <div title="{{localize 'TIP.StatImp'}}" class="stat-header-row">Imp.</div>
+      <div title="{{localize 'TIP.StatMod'}}" class="stat-header-row">Mod.</div>
+      <div title="{{localize 'TIP.StatValue'}}" class="stat-header-row">Value</div>
     </div>
     {{#each data.stats as |stat s|}}
     <div class="stat-container">
@@ -21,7 +21,7 @@
   <div class="grid grid-4col fate-xp">
     <div class="fate">
       <input type="text" name="data.info.fates.fate1.value" value="{{data.info.fates.fate1.value}}" placeholder="Fate"/>
-      <select name="data.info.fates.fate1.type" type="text" value="{{data.info.fates.fate1.type}}">
+      <select title="{{localize 'TIP.Fate'}}" name="data.info.fates.fate1.type" type="text" value="{{data.info.fates.fate1.type}}">
         {{#select data.info.fates.fate1.type}}
         <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
         <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
@@ -30,7 +30,7 @@
     </div>
     <div class="fate">
       <input type="text" name="data.info.fates.fate2.value" value="{{data.info.fates.fate2.value}}" placeholder="Fate"/>
-      <select name="data.info.fates.fate2.type" type="text" value="{{data.info.fates.fate2.type}}">
+      <select title="{{localize 'TIP.Fate'}}" name="data.info.fates.fate2.type" type="text" value="{{data.info.fates.fate2.type}}">
         {{#select data.info.fates.fate2.type}}
         <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
         <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
@@ -39,7 +39,7 @@
     </div>
     <div class="fate">
       <input type="text" name="data.info.fates.fate3.value" value="{{data.info.fates.fate3.value}}" placeholder="Fate"/>
-      <select name="data.info.fates.fate3.type" type="text" value="{{data.info.fates.fate3.type}}">
+      <select title="{{localize 'TIP.Fate'}}" name="data.info.fates.fate3.type" type="text" value="{{data.info.fates.fate3.type}}">
         {{#select data.info.fates.fate3.type}}
         <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
         <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
@@ -54,7 +54,7 @@
         <div class="xp-header">Earned</div>
         <div class="xp-header">Spent</div>
         <div class="xp-header">Left</div>
-        <div class="grid-span-3">{{localize data.info.xp.label}}</div>
+        <div class="grid-span-3" title="{{localize 'TIP.XP'}}">{{localize data.info.xp.label}}</div>
       </div>
     </div>
   </div>

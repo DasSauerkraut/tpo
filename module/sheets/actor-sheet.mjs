@@ -12,7 +12,7 @@ export class tpoActorSheet extends ActorSheet {
     return mergeObject(super.defaultOptions, {
       classes: ["tpo", "sheet", "actor"],
       template: "systems/tpo/templates/actor/actor-sheet.html",
-      width: 600,
+      width: 650,
       height: 710,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
     });

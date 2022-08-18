@@ -549,6 +549,66 @@
   padding: 0 8px;
 }
 
+.tpo .elemental-resistances {
+  width: 55%;
+  text-align: center;
+}
+
+.tpo .elemental {
+  gap: 2px;
+}
+
+.tpo .element-resist {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  text-align: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.tpo .element-resist .left {
+  margin-left: auto;
+}
+
+.tpo .element-resist .right {
+  margin-right: auto;
+}
+
+.tpo .element-resist .element-picker {
+  text-align: center;
+  margin: 0;
+  border-radius: 0px;
+  border: 0px;
+  border-bottom: 1px solid var(--color-border-light-tertiary);
+  font-family: "TypographerRotunda";
+  font-size: 18px;
+}
+
+.tpo .element-resist .W {
+  color: #642422;
+  font-weight: bold;
+  text-shadow: 0 0 4px #ff0800;
+}
+
+.tpo .element-resist .S {
+  color: #51632C;
+  font-weight: bold;
+  text-shadow: 0 0 4px #83c300;
+}
+
+.tpo .dragon {
+  margin-left: auto;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin-right: auto;
+}
+
 .tpo .resource-label {
   font-size: 12px;
 }

@@ -198,3 +198,50 @@
     padding: 0 8px;
   }
 }
+
+.elemental-resistances{
+  width: 55%;
+  text-align: center;
+}
+
+.elemental{
+  gap: 2px;
+}
+
+.element-resist{
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: space-between;
+  .left{
+    margin-left: auto;
+  }
+  .right{
+    margin-right: auto;
+  }
+  .element-picker{
+    text-align: center;
+    margin: 0;
+    border-radius: 0px;
+    border: 0px;
+    border-bottom: 1px solid var(--color-border-light-tertiary);
+    font-family: $font-secondary;
+    font-size:18px
+  }
+  .W{
+    color: #642422;
+    font-weight: bold;
+    text-shadow: 0 0 4px #ff0800;
+  }
+  .S{
+    color: #51632C;
+    font-weight: bold;
+    text-shadow: 0 0 4px #83c300;
+  }
+}
+
+.dragon{
+  margin-left: auto;
+  width: fit-content;
+  margin-right: auto;
+}

@@ -5,7 +5,7 @@
     <div class="top-header">
       <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
       <h1 class="charspecies">
-        <select name="data.details.species.value" type="text" value="{{data.details.species.value}}">
+        <select title="{{localize 'TIP.Species'}}" name="data.details.species.value" type="text" value="{{data.details.species.value}}">
           {{#select data.details.species.value}}
           <optgroup label="{{localize 'SPECIES.Human'}}">
             <option value="{{localize 'SPECIES.Ri'}}">{{localize 'SPECIES.Ri'}}</option>
@@ -40,7 +40,7 @@
         {{!-- "flex-group-center" is also defined in the _grid.scss file
         and it will add a small amount of padding, a border, and will
         center all of its child elements content and text. --}}
-        <div class="resource flex-group-center">
+        <div class="resource flex-group-center" title="{{localize 'TIP.HP'}}">
           <div class="resource-content flexrow flex-center flex-between">
             <input class="two-value" type="text" name="data.derived.hp.value" value="{{data.derived.hp.value}}" data-dtype="Number"/>
             {{#if data.autocalc.hp}}
@@ -55,7 +55,7 @@
           <label for="data.derived.hp.value" class="resource-label">{{data.derived.hp.abrev}}</label>
         </div>
 
-        <div class="resource flex-group-center">
+        <div class="resource flex-group-center" title="{{localize 'TIP.AP'}}">
           <div class="resource-content flexrow flex-center flex-between">
             <input class="two-value" type="text" name="data.derived.ap.value" value="{{data.derived.ap.value}}" data-dtype="Number"/>
             {{#if data.autocalc.ap}}
@@ -70,7 +70,7 @@
           <label for="data.derived.ap.value" class="resource-label">{{data.derived.ap.abrev}}</label>
         </div>
 
-        <div class="resource flex-group-center">
+        <div class="resource flex-group-center" title="{{localize 'TIP.Resolve'}}">
           <div class="resource-content flexrow flex-center flex-between">
             <!-- <input type="text" name="data.info.resolve.value" value="{{data.info.resolve.value}}" data-dtype="Number"/> -->
             {{#greaterThan data.info.resolve.value 0}}
@@ -92,7 +92,7 @@
           <label for="data.info.resolve.value" class="resource-label">{{localize data.info.resolve.label}}</label>
         </div>
 
-        <div class="resource flex-group-center">
+        <div class="resource flex-group-center" title="{{localize 'TIP.TempHP'}}">
           <div class="resource-content flexrow flex-center flex-between">
             <input class="two-value" type="text" name="data.derived.tempHp.value" value="{{data.derived.tempHp.value}}" data-dtype="Number"/>
             {{#if data.autocalc.thp}}
@@ -108,7 +108,7 @@
         </div>
 
         {{!-- ABSORPTION --}}
-        <div class="resource flex-group-center">
+        <div class="resource flex-group-center" title="{{localize 'TIP.Absorption'}}">
           <div class="resource-content flexrow flex-center flex-between">
             <span class="absorption-item">
               {{#if data.autocalc.absorption}}
@@ -133,7 +133,7 @@
           <label for="data.derived.absorption.value" class="resource-label">{{data.derived.absorption.label}}</label>
         </div>
 
-        <div class="resource flex-group-center two-items">
+        <div class="resource flex-group-center two-items" title="{{localize 'TIP.Bloodied'}}">
           <div class="container">
             <div class="resource-content flexrow flex-center flex-between">
               {{#if data.autocalc.bloodied}}
@@ -147,7 +147,7 @@
             </div>
             <label for="data.derived.bloodied.value" class="resource-label">{{data.derived.bloodied.label}}</label>
           </div>
-          <div class="container">
+          <div class="container" title="{{localize 'TIP.Movement'}}">
             <div class="resource-content flexrow flex-center flex-between">
               {{#if data.autocalc.movement}}
               <a title="{{localize 'SYS.ToggleAutocalc'}}" id="movement" class="field">{{data.derived.movement.value}}</a>
@@ -161,6 +161,61 @@
             <label for="data.derived.movement.value" class="resource-label">{{data.derived.movement.label}}</label>  
           </div>
         </div>
+      </div>
+      <div class="elemental-resistances">
+        <div class="grid grid-2col elemental">
+          <div class="element-resist">
+            <span class="resource-label left">Fire</span>
+            <select class="element-picker {{data.details.elementalResistances.fire}}" name="data.details.elementalResistances.fire" type="text" value="{{data.details.elementalResistances.fire}}">
+              {{#select data.details.elementalResistances.fire}}
+                <option value="-">-</option>
+                <option value="W">W</option>
+                <option value="S">S</option>
+              {{/select}}
+            </select>
+          </div>
+          <div class="element-resist">
+            <select class="element-picker {{data.details.elementalResistances.water}}" name="data.details.elementalResistances.water" type="text" value="{{data.details.elementalResistances.water}}">
+              {{#select data.details.elementalResistances.water}}
+                <option value="-">-</option>
+                <option value="W">W</option>
+                <option value="S">S</option>
+              {{/select}}
+            </select>
+            <span class="resource-label right">Water</span>
+          </div>
+          <div class="element-resist">
+            <span class="resource-label left">Elec.</span>
+            <select class="element-picker {{data.details.elementalResistances.elec}}" name="data.details.elementalResistances.elec" type="text" value="{{data.details.elementalResistances.elec}}">
+              {{#select data.details.elementalResistances.elec}}
+                <option value="-">-</option>
+                <option value="W">W</option>
+                <option value="S">S</option>
+              {{/select}}
+            </select>
+          </div>
+          <div class="element-resist">
+            <select class="element-picker {{data.details.elementalResistances.ice}}" name="data.details.elementalResistances.ice" type="text" value="{{data.details.elementalResistances.ice}}">
+              {{#select data.details.elementalResistances.ice}}
+                <option value="-">-</option>
+                <option value="W">W</option>
+                <option value="S">S</option>
+              {{/select}}
+            </select>
+            <span class="resource-label right">Ice</span>
+          </div>
+        </div>
+        <div class="element-resist dragon">
+          <span class="resource-label left">Dragon</span>
+          <select class="element-picker {{data.details.elementalResistances.dragon}}" name="data.details.elementalResistances.dragon" type="text" value="{{data.details.elementalResistances.dragon}}">
+            {{#select data.details.elementalResistances.dragon}}
+              <option value="-">-</option>
+              <option value="W">W</option>
+              <option value="S">S</option>
+            {{/select}}
+          </select>
+        </div>
+        <label for="data.derived.hp.value" class="resource-label">Elemental Resistances</label>
       </div>
     </div>
   </header>

@@ -85,6 +85,13 @@
                 "used": false
               }
             }
+          },
+          "elementalResistances": {
+            "fire": "",
+            "elec": "",
+            "water": "",
+            "ice": "",
+            "dragon": ""
           }
         }
       },
@@ -203,7 +210,8 @@
           "label": "CHAR.Fates",
           "fate1": {
             "type": "",
-            "value": ""
+            "value": "",
+            "invoked": false
           },
           "fate2": {
             "type": "",

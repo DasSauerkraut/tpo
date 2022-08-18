@@ -134,6 +134,23 @@
   "STATUS.Marked": "Marked",
   "STATUS.Stabilized": "Stabilized",
 
+  "TIP.Species": "Your species determines various stats bonuses and provide other effects.",
+  "TIP.HP": "Your HP determines how much physical and mental punishment you can take before being Downed.",
+  "TIP.AP": "You start each turn with several Action Points, which can be spent to perform various Actions, but they are also used to move about the field and defend from enemy attacks.\rAt the start of the first non-Surprise Round, you gain 4 AP.\rAfter that, your AP refreshes to 4 AP at the start of your Turn.",
+  "TIP.Resolve": "Resolve is a resource that you can spend to:\r- Reroll a failed test after the outcome is known. You cannot spend Resolve to reroll the same test multiple times.\r- Ignore the effects of a failed Morale Test.\r- Immediately remove any Status affecting you.\rAt the end of a session, you can regain 1 Resolve. If the table agrees that you acted accordingly to your character's Fates, you may regain an additional Resolve.",
+  "TIP.TempHP": "Most healing in TAA comes in the form of Temporary HP. Temporary HP only lasts for the current encounter you are in, or 30 minutes.\rWhen you take damage, always subtract from your Temporary HP first.",
+  "TIP.Absorption": "Absorption reduces incoming damage.\rWhenever you take damage, unless otherwise stated, reduce that damage by your total Absorption.",
+  "TIP.Bloodied": "If your HP is below this value, you are visually wounded, you will suffer a Minor Injury, and you must perform a Morale Test.\rYour HP will turn red as an indicator.",
+  "TIP.Movement": "How many squares you can move with a Move action.\rEach square is roughly equivelant to a yard or meter.",
+  
+  "TIP.StatInit": "The values your character starts with. These are determined by your character's Species.",
+  "TIP.StatImp": "How many times you have improved a given stat.",
+  "TIP.StatMod": "Anything that would modify your Stats like injuries or situational debuffs.",
+  "TIP.StatValue": "The total of the above.",
+
+  "TIP.Fate": "Your Fates reveal aspects of your Character's virtues and vices.\rYou may invoke a Fate to prevent yourself from dying. If invoked in this manner during combat, you will be removed from the encounter in some manner.\rYou may also invoke a Fate to choose the number rolled on a Test.\r\rAfter a Fate has been invoked, it cannot be invoked again.\rUse the checkboxes to note if a fate has been invoked.",
+  "TIP.XP": "Over the course of your adventure, you will gain XP. Generally, you gain 7-10XP at the end of each session. But you can gain more by accomplishing one of your character's aspirations.\rWhen you have some downtime and a safe location, you can spend XP to improve Stats, Skills, and Abilities.",
+
   "ERROR.StatImpCap": "TPO | Cannot Improve Stat past the Improvement cap!",
   "ERROR.StatNoXp": "TPO | Cannot Improve Stat, not enough XP!",
   "ERROR.StatLessThanZero": "TPO | Cannot degrade Stat below 0 Improvements!",
