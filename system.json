@@ -21,8 +21,8 @@
   "gridUnits": "yd",
   "primaryTokenAttribute": "hp",
   "secondaryTokenAttribute": "ap",
-  "url": "",
-  "manifest": "",
-  "download": "",
+  "url": "https://github.com/DasSauerkraut/tpo",
+  "manifest": "https://github.com/DasSauerkraut/tpo/latest/download/system.json",
+  "download": "https://github.com/DasSauerkraut/tpo/latest/download/1.0.0/tpo.zip",
   "license": "LICENSE.txt"
 }
