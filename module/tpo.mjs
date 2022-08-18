@@ -44,6 +44,8 @@ Hooks.once('init', async function() {
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("tpo", tpoItemSheet, { makeDefault: true });
 
+  CONFIG.statusEffects = TPO.statuses;
+
   // Preload Handlebars templates.
   return preloadHandlebarsTemplates();
 });
