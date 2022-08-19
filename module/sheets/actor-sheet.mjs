@@ -225,6 +225,7 @@ export class tpoActorSheet extends ActorSheet {
       ev.target.classList.remove("dragover")
       this._onItemDrop(ev, JSON.parse(ev.originalEvent.dataTransfer.getData("text/plain")).data)
     })
+    html.find('.inventory-item').mousedown(this._onPowerOrArmamentEdit.bind(this))
     html.find('.containerDelete').click(this._onContainerDelete.bind(this))
 
     // Drag events for macros.

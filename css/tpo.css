@@ -1275,6 +1275,10 @@
   margin-top: -8px;
 }
 
+.tpo .inventory-section {
+  color: black;
+}
+
 .tpo .inventory-section h2 {
   text-align: center;
 }
@@ -1305,6 +1309,10 @@
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+.tpo .inventory-section ul {
+  min-height: 20%;
 }
 
 .tpo .inventory-section .inventory-item {
@@ -1354,4 +1362,120 @@
 .tpo .inventory-section ul {
   list-style: none;
   padding: 0px;
+}
+
+.tpo .inventory-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border-light-primary);
+  margin-bottom: 5px;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.tpo .money {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-size: 16px;
+}
+
+.tpo .money .money-field {
+  border-radius: 0px;
+  border: 0px;
+  font-family: "TypographerRotunda";
+  font-size: 18px;
+  text-align: center;
+  width: 35px;
+}
+
+.tpo .money-label {
+  width: 100%;
+  text-align: center;
+  border-top: 1px solid var(--color-border-light-tertiary);
+}
+
+.tpo .money-total {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-item-align: center;
+  align-self: center;
+  font-family: "TypographerRotunda";
+  font-size: 18px;
+}
+
+.tpo .money-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.tpo .money-header .money-grid {
+  gap: 0px;
+}
+
+.tpo .splendor-header {
+  width: 33%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  text-align: center;
+}
+
+.tpo .splendor-grid {
+  gap: 0px;
+}
+
+.tpo .splendor-grid .splendor {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-family: "TypographerRotunda";
+  font-size: 18px;
+  border-bottom: 1px solid var(--color-border-light-tertiary);
+}
+
+.tpo .splendor-grid .rerolls {
+  font-weight: bold;
+}
+
+.tpo .splendor-grid input {
+  border-radius: 0px;
+  border: 0px;
+  border-bottom: 1px solid var(--color-border-light-tertiary);
+  font-family: "TypographerRotunda";
+  font-size: 18px;
+}
+
+.tpo .splendor-grid .label {
+  font-size: 10px;
 }

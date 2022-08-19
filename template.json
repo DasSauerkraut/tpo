@@ -40,6 +40,12 @@
           "encumbrance": {
             "label": "Encumbrance",
             "abrev": "Enc.",
+            "money": {
+              "l": 0,
+              "s": 0,
+              "c": 0,
+              "total": 0
+            },
             "locations": {
               "lScabbard": {
                 "owned": false,
@@ -272,6 +278,13 @@
             "label": "CHAR.DistinguishingFeatures",
             "value": ""
           }
+        },
+        "splendor": {
+          "items": 0,
+          "mod": 0,
+          "total": 0,
+          "cap": 0,
+          "rerolls": 0
         }
       }
     },

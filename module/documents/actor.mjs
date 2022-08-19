@@ -43,9 +43,9 @@ export class tpoActor extends Actor {
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
+    this._prepareItems(actorData);
     this._prepareCharacterData(actorData);
     this._prepareNpcData(actorData);
-    this._prepareItems(actorData);
     console.log(actorData);
   }
 
@@ -94,6 +94,16 @@ export class tpoActor extends Actor {
     }
     //Enc Bonus
     data.derived.encumbrance.locations.chest.max = data.stats.str.bonus + 1;
+    //Money
+    data.derived.encumbrance.money.total = data.derived.encumbrance.money.l + data.derived.encumbrance.money.s/20 + data.derived.encumbrance.money.c/200
+    //Splendor
+    data.info.splendor.cap = data.stats.cha.bonus*2;
+    if(data.info.splendor.items > data.info.splendor.cap)
+      data.info.splendor.items = data.info.splendor.cap;
+
+    data.info.splendor.total = data.info.splendor.items + data.info.splendor.mod;
+
+    data.info.splendor.rerolls = Math.floor(data.info.splendor.total / 4);
 
     //AP
     if(data.autocalc.ap)
@@ -151,7 +161,11 @@ export class tpoActor extends Actor {
     actorData.data.derived.encumbrance.locations.rScabbard.owned = false;
     actorData.data.derived.encumbrance.locations.rPouch.owned = false;
 
-    actorData.items.forEach( i => { 
+    actorData.items.forEach( i => {
+      if(i.data.data.splendor){
+        actorData.data.info.splendor.items += i.data.data.splendor;
+      }
+
       if(i.type == "skill"){
         let skill = this.prepareSkill(i.data, actorData);
         if (skill.data.grouped || skill.data.advanced)

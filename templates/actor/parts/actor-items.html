@@ -1,3 +1,27 @@
+<div class="inventory-header">
+  <div class="money-header">
+    <div class="money-grid grid grid-4col">
+      <span class="money"><input class="money-field" type="text" name="data.derived.encumbrance.money.l" value="{{data.derived.encumbrance.money.l}}" data-dtype="Number"/>ℓ</span>
+      <span class="money"><input class="money-field" type="text" name="data.derived.encumbrance.money.s" value="{{data.derived.encumbrance.money.s}}" data-dtype="Number"/>s</span>
+      <span class="money"><input class="money-field" type="text" name="data.derived.encumbrance.money.c" value="{{data.derived.encumbrance.money.c}}" data-dtype="Number"/>c = </span>
+      <div class="money-total">{{data.derived.encumbrance.money.total}}ℓ</div>
+    </div>
+    <span class="money-label">Coin Purse</span>
+  </div>
+  <div class="splendor-header">
+    <div class="splendor-grid grid grid-4col">
+      <div class="splendor">{{data.info.splendor.items}}</div>
+      <input type="text" name="data.info.splendor.mod" value="{{data.info.splendor.mod}}" data-dtype="Number"/>
+      <div class="splendor">{{data.info.splendor.total}}</div>
+      <div class="splendor rerolls">{{data.info.splendor.rerolls}}</div>
+      <div class="label">Items</div>
+      <div class="label">Mod</div>
+      <div class="label">Total</div>
+      <div class="label">Rerolls</div>
+    </div>
+    Splendor
+  </div>
+</div>
 <div class="grid grid-5col">
   <div class="inventory-section" data-location="lThigh">
     <h2>Left Thigh</h2>
