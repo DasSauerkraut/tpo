@@ -73,21 +73,21 @@
         <div class="resource flex-group-center" title="{{localize 'TIP.Resolve'}}">
           <div class="resource-content flexrow flex-center flex-between">
             <!-- <input type="text" name="data.info.resolve.value" value="{{data.info.resolve.value}}" data-dtype="Number"/> -->
-            {{#greaterThan data.info.resolve.value 0}}
+            {{#if data.info.resolve.resolve1}}
               <input class="resolve" id="resolve1" type="checkbox" checked data-dtype="Boolean"/>
             {{else}}
               <input class="resolve" id="resolve1" type="checkbox" data-dtype="Boolean"/>
-            {{/greaterThan}}
-            {{#greaterThan data.info.resolve.value 1}}
-              <input class="resolve" id="resolve2" checked type="checkbox" data-dtype="Boolean"/>
+            {{/if}}
+            {{#if data.info.resolve.resolve2}}
+              <input class="resolve" id="resolve2" type="checkbox" checked data-dtype="Boolean"/>
             {{else}}
               <input class="resolve" id="resolve2" type="checkbox" data-dtype="Boolean"/>
-            {{/greaterThan}}
-            {{#greaterThan data.info.resolve.value 2}}
-              <input class="resolve" id="resolve3" checked type="checkbox" data-dtype="Boolean"/>
+            {{/if}}
+            {{#if data.info.resolve.resolve3}}
+              <input class="resolve" id="resolve3" type="checkbox" checked data-dtype="Boolean"/>
             {{else}}
               <input class="resolve" id="resolve3" type="checkbox" data-dtype="Boolean"/>
-            {{/greaterThan}}
+            {{/if}}
           </div>
           <label for="data.info.resolve.value" class="resource-label">{{localize data.info.resolve.label}}</label>
         </div>

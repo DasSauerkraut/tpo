@@ -209,8 +209,9 @@
       "info": {
         "resolve": {
           "label": "CHAR.Resolve",
-          "value": 3,
-          "max": 3
+          "resolve1": true,
+          "resolve2": true,
+          "resolve3": true
         },
         "fates": {
           "label": "CHAR.Fates",

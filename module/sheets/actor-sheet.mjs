@@ -835,16 +835,18 @@ export class tpoActorSheet extends ActorSheet {
   _onResolveToggle(event){
     // event.preventDefault();
     const element = event.currentTarget;
-    if(element.checked){
-      this.actor.data.data.info.resolve.value += 1;
-    } else {
-      this.actor.data.data.info.resolve.value -= 1;
-    }
+    console.log(element.id);
+    this.actor.update({[`data.info.resolve.${element.id}`]: !this.actor.data.data.info.resolve[element.id] })
+    // if(element.checked){
+    //   this.actor.data.data.info.resolve.value += 1;
+    // } else {
+    //   this.actor.data.data.info.resolve.value -= 1;
+    // }
 
-    if(this.actor.data.data.info.resolve.value < 0)
-      this.actor.data.data.info.resolve.value = 0;
+    // if(this.actor.data.data.info.resolve.value < 0)
+    //   this.actor.data.data.info.resolve.value = 0;
 
-    if(this.actor.data.data.info.resolve.value > this.actor.data.data.info.resolve.max)
-      this.actor.data.data.info.resolve.value = this.actor.data.data.info.resolve.max
+    // if(this.actor.data.data.info.resolve.value > this.actor.data.data.info.resolve.max)
+    //   this.actor.data.data.info.resolve.value = this.actor.data.data.info.resolve.max
   }
 }
