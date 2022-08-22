@@ -432,14 +432,13 @@ export class tpoActorSheet extends ActorSheet {
   _onStatRoll(event){
     event.preventDefault();
     const stat = event.currentTarget.getAttribute("data-stat");
-    console.log(stat);
 
     let testData = {
       advantage: 0,
       disadvantage: 0,
       modifier: 0,
       risk: false,
-      difficulty: 0,
+      difficulty: 20,
       hasDamage: false
     }
     
@@ -768,7 +767,10 @@ export class tpoActorSheet extends ActorSheet {
     }
 
     if(name) testData.name = name;
+
     testData.target = skill.data.data.total;
+
+    testData.actorName = canvas.tokens.controlled[0].data.name;
 
     let callback = (html) => {
       testData.advantage = Number(html.find('[name="advantage"]').val());
@@ -833,20 +835,8 @@ export class tpoActorSheet extends ActorSheet {
    * @private
    */
   _onResolveToggle(event){
-    // event.preventDefault();
     const element = event.currentTarget;
     console.log(element.id);
     this.actor.update({[`data.info.resolve.${element.id}`]: !this.actor.data.data.info.resolve[element.id] })
-    // if(element.checked){
-    //   this.actor.data.data.info.resolve.value += 1;
-    // } else {
-    //   this.actor.data.data.info.resolve.value -= 1;
-    // }
-
-    // if(this.actor.data.data.info.resolve.value < 0)
-    //   this.actor.data.data.info.resolve.value = 0;
-
-    // if(this.actor.data.data.info.resolve.value > this.actor.data.data.info.resolve.max)
-    //   this.actor.data.data.info.resolve.value = this.actor.data.data.info.resolve.max
   }
 }

@@ -88,10 +88,10 @@ export class DiceTPO {
     //compare vs target
     let didTestSucceed = selectedRoll <= target;
     // Auto success/failure
-    if(selectedRoll <= 5){
+    if(selectedRoll <= 5 && !didTestSucceed){
       didTestSucceed = true;
       autoSuccess = true;
-    }else if (selectedRoll >= 95){
+    }else if (selectedRoll >= 95 && didTestSucceed){
       didTestSucceed = false;
       autoSuccess = true;
     }
@@ -134,6 +134,7 @@ export class DiceTPO {
 
     //output
     return {
+      actorName: rollData.actorName,
       result: result,
       skill: skill,
       name: rollData.name ? rollData.name : skill.name,
@@ -185,7 +186,7 @@ export class DiceTPO {
     else
      damageString = '';
     let chatContent = `
-      <b>${testData.name}</b><br>
+      <b>${testData.actorName} | ${testData.name}</b><br>
       <h3> ${testData.result} </h3>
       <hr>
       <b>Roll${testData.risk ? ` with Risk` : ''}:</b> ${testData.selectedRoll} vs ${testData.target} <br>
