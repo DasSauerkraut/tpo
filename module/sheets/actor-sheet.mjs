@@ -196,6 +196,8 @@ export class tpoActorSheet extends ActorSheet {
     html.find('.power-draggable').mousedown(this._onPowerOrArmamentEdit.bind(this))
     html.find('.armament-name').mousedown(this._onPowerOrArmamentEdit.bind(this))
 
+    html.find('.action').click(this._onCombatAction.bind(this))
+
     html.find('.upgradeDelete').click(ev => {
       const li = $(ev.currentTarget).parents(".expand-container-nested");
       const item = this.actor.items.get(li.data("itemId"));
@@ -275,6 +277,177 @@ export class tpoActorSheet extends ActorSheet {
       data: item,
       root: ev.currentTarget.getAttribute("root")
     }));
+  }
+
+  _onCombatAction(event) {
+    event.preventDefault();
+    const action = $(event.currentTarget).data("action")
+    let skill;
+    let testData = {
+      advantage: 0,
+      disadvantage: 0,
+      modifier: 0,
+      risk: false,
+      difficulty: 0,
+    };
+
+    let selectedSkill;
+    let skillOptions = [];
+    let callback = (html) => {
+      selectedSkill = html.find('[name="skill"]').val();
+      return selectedSkill;
+    }
+
+    switch (action) {
+      case "defend":
+        if(this.actor.items.getName("Dodge"))
+          skillOptions.push("Dodge")
+        if(this.actor.items.getName("Weapon (Heavy)"))
+          skillOptions.push("Weapon (Heavy)")
+        if(this.actor.items.getName("Weapon (Light)"))
+          skillOptions.push("Weapon (Light)")
+        if(this.actor.items.getName("Weapon (Ranged)"))
+          skillOptions.push("Weapon (Ranged)")
+        if(this.actor.items.getName("Weapon (Mundane)"))
+          skillOptions.push("Weapon (Mundane)")
+        
+        skillOptions.push("Weapon Skill")
+
+        if(1 > this.actor.data.data.derived.ap.value)
+          ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
+        this.actor.update({[`data.derived.ap.value`]: this.actor.data.data.derived.ap.value - 1 })
+
+        renderTemplate('systems/tpo/templates/dialog/combatActionPicker.html', skillOptions).then(dlg => {
+          new Dialog({
+            title: game.i18n.localize("SYS.Defend"),
+            content: dlg,
+            buttons: {
+              rollButton: {
+                label: game.i18n.localize("SYS.Defend"),
+                callback: html => {
+                  callback(html);
+                  skill = this.actor.items.getName(selectedSkill);
+
+                  if(skill === undefined){
+                    skill = {
+                      name: "Weapon Skill",
+                      data: {
+                        data: {
+                          total: this.actor.data.data.stats.ws.value
+                        },
+                      }
+                    }
+                  }
+                  this._performTest(skill, testData, 0, 0, `Defending w/ ${selectedSkill}`);;
+                }
+              },
+            },
+            default: "rollButton"
+          }).render(true);
+        });
+        break;
+      case "disengage":
+        skill = this.actor.items.getName("Dodge");
+
+        if(skill === undefined){
+          skill = {
+            name: "Agility",
+            data: {
+              data: {
+                total: this.actor.data.data.stats.agi.value
+              },
+            }
+          }
+          testData.disadvantage = 1;
+        }
+        if(1 > this.actor.data.data.derived.ap.value)
+          ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
+        this.actor.update({[`data.derived.ap.value`]: this.actor.data.data.derived.ap.value - 1 })
+
+        this._performTest(skill, testData, 0, 0, "Disengaging");
+        break;
+      case "morale":
+        skill = this.actor.items.getName("Cool");
+        testData.difficulty = 20;
+
+        if(skill === undefined){
+          skill = {
+            name: "Willpower",
+            data: {
+              data: {
+                total: this.actor.data.data.stats.will.value
+              },
+            }
+          }
+          testData.disadvantage = 1;
+        }
+        this._performTest(skill, testData, 0, 0, "Morale Test");
+        break;
+      case "grapple":
+        skill = this.actor.items.getName("Grapple");
+
+        if(2 > this.actor.data.data.derived.ap.value)
+          ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
+        this.actor.update({[`data.derived.ap.value`]: this.actor.data.data.derived.ap.value - 2 })
+
+        if(skill === undefined){
+          skill = {
+            name: "Strength",
+            data: {
+              data: {
+                total: this.actor.data.data.stats.str.value
+              },
+            }
+          }
+          testData.disadvantage = 1;
+        }
+        this._performTest(skill, testData, 0, 0, "Grappling");
+        break;
+      case "mounted":
+        selectedSkill;
+        skillOptions = [];
+        if(this.actor.items.getName("Ride (Ceffyl)"))
+          skillOptions.push("Ride (Ceffyl)")
+        if(this.actor.items.getName("Ride (Draft)"))
+          skillOptions.push("Ride (Draft)")
+        if(this.actor.items.getName("Ride (Radacen)"))
+          skillOptions.push("Ride (Radacen)")
+        if(this.actor.items.getName("Animal Handling"))
+          skillOptions.push("Animal Handling")
+        skillOptions.push("Willpower")
+
+        renderTemplate('systems/tpo/templates/dialog/combatActionPicker.html', skillOptions).then(dlg => {
+          new Dialog({
+            title: game.i18n.localize("SYS.MountAction"),
+            content: dlg,
+            buttons: {
+              rollButton: {
+                label: game.i18n.localize("SYS.MountAction"),
+                callback: html => {
+                  callback(html);
+                  skill = this.actor.items.getName(selectedSkill);
+
+                  if(skill === undefined){
+                    skill = {
+                      name: "Weapon Skill",
+                      data: {
+                        data: {
+                          total: this.actor.data.data.stats.ws.value
+                        },
+                      }
+                    }
+                  }
+                  this._performTest(skill, testData, 0, 0, `Defending w/ ${selectedSkill}`);;
+                }
+              },
+            },
+            default: "rollButton"
+          }).render(true);
+        });
+        break;
+      default:
+        break;
+    }
   }
 
   async _onPowerCheck(event){
@@ -408,15 +581,6 @@ export class tpoActorSheet extends ActorSheet {
     const location = container.data("location")
     const chestLoc = duplicate(this.actor.data.data.inventory.chest);
 
-    // console.log(this.actor.data.data.inventory[location]);
-    // for (let item in this.actor.data.data.inventory[location]){
-    //   console.log(item);
-    //   item.data.location = "chest"
-    //   await this.actor.updateEmbeddedDocuments("Item", [item]);
-    //   console.log(item)
-    //   chestLoc.push(item);
-    // }
-
     console.log(chestLoc)
     await this.actor.update({[`data.inventory.chest`]: chestLoc })
     await this.actor.update({[`data.inventory.${location}`]: [] })
@@ -525,38 +689,6 @@ export class tpoActorSheet extends ActorSheet {
 
     // Finally, create the item!
     return await Item.create(itemData, {parent: this.actor});
-  }
-
-  /**
-   * Handle clickable rolls.
-   * @param {Event} event   The originating click event
-   * @private
-   */
-  _onRoll(event) {
-    event.preventDefault();
-    const element = event.currentTarget;
-    const dataset = element.dataset;
-
-    // Handle item rolls.
-    if (dataset.rollType) {
-      if (dataset.rollType == 'item') {
-        const itemId = element.closest('.item').dataset.itemId;
-        const item = this.actor.items.get(itemId);
-        if (item) return item.roll();
-      }
-    }
-
-    // Handle rolls that supply the formula directly.
-    if (dataset.roll) {
-      let label = dataset.label ? `[roll] ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData());
-      roll.toMessage({
-        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: label,
-        rollMode: game.settings.get('core', 'rollMode'),
-      });
-      return roll;
-    }
   }
 
   /**

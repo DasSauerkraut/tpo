@@ -87,6 +87,8 @@
   "SYS.RollOrEdit": "Click to perform a test with this skill. Right click to edit the skill.",
   "SYS.ToggleAutocalc": "Toggle Autocalculation",
   "SYS.PerformTest": "Perform Test",
+  "SYS.Defend": "Defend",
+  "SYS.MountAction": "Mount Action",
   "SYS.PowerUsed": "This Power is still on cooldown. Do you wish to Overload your Armament?",
   "SYS.ExceedsAP": "Using this Power will exceed your remaining AP.",
 

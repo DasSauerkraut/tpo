@@ -1,4 +1,4 @@
-
+import { TPO } from "./config.mjs";
 export class DiceTPO {
   static async rollTest(skill, rollData) {
     //calculate target
@@ -222,5 +222,28 @@ export class UtilsTPO {
     const idx = armament.data.powers.map(pwr => pwr._id).indexOf(power._id);
     armament.data.powers[idx] = power;
     await actor.updateEmbeddedDocuments("Item", [armament]);
+  }
+
+  static formatRatingStatus(statuses){
+    let count = 0;
+    statuses.forEach(s => {
+      count += Number(s.data.label.match(/\d+/)[0])
+    })
+    
+    let description = TPO.statuses.filter(s => {
+      return game.i18n.format(s.label) === statuses[0].data.label;
+    });
+    description = description[0].description.replace(/REPLACE/g, count);
+
+    let label = statuses[0].data.label.replace(/[0-9]/g, count);
+
+    return `
+      <br>
+      <b>${label}</b>
+      <div style="display:flex;">
+        <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${statuses[0].data.icon}" alt="${label}">
+        <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
+      </div>
+    `
   }
 }
