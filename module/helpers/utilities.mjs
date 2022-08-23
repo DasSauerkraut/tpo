@@ -17,8 +17,10 @@ export class DiceTPO {
 
     if(rollData.risk){
       let riskTarget = 50 + advantages * 10;
-      let roll1 = await new Roll("1d100").evaluate()
-      let roll2 = await new Roll("1d100").evaluate()
+      let roll1 = await new Roll("1d100").roll({async: true})
+      await this.showDiceSoNice(roll1);
+      let roll2 = await new Roll("1d100").roll({async: true})
+      await this.showDiceSoNice(roll2);
       dice.push(roll1.total);
       dice.push(roll2.total);
 
@@ -33,11 +35,13 @@ export class DiceTPO {
     } else {
       if(advantages !== 0){
         for(let i = 0; i < Math.abs(advantages) + 1; i++){
-          let roll = await new Roll("1d100").evaluate()
+          let roll = await new Roll("1d100").roll({async: true})
+          await this.showDiceSoNice(roll);
           dice.push(roll.total);
         }
       } else {
-        let roll = await new Roll("1d100").evaluate()
+        let roll = await new Roll("1d100").roll({async: true})
+        await this.showDiceSoNice(roll);
         dice.push(roll.total);
       }
       dice.sort((a, b) => {return a - b});
@@ -198,6 +202,12 @@ export class DiceTPO {
       user: game.user._id,
     };
     ChatMessage.create(chatData, {});
+  }
+
+  static async showDiceSoNice(roll) {
+    if (game.modules.get("dice-so-nice") && game.modules.get("dice-so-nice").active) {
+      await game.dice3d.showForRoll(roll, game.user);
+    }
   }
 }
 

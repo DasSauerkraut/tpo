@@ -5,8 +5,6 @@ Inventory
   Delete Container Logic
   stackable items
 
-Combat Buttons
-Status Effects -> show overview at start of turn
 Injuries
 Add Tooltips to fucking everything lol
 Power Keywords
@@ -15,3 +13,5 @@ Relics
 Mundane Weapons
 
 Fate Checkboxes!
+Encounter reset at end of Combat
+Sleep/Heal button by HP
