@@ -45,6 +45,11 @@ export function prepareActiveEffectCategories(effects) {
         label: "Passive Effects",
         effects: []
       },
+      // injuries: {
+      //   type: "injuries",
+      //   label: "Injuries",
+      //   effects: []
+      // },
       inactive: {
         type: "inactive",
         label: "Inactive Effects",

@@ -46,10 +46,6 @@ export class tpoActorSheet extends ActorSheet {
       this._prepareCharacterData(context);
     }
 
-    // Prepare NPC data and items.
-    // if (actorData.type == 'npc') {
-    //   this._prepareItems(context);
-    // }
 
     // Add roll data for TinyMCE editors.
     context.rollData = context.actor.getRollData();
@@ -69,31 +65,6 @@ export class tpoActorSheet extends ActorSheet {
    */
   _prepareCharacterData(context) {
   }
-
-  /**
-   * Organize and classify Items for Character sheets.
-   *
-   * @param {Object} actorData The actor to prepare.
-   *
-   * @return {undefined}
-   */
-  // _prepareItems(context) {
-  //   // Initialize containers.
-  //   const gear = [];
-  //   const abilities = [];
-
-  //   // Iterate through items, allocating to containers
-  //   for (let i of context.items) {
-  //     i.img = i.img || DEFAULT_TOKEN;
-  //     // Append to gear.
-  //     if (i.type === 'item') {
-  //       gear.push(i);
-  //     }
-  //   }
-
-  //   // Assign and return
-  //   context.gear = gear;
-  //  }
 
   /* -------------------------------------------- */
 

@@ -1,4 +1,5 @@
 import { UtilsTPO } from "../helpers/utilities.mjs";
+import {prepareActiveEffectCategories} from "../helpers/effects.mjs";
 
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
@@ -40,6 +41,8 @@ export class tpoActor extends Actor {
       stat.bonus = Math.floor((stat.value) / 10)
       stat.cost = 4 + Math.floor(stat.improvements / 5) * 2
     });
+
+    //data["effects"] = prepareActiveEffectCategories(actorData.effects);
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.

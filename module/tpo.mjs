@@ -179,6 +179,11 @@ Hooks.on("updateCombat", (combat) => {
     ChatMessage.create(chatData, {});
 })
 
+// Hooks.on("simple-calendar-date-time-change", (data) => {
+//   console.log(data);
+// });
+
+
 /* -------------------------------------------- */
 /*  Hotbar Macros                               */
 /* -------------------------------------------- */
