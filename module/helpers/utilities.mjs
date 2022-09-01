@@ -5,7 +5,11 @@ export class DiceTPO {
     const target = skill.data.data.total + rollData.modifier + rollData.difficulty;
 
     //calculate advantages
-    const advantages = rollData.advantage - rollData.disadvantage;
+    let advantages = rollData.advantage - rollData.disadvantage;
+    if(Math.abs(advantages) > 100){
+      ui.notifications.warn(game.i18n.format('SYS.ExceedsMaxAdvantage'));
+      advantages = 100 * Math.sign(advantages);
+    }
 
     //roll dice
     let dice = [];
@@ -34,27 +38,29 @@ export class DiceTPO {
 
     } else {
       if(advantages !== 0){
-        for(let i = 0; i < Math.abs(advantages) + 1; i++){
-          let roll = await new Roll("1d100").roll({async: true})
-          await this.showDiceSoNice(roll);
-          dice.push(roll.total);
-        }
+        let roll = await new Roll(`${Math.abs(advantages)}d100${advantages > 0 ? 'kl' : 'kh' }`).roll({async: true})
+        console.log(roll)
+        await this.showDiceSoNice(roll);
+        roll.terms[0].results.forEach(die => {
+          dice.push(die.result)
+        })
       } else {
         let roll = await new Roll("1d100").roll({async: true})
         await this.showDiceSoNice(roll);
-        dice.push(roll.total);
+        dice.push(roll.terms[0].results[0].result);
       }
       dice.sort((a, b) => {return a - b});
 
-      if(advantages > 0) {
-        //Advantage
-        let selectedCrit = 2000;
-        let crits = [];
+      let selectedCrit = 2000;
+      let crits = [];
         dice.forEach(roll => {
           if(roll % 11 === 0) {
             crits.push(roll);
           }
         })
+
+      if(advantages > 0) {
+        //Advantage
         if(crits.length !== 0){
           selectedCrit = Math.min(...crits);
         }
@@ -66,13 +72,6 @@ export class DiceTPO {
           selectedRoll = Math.min(...dice);
       } else if (advantages < 0) {
         //Disadvantage
-        let selectedCrit = -2000;
-        let crits = [];
-        dice.forEach(roll => {
-          if(roll % 11 === 0) {
-            crits.push(roll);
-          }
-        })
         if(crits.length !== 0){
           selectedCrit = Math.max(...crits);
         }
@@ -206,7 +205,7 @@ export class DiceTPO {
 
   static async showDiceSoNice(roll) {
     if (game.modules.get("dice-so-nice") && game.modules.get("dice-so-nice").active) {
-      await game.dice3d.showForRoll(roll, game.user);
+      await game.dice3d.showForRoll(roll, game.user, true);
     }
   }
 }

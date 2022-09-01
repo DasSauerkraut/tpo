@@ -124,8 +124,8 @@ export class tpoActorSheet extends ActorSheet {
     // Active Effect management
     html.find(".effect-control").click(ev => onManageActiveEffect(ev, this.actor));
 
-    html.find('.stat-header').mousedown(this._onStatImprove.bind(this))
-    html.find('.stat-total').click(this._onStatRoll.bind(this))
+    html.find('.stat-header').click(this._onStatRoll.bind(this))
+    html.find('.stat-total').mousedown(this._onStatImprove.bind(this))
 
     html.find('.resolve').click(this._onResolveToggle.bind(this));
 
@@ -873,7 +873,10 @@ export class tpoActorSheet extends ActorSheet {
 
     testData.target = skill.data.data.total;
 
-    testData.actorName = canvas.tokens.controlled[0].data.name;
+    if(canvas.tokens.controlled.length > 0)
+      testData.actorName = canvas.tokens.controlled[0].data.name;
+    else
+      testData.actorName = game.user.name;
 
     let callback = (html) => {
       testData.advantage = Number(html.find('[name="advantage"]').val());

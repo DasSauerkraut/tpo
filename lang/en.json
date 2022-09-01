@@ -91,6 +91,7 @@
   "SYS.MountAction": "Mount Action",
   "SYS.PowerUsed": "This Power is still on cooldown. Do you wish to Overload your Armament?",
   "SYS.ExceedsAP": "Using this Power will exceed your remaining AP.",
+  "SYS.ExceedsMaxAdvantage": "TPO | Advantage/Disadvantage cannot exceed 100",
 
   "ROLL.Marginal": "Marginal",
   "ROLL.Impressive": "Impressive",

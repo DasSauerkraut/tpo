@@ -75,22 +75,10 @@
   font-family: "EBGaramond";
 }
 
-.grid-9col .stat-container .stat-header .stat-improvement {
-  padding: 1px;
-  padding-left: 4px;
-  font-weight: bold;
-  color: var(--color-underline-active);
-  display: none;
-}
-
 .grid-9col .stat-container .stat-header:hover {
   text-shadow: 0 0 10px red;
   cursor: pointer;
   color: var(--color-underline-active);
-}
-
-.grid-9col .stat-container .stat-header:hover .stat-improvement {
-  display: contents;
 }
 
 .grid-9col .stat-container .stat-header-row {
@@ -113,6 +101,24 @@
   border: 1px solid var(--color-border-light-tertiary);
   font-size: 18px;
   color: var(--color-underline-active);
+}
+
+.grid-9col .stat-container .stat-total .stat-improvement {
+  padding: 1px;
+  padding-left: 4px;
+  font-weight: bold;
+  color: var(--color-underline-active);
+  display: none;
+}
+
+.grid-9col .stat-container .stat-total:hover {
+  text-shadow: 0 0 10px red;
+  cursor: pointer;
+  color: var(--color-underline-active);
+}
+
+.grid-9col .stat-container .stat-total:hover .stat-improvement {
+  display: contents;
 }
 
 .grid-10col {
