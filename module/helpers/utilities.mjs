@@ -38,7 +38,7 @@ export class DiceTPO {
 
     } else {
       if(advantages !== 0){
-        let roll = await new Roll(`${Math.abs(advantages)}d100${advantages > 0 ? 'kl' : 'kh' }`).roll({async: true})
+        let roll = await new Roll(`${Math.abs(advantages)+1}d100${advantages > 0 ? 'kl' : 'kh' }`).roll({async: true})
         console.log(roll)
         await this.showDiceSoNice(roll);
         roll.terms[0].results.forEach(die => {
@@ -51,7 +51,7 @@ export class DiceTPO {
       }
       dice.sort((a, b) => {return a - b});
 
-      let selectedCrit = 2000;
+      let selectedCrit = null;
       let crits = [];
         dice.forEach(roll => {
           if(roll % 11 === 0) {
@@ -64,7 +64,7 @@ export class DiceTPO {
         if(crits.length !== 0){
           selectedCrit = Math.min(...crits);
         }
-        if(selectedCrit <= target) {
+        if(selectedCrit && selectedCrit <= target) {
           selectedRoll = selectedCrit;
           didCrit = true;
         }
@@ -75,7 +75,7 @@ export class DiceTPO {
         if(crits.length !== 0){
           selectedCrit = Math.max(...crits);
         }
-        if(selectedCrit > target) {
+        if(selectedCrit && selectedCrit > target) {
           selectedRoll = selectedCrit;
           didCrit = true;
         }
