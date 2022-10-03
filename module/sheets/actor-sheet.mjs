@@ -250,7 +250,7 @@ export class tpoActorSheet extends ActorSheet {
     }));
   }
 
-  _onCombatAction(event) {
+  async _onCombatAction(event) {
     event.preventDefault();
     const action = $(event.currentTarget).data("action")
     let skill;
@@ -341,6 +341,11 @@ export class tpoActorSheet extends ActorSheet {
         skill = this.actor.items.getName("Cool");
         testData.difficulty = 20;
 
+        if((this.actor.data.data.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
+        (this.actor.data.data.derived.hp.value <= this.actor.data.data.derived.bloodied.value)){
+          testData.disadvantage += 1;
+        }
+
         if(skill === undefined){
           skill = {
             name: "Willpower",
@@ -350,7 +355,7 @@ export class tpoActorSheet extends ActorSheet {
               },
             }
           }
-          testData.disadvantage = 1;
+          testData.disadvantage += 1;
         }
         this._performTest(skill, testData, 0, 0, "Morale Test");
         break;
@@ -724,8 +729,6 @@ export class tpoActorSheet extends ActorSheet {
 
     let itemId = event.target.attributes["data-item-id"].value;
     let itemToEdit = duplicate(this.actor.items.get(itemId));
-    console.log(itemToEdit)
-    console.log(event.target.classList)
     
     if($(event.target).hasClass("abilities-imp"))
       itemToEdit.data.improvements = Number(event.target.value);
@@ -873,6 +876,20 @@ export class tpoActorSheet extends ActorSheet {
 
     testData.target = skill.data.data.total;
 
+    //Narvid Racial Bonus
+    if((this.actor.data.data.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
+    (skill.data.data.stat === 'ws' || skill.data.data.stat === 'agi' || skill.data.data.stat === 'will') &&
+    (this.actor.data.data.derived.hp.value > this.actor.data.data.derived.bloodied.value)){
+      testData.modifier += 10;
+    }
+
+    //Raivo Racial Bonus
+    if((this.actor.data.data.details.species.value === game.i18n.format("SPECIES.Raivoaa")) && 
+    (skill.data.data.stat === 'ws' || skill.data.data.stat === 'agi' || skill.data.data.stat === 'will') &&
+    (this.actor.data.data.derived.hp.value <= this.actor.data.data.derived.bloodied.value)){
+      testData.advantage += 1;
+    }
+
     if(canvas.tokens.controlled.length > 0)
       testData.actorName = canvas.tokens.controlled[0].data.name;
     else
@@ -889,6 +906,7 @@ export class tpoActorSheet extends ActorSheet {
       return testData;
     }
 
+    let completedRoll = {}
     renderTemplate('systems/tpo/templates/dialog/rollTest.html', testData).then(dlg => {
       new Dialog({
         title: game.i18n.localize("SYS.PerformTest"),
@@ -898,7 +916,7 @@ export class tpoActorSheet extends ActorSheet {
             label: game.i18n.localize("SYS.PerformTest"),
             callback: html => {
               callback(html);
-              DiceTPO.rollTest(skill, testData).then(result => {DiceTPO.outputTest(result)});
+              DiceTPO.rollTest(skill, testData).then(result => {return DiceTPO.outputTest(result);});
             }
           },
         },
