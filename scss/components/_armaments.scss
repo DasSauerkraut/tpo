@@ -10,6 +10,10 @@
     box-shadow: 0 0 5px 0px var(--color-shadow-primary);
   }
 }
+.combat-container{
+  overflow-y: auto;
+  height: 450px;
+}
 
 .armament-container{
   .armament-name{

@@ -898,6 +898,11 @@
   box-shadow: 0 0 5px 0px var(--color-shadow-primary);
 }
 
+.tpo .combat-container {
+  overflow-y: auto;
+  height: 450px;
+}
+
 .tpo .armament-container .armament-name {
   font-weight: bold;
   display: -webkit-box;
@@ -1290,10 +1295,6 @@
   margin-top: -8px;
 }
 
-.tpo .inventory-section {
-  color: black;
-}
-
 .tpo .inventory-section h2 {
   text-align: center;
 }
@@ -1377,6 +1378,12 @@
 .tpo .inventory-section ul {
   list-style: none;
   padding: 0px;
+}
+
+.tpo .inventory-list {
+  overflow-x: clip;
+  overflow-y: auto;
+  max-height: 200px;
 }
 
 .tpo .inventory-header {

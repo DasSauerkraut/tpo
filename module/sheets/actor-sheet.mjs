@@ -14,7 +14,8 @@ export class tpoActorSheet extends ActorSheet {
       template: "systems/tpo/templates/actor/actor-sheet.html",
       width: 650,
       height: 710,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }]
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }],
+      scrollY: [".window-content", ".skill-container", ".combat-container", "inventory-list"]
     });
   }
 
@@ -979,7 +980,7 @@ export class tpoActorSheet extends ActorSheet {
       expand.style.maxHeight = null;
       expand.style.minHeight = null;
     } else {
-      expand.style.maxHeight = "240px";
+      expand.style.maxHeight = expand.scrollHeight + "px";
       expand.style.minHeight = "15px";
     }
   }

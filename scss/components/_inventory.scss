@@ -1,5 +1,4 @@
 .inventory-section{
-  color: black;
   h2 {
     text-align: center;
     .containerDelete {
@@ -57,6 +56,12 @@
     list-style: none;
     padding: 0px;
   }
+}
+
+.inventory-list{
+  overflow-x: clip;
+  overflow-y: auto;
+  max-height: 200px;
 }
 
 .inventory-header{
