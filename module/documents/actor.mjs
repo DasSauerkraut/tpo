@@ -98,7 +98,7 @@ export class tpoActor extends Actor {
     //Enc Bonus
     data.derived.encumbrance.locations.chest.max = data.stats.str.bonus + 1;
     //Money
-    data.derived.encumbrance.money.total = data.derived.encumbrance.money.l + data.derived.encumbrance.money.s/20 + data.derived.encumbrance.money.c/200
+    data.derived.encumbrance.money.total = (data.derived.encumbrance.money.l + data.derived.encumbrance.money.s/20 + data.derived.encumbrance.money.c/200).toFixed(2)
     //Splendor
     data.info.splendor.cap = data.stats.cha.bonus*2;
     if(data.info.splendor.items > data.info.splendor.cap)

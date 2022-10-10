@@ -53,11 +53,27 @@ export class DiceTPO {
 
       let selectedCrit = null;
       let crits = [];
-        dice.forEach(roll => {
-          if(roll % 11 === 0) {
-            crits.push(roll);
-          }
-        })
+      let hasCritEyeOne = false;
+      let hasCritEyeTwo = false;
+      if(rollData.actor.items.getName("Critical Eye")){
+        const level = rollData.actor.items.getName("Critical Eye").data.data.level;
+        if(level > 1)
+          hasCritEyeTwo = true;
+        else if(level > 0)
+         hasCritEyeOne = true;
+      }
+      dice.forEach(roll => {
+        if(roll % 11 === 0) {
+          crits.push(roll);
+          didCrit = true;
+        } else if(hasCritEyeOne && roll % 5 === 0) {
+          crits.push(roll);
+          didCrit = true;
+        } else if(hasCritEyeTwo && roll % 10 === 0) {
+          crits.push(roll);
+          didCrit = true;
+        }
+      })
 
       if(advantages > 0) {
         //Advantage
@@ -66,7 +82,6 @@ export class DiceTPO {
         }
         if(selectedCrit && selectedCrit <= target) {
           selectedRoll = selectedCrit;
-          didCrit = true;
         }
         else
           selectedRoll = Math.min(...dice);
@@ -77,7 +92,6 @@ export class DiceTPO {
         }
         if(selectedCrit && selectedCrit > target) {
           selectedRoll = selectedCrit;
-          didCrit = true;
         }
         else
           selectedRoll = Math.max(...dice);

@@ -66,7 +66,7 @@
               </div>
             </div>
             {{/each}}
-            {{#if armament.data.capacity.hasMisc}}
+            {{#greaterThan armament.data.capacity.currentMisc 0}}
               <div class="container-header">Misc. Powers ({{armament.data.capacity.currentMisc}}/{{armament.data.capacity.misc}})</div>
               {{#each armament.data.miscPowers as |power id|}}
               <div class="power expand-container-nested power-draggable" data-item-id="{{power._id}}">
@@ -83,7 +83,7 @@
                 </div>
               </div>
               {{/each}}
-            {{/if}}
+            {{/greaterThan}}
             <div class="container-header">Upgrades</div>
               {{#each armament.data.upgrades as |power id|}}
               <div class="power expand-container-nested power-draggable" data-item-id="{{power._id}}">
@@ -135,10 +135,10 @@
       </div>
     </ol>
   </div>
-  <div>
+  <!-- <div>
     <h2>Relics</h2>
   </div>
   <div>
     <h2>Mundane Weapons</h2>
-  </div>
+  </div> -->
 </div>

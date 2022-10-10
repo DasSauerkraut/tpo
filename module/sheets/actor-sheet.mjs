@@ -915,7 +915,8 @@ export class tpoActorSheet extends ActorSheet {
         risk: false,
         difficulty: 20,
         damage: 0,
-        name: null
+        name: null,
+        actor: this.actor
       }
     }
 
@@ -937,10 +938,7 @@ export class tpoActorSheet extends ActorSheet {
       testData.advantage += 1;
     }
 
-    if(canvas.tokens.controlled.length > 0)
-      testData.actorName = canvas.tokens.controlled[0].data.name;
-    else
-      testData.actorName = game.user.name;
+    testData.actorName = this.actor.name;
 
     let callback = (html) => {
       testData.advantage = Number(html.find('[name="advantage"]').val());
