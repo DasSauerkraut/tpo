@@ -137,6 +137,8 @@ export class tpoActorSheet extends ActorSheet {
       this.actor.update({[`data.autocalc.hp`]: !this.actor.data.data.autocalc.hp })
     })
 
+    html.find('#hp-heal').click(this._onRest.bind(this));
+
     html.find('#ap-max').click(event => {
       event.preventDefault();
       this.actor.update({[`data.autocalc.ap`]: !this.actor.data.data.autocalc.ap })
@@ -248,6 +250,51 @@ export class tpoActorSheet extends ActorSheet {
       data: item,
       root: ev.currentTarget.getAttribute("root")
     }));
+  }
+
+  _onRest(event){
+    let skill;
+    let testData = {
+      advantage: 0,
+      disadvantage: 0,
+      modifier: 0,
+      risk: false,
+      difficulty: 0,
+    };
+
+    let selectedHeal;
+    let healOptions = ["No Supplies", "Poor Supplies", "Common Supplies", "Fine Supplies", "Safe Location"]
+    let callback = (html) => {
+      selectedHeal = html.find('[name="heal"]').val();
+    }
+    renderTemplate('systems/tpo/templates/dialog/combatActionPicker.html', healOptions).then(dlg => {
+      new Dialog({
+        title: game.i18n.localize("SYS.Rest"),
+        content: dlg,
+        buttons: {
+          rollButton: {
+            label: game.i18n.localize("SYS.Rest"),
+            callback: html => {
+              callback(html);
+              skill = this.actor.items.getName(selectedHeal);
+
+              if(skill === undefined){
+                skill = {
+                  name: "Weapon Skill",
+                  data: {
+                    data: {
+                      total: this.actor.data.data.stats.ws.value
+                    },
+                  }
+                }
+              }
+              this._performTest(skill, testData, 0, 0, `Defending w/ ${selectedSkill}`);;
+            }
+          },
+        },
+        default: "rollButton"
+      }).render(true);
+    });
   }
 
   async _onCombatAction(event) {

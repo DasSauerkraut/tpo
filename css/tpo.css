@@ -239,6 +239,7 @@
   -ms-flex-align: center;
   align-items: center;
   text-align: center;
+  position: relative;
 }
 
 .flex-group-left {
@@ -616,6 +617,14 @@
 }
 
 .tpo .resource-label {
+  font-size: 12px;
+  position: relative;
+}
+
+.tpo .resource-label .rest {
+  position: absolute;
+  right: 5px;
+  color: var(--color-text-dark-secondary);
   font-size: 12px;
 }
 

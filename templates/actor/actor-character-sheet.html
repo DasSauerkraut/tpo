@@ -52,7 +52,10 @@
             </div>
             {{/if}}
           </div>
-          <label for="data.derived.hp.value" class="resource-label">{{data.derived.hp.abrev}}</label>
+          <label for="data.derived.hp.value" class="resource-label">
+            {{data.derived.hp.abrev}}
+            <a title="{{localize 'SYS.Rest'}}" id="hp-heal" class="rest"><i class="fas fa-procedures"></i></a>
+          </label>
         </div>
 
         <div class="resource flex-group-center" title="{{localize 'TIP.AP'}}">
@@ -72,7 +75,6 @@
 
         <div class="resource flex-group-center" title="{{localize 'TIP.Resolve'}}">
           <div class="resource-content flexrow flex-center flex-between">
-            <!-- <input type="text" name="data.info.resolve.value" value="{{data.info.resolve.value}}" data-dtype="Number"/> -->
             {{#if data.info.resolve.resolve1}}
               <input class="resolve" id="resolve1" type="checkbox" checked data-dtype="Boolean"/>
             {{else}}
@@ -215,7 +217,7 @@
             {{/select}}
           </select>
         </div>
-        <label for="data.derived.hp.value" class="resource-label">Elemental Resistances</label>
+        <label for="data.details.elementalResistances.dragon" class="resource-label">Elemental Resistances</label>
       </div>
     </div>
   </header>
