@@ -63,7 +63,7 @@
                     <span class="cost"><i title="Use Power" class="fas fa-dice-d20 powerRoll rollable"></i> {{power.data.apCost}} AP</span>
                     <span class="target">Target {{power.data.target}} <i title="Delete Power" class="fas fa-trash powerDelete rollable"></i></span>
                   </div>
-                  <div class="description">{{{power.data.description}}}</div>
+                  <div class="description">{{{power.data.descriptionDisplay}}}</div>
                 </div>
               </div>
               {{/each}}
@@ -80,7 +80,7 @@
                       <span class="cost"><i title="Use Power" class="fas fa-dice-d20 powerRoll rollable"></i> {{power.data.apCost}} AP</span>
                       <span class="target">Target {{power.data.target}} <i title="Delete Power" class="fas fa-trash powerDelete rollable"></i></span>
                     </div>
-                    <div class="description">{{{power.data.description}}}</div>
+                    <div class="description">{{{power.data.descriptionDisplay}}}</div>
                   </div>
                 </div>
                 {{/each}}
@@ -93,7 +93,7 @@
                     <i title="Delete Upgrade" class="fas fa-trash upgradeDelete rollable"></i>
                   </div>
                   <div class="expandable">
-                    <div class="description">{{{power.data.description}}}</div>
+                    <div class="description">{{{power.data.descriptionDisplay}}}</div>
                   </div>
                 </div>
                 {{/each}}
@@ -129,7 +129,7 @@
                 <span class="cost">{{power.data.apCost}} AP</span>
                 <span class="target">Target {{power.data.target}} </span>
               </div>
-              <div class="description">{{{power.data.description}}}</div>
+              <div class="description">{{{power.data.descriptionDisplay}}}</div>
             </div>
           </li>
         {{/each}}

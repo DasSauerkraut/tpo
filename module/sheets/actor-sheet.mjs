@@ -27,7 +27,7 @@ export class tpoActorSheet extends ActorSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  getData() {
+  async getData() {
     // Retrieve the data structure from the base sheet. You can inspect or log
     // the context variable to see the structure, but some key properties for
     // sheets are the actor object, the data object, whether or not it's
@@ -47,9 +47,9 @@ export class tpoActorSheet extends ActorSheet {
       this._prepareCharacterData(context);
     }
 
-
     // Add roll data for TinyMCE editors.
     context.rollData = context.actor.getRollData();
+    console.log(context.rollData)
 
     // Prepare active effects
     context.effects = prepareActiveEffectCategories(this.actor.effects);
@@ -65,6 +65,7 @@ export class tpoActorSheet extends ActorSheet {
    * @return {undefined}
    */
   _prepareCharacterData(context) {
+
   }
 
   /* -------------------------------------------- */
