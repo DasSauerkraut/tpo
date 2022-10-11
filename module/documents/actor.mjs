@@ -165,6 +165,7 @@ export class tpoActor extends Actor {
     actorData.data.derived.encumbrance.locations.rPouch.owned = false;
 
     actorData.items.forEach( i => {
+      this.prepareRollDataItem(i, actorData.data)
       if(i.data.data.splendor){
         actorData.data.info.splendor.items += i.data.data.splendor;
       }
@@ -285,6 +286,43 @@ export class tpoActor extends Actor {
     actorData.data.activeAbilities = activeAbilities;
     actorData.data.inactiveAbilities = inactiveAbilities;
     actorData.data.inventory = inventory;
+  }
+
+  prepareRollDataItem(item, actorData){
+    if (actorData.stats.ws) {
+      item.data.data.ws = actorData.stats.ws.initial + actorData.stats.ws.improvements + actorData.stats.ws.modifier ?? 0;
+      item.data.data.wsb = actorData.stats.ws.bonus ?? 0;
+    }
+    if (actorData.stats.str) {
+      item.data.data.str = actorData.stats.str.initial + actorData.stats.str.improvements + actorData.stats.str.modifier ?? 0;
+      item.data.data.strb = actorData.stats.str.bonus ?? 0;
+    }
+    if (actorData.stats.con) {
+      item.data.data.con = actorData.stats.con.initial + actorData.stats.con.improvements + actorData.stats.con.modifier ?? 0;
+      item.data.data.conb = actorData.stats.con.bonus ?? 0;
+    }
+    if (actorData.stats.agi) {
+      item.data.data.agi = actorData.stats.agi.initial + actorData.stats.agi.improvements + actorData.stats.agi.modifier ?? 0;
+      item.data.data.agib = actorData.stats.agi.bonus ?? 0;
+    }
+    if (actorData.stats.dex) {
+      item.data.data.dex = actorData.stats.dex.initial + actorData.stats.dex.improvements + actorData.stats.dex.modifier ?? 0;
+      item.data.data.dexb = actorData.stats.dex.bonus ?? 0;
+    }
+    if (actorData.stats.int) {
+      item.data.data.int = actorData.stats.int.initial + actorData.stats.int.improvements + actorData.stats.int.modifier ?? 0;
+      item.data.data.intb = actorData.stats.int.bonus ?? 0;
+    }
+    if (actorData.stats.will) {
+      item.data.data.will = actorData.stats.will.initial + actorData.stats.will.improvements + actorData.stats.will.modifier ?? 0;
+      item.data.data.willb = actorData.stats.will.bonus ?? 0;
+    }
+    if (actorData.stats.cha) {
+      item.data.data.cha = actorData.stats.cha.initial + actorData.stats.cha.improvements + actorData.stats.cha.modifier ?? 0;
+      item.data.data.chab = actorData.stats.cha.bonus ?? 0;
+    }
+
+    console.log(item)
   }
 
   prepareSkill(skill, actorData) {

@@ -10,6 +10,7 @@ export class tpoItem extends Item {
     // As with the actor class, items are documents that can have their data
     // preparation methods overridden (such as prepareBaseData()).
     super.prepareData();
+    this.data.data.description = TextEditor.enrichHTML(this.data.data.description);
     if(this.data.type === "armament"){
       this.data.data.damage.value = this.data.data.damage.base + this.data.data.damage.upgrades;
       this.data.data.elementDamage.value = this.data.data.elementDamage.base + this.data.data.elementDamage.upgrades;
