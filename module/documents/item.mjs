@@ -32,31 +32,37 @@ export class tpoItem extends Item {
   formatDescription(description){
     if(!this.actor || !this.actor.data || !description)
       return;
-    console.log(this.actor.data.data)
     //ws
-    description = description.replace("((@ws))", `<span title="WS">${this.actor.getStatData("ws")}</span>`)
-    description = description.replace("((@wsb))", `<span title="WSB">${this.actor.getStatData("ws", true)}</span>`)
+    description = description.replaceAll("((@ws))", this.actor.getStatData("ws"))
+    description = description.replaceAll("((@wsb))", this.actor.getStatData("ws", true))
     //str
-    description = description.replace("((@str))", `<span title="Str">${this.actor.getStatData("str")}</span>`)
-    description = description.replace("((@strb))", `<span title="StrB">${this.actor.getStatData("str", true)}</span>`)
+    description = description.replaceAll("((@str))", this.actor.getStatData("str"))
+    description = description.replaceAll("((@strb))", this.actor.getStatData("str", true))
     //con
-    description = description.replace("((@con))", `<span title="Con">${this.actor.getStatData("con")}</span>`)
-    description = description.replace("((@conb))", `<span title="ConB">${this.actor.getStatData("con", true)}</span>`)
+    description = description.replaceAll("((@con))", this.actor.getStatData("con"))
+    description = description.replaceAll("((@conb))", this.actor.getStatData("con", true))
     //agi
-    description = description.replace("((@agi))", `<span title="Agi">${this.actor.getStatData("agi")}</span>`)
-    description = description.replace("((@agib))", `<span title="AgiB">${this.actor.getStatData("agi", true)}</span>`)
+    description = description.replaceAll("((@agi))", this.actor.getStatData("agi"))
+    description = description.replaceAll("((@agib))", this.actor.getStatData("agi", true))
     //dex
-    description = description.replace("((@dex))", `<span title="Dex">${this.actor.getStatData("dex")}</span>`)
-    description = description.replace("((@dexb))", `<span title="DexB">${this.actor.getStatData("dex", true)}</span>`)
+    description = description.replaceAll("((@dex))", this.actor.getStatData("dex"))
+    description = description.replaceAll("((@dexb))", this.actor.getStatData("dex", true))
     //int
-    description = description.replace("((@int))", `<span title="Int">${this.actor.getStatData("int")}</span>`)
-    description = description.replace("((@intb))", `<span title="IntB">${this.actor.getStatData("int", true)}</span>`)
+    description = description.replaceAll("((@int))", this.actor.getStatData("int"))
+    description = description.replaceAll("((@intb))", this.actor.getStatData("int", true))
     //will
-    description = description.replace("((@will))", `<span title="Will">${this.actor.getStatData("will")}</span>`)
-    description = description.replace("((@willb))", `<span title="WillB">${this.actor.getStatData("will", true)}</span>`)
+    description = description.replaceAll("((@will))", this.actor.getStatData("will"))
+    description = description.replaceAll("((@willb))", this.actor.getStatData("will", true))
     //cha
-    description = description.replace("((@cha))", `<span title="Cha">${this.actor.getStatData("cha")}</span>`)
-    description = description.replace("((@chab))", `<span title="ChaB">${this.actor.getStatData("cha", true)}</span>`)
+    description = description.replaceAll("((@cha))", this.actor.getStatData("cha"))
+    description = description.replaceAll("((@chab))", this.actor.getStatData("cha", true))
+
+    const regexp = /\(\(\#(.*?)\)\)/g;
+    const mathMatches = [...description.matchAll(regexp)];
+    mathMatches.forEach(match => {
+      description = description.replace(match[0], window.math.evaluate(match[1]))
+    })
+    
     return description;
   }
 
