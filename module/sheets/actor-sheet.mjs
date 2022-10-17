@@ -917,10 +917,11 @@ export class tpoActorSheet extends ActorSheet {
         risk: false,
         difficulty: 20,
         damage: 0,
-        name: null,
-        actor: this.actor
+        name: null
       }
     }
+
+    testData.actor = this.actor
 
     if(name) testData.name = name;
 

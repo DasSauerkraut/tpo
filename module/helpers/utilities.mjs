@@ -55,7 +55,7 @@ export class DiceTPO {
       let crits = [];
       let hasCritEyeOne = false;
       let hasCritEyeTwo = false;
-      if(rollData.actor.items.getName("Critical Eye")){
+      if(rollData.actor && rollData.actor.items.getName("Critical Eye")){
         const level = rollData.actor.items.getName("Critical Eye").data.data.level;
         if(level > 1)
           hasCritEyeTwo = true;
