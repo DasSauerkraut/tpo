@@ -70,10 +70,10 @@ export class tpoItem extends Item {
    * Prepare a data object which is passed to any Roll formulas which are created related to this Item
    * @private
    */
-   async getRollData() {
+   getRollData() {
     // If present, return the actor's roll data.
     if ( !this.actor ) return null;
-    const rollData = await this.actor.getRollData();
+    const rollData = this.actor.getRollData();
     rollData.item = foundry.utils.deepClone(this.data.data);
 
     console.log(rollData)

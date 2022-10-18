@@ -27,7 +27,7 @@ export class tpoActorSheet extends ActorSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  async getData() {
+  getData() {
     // Retrieve the data structure from the base sheet. You can inspect or log
     // the context variable to see the structure, but some key properties for
     // sheets are the actor object, the data object, whether or not it's

@@ -308,7 +308,7 @@ export class tpoActor extends Actor {
   /**
    * Override getRollData() that's supplied to rolls.
    */
-  async getRollData() {
+  getRollData() {
     const data = super.getRollData();
 
     // Prepare character roll data.
