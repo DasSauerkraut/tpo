@@ -13,26 +13,32 @@
       <input type="text" name="modifier" value="{{modifier}}" data-dtype="Number"/>
     </div>
     <div>
-      {{#if hasDamage}}
-      <div>
-        <span>Damage</span>
-        <input type="text" name="damage" value="{{damage}}" data-dtype="Number"/>
-      </div>
-      <div>
-        <span>Elemental Damage</span>
-        <input type="text" name="elementDamage" value="{{elementDamage}}" data-dtype="Number"/>
-      </div>
+      <span>Risk</span>
+      {{#if risk}}
+        <input name="risk" type="checkbox" checked/>
+      {{else}}
+        <input name="risk" type="checkbox"/>
       {{/if}}
-      <div>
-        <span>Risk</span>
-        {{#if risk}}
-          <input name="risk" type="checkbox" checked/>
-        {{else}}
-          <input name="risk" type="checkbox"/>
-        {{/if}}
-      </div>
-      <span>Target {{target}}</span>
     </div>
+    {{#if hasDamage}}
+    <div>
+      <span>Damage</span>
+      <input type="text" name="damage" value="{{damage}}" data-dtype="Number"/>
+    </div>
+    <div>
+      <span>Elemental Damage</span>
+      <input type="text" name="elementDamage" value="{{elementDamage}}" data-dtype="Number"/>
+    </div>
+    <div>
+      <span>Weak Damage</span>
+      {{#if weakDamage}}
+        <input name="weak-damage" type="checkbox" checked/>
+      {{else}}
+        <input name="weak-damage" type="checkbox"/>
+      {{/if}}
+    </div>
+    {{/if}}
+    <span>Target {{target}}</span>
   </div>
   <div>
     <span>Difficulty</span>

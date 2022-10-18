@@ -68,6 +68,8 @@ export class tpoItemSheet extends ItemSheet {
     html.find('#ice').click(event => {this._onElementToggle(event, "ice")});
     html.find('#water').click(event => {this._onElementToggle(event, "water")});
 
+    html.find('#weak-toggle').click(event => {this._onWeakToggle(event)});
+
     $("input[type=text]").focusin(function() {
       $(this).select();
     });
@@ -79,6 +81,10 @@ export class tpoItemSheet extends ItemSheet {
 
   _onGroupedToggle(event){
     this.object.update({[`data.grouped`]: !this.object.data.data.grouped })
+  }
+
+  _onWeakToggle(event){
+    this.object.update({[`data.isWeak`]: !this.object.data.data.isWeak })
   }
 
   async _onElementToggle(event, element){

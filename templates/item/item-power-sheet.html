@@ -21,6 +21,14 @@
           <label class="resource-label">Elemental Damage</label>
         </div>
         <div class="resource">
+          Weak Damage: 
+          {{#if data.isWeak}}
+            <input id="weak-toggle" type="checkbox" checked data-dtype="Boolean"/>
+          {{else}}
+            <input id="weak-toggle" type="checkbox"  data-dtype="Boolean"/>
+          {{/if}}
+        </div>
+        <div class="resource">
           <select name="data.armamentType" type="text" value="{{data.armamentType}}">
             {{#select data.armamentType}}
               <option value="{{localize 'ARM.GS'}}">{{localize 'ARM.GS'}}</option>

@@ -669,10 +669,13 @@ export class tpoActorSheet extends ActorSheet {
       risk: false,
       difficulty: 0,
       hasDamage: true,
+      weakDamage: power.data.isWeak,
       damage: power.data.damageMod,
       element: armament.data.selectedElement.display,
       elementDamage: power.data.elementDamageMod
     }
+
+    console.log(testData.weakDamage)
 
     if(skill === undefined){
       skill = {
@@ -683,7 +686,6 @@ export class tpoActorSheet extends ActorSheet {
           },
         }
       }
-      testData.disadvantage = 1;
     }
 
     this._performTest(skill, testData, armament.data.damage.value, armament.data.elementDamage.value, power.name);
@@ -915,6 +917,7 @@ export class tpoActorSheet extends ActorSheet {
         disadvantage: 0,
         modifier: 0,
         risk: false,
+        weakDamage: false,
         difficulty: 20,
         damage: 0,
         name: null
@@ -930,14 +933,16 @@ export class tpoActorSheet extends ActorSheet {
     //Narvid Racial Bonus
     if((this.actor.data.data.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
     (skill.data.data.stat === 'ws' || skill.data.data.stat === 'agi' || skill.data.data.stat === 'will') &&
-    (this.actor.data.data.derived.hp.value > this.actor.data.data.derived.bloodied.value)){
+    (this.actor.data.data.derived.hp.value > this.actor.data.data.derived.bloodied.value) &&
+    this.actor.token.combatant){
       testData.modifier += 10;
     }
 
     //Raivo Racial Bonus
     if((this.actor.data.data.details.species.value === game.i18n.format("SPECIES.Raivoaa")) && 
     (skill.data.data.stat === 'ws' || skill.data.data.stat === 'agi' || skill.data.data.stat === 'will') &&
-    (this.actor.data.data.derived.hp.value <= this.actor.data.data.derived.bloodied.value)){
+    (this.actor.data.data.derived.hp.value <= this.actor.data.data.derived.bloodied.value) &&
+    this.actor.token.combatant){
       testData.advantage += 1;
     }
 
@@ -950,6 +955,7 @@ export class tpoActorSheet extends ActorSheet {
       testData.risk = html.find('[name="risk"]').is(':checked');
       testData.difficulty = Number(html.find('[name="difficulty"]').val());
       testData.damage = Number(html.find('[name="damage"]').val()) + this.actor.data.data.stats.str.bonus + armamentDmg;
+      testData.weakDamage = html.find('[name="weak-damage"]').is(':checked');
       testData.elementDamage = Number(html.find('[name="elementDamage"]').val()) + armamentEleDmg;
       return testData;
     }

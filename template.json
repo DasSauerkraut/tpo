@@ -366,6 +366,7 @@
       "apCost": 0,
       "target": "",
       "damageMod": 0,
+      "isWeak": false,
       "elementDamageMod": 0,
       "used": false,
       "parent": {

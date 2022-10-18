@@ -1,6 +1,7 @@
 import { TPO } from "./config.mjs";
 export class DiceTPO {
   static async rollTest(skill, rollData) {
+    console.log(rollData)
     //calculate target
     const target = skill.data.data.total + rollData.modifier + rollData.difficulty;
 
@@ -161,8 +162,9 @@ export class DiceTPO {
       SLs: SLs,
       dice: dice,
       hasDamage: rollData.hasDamage,
+      weakDamage: rollData.weakDamage,
       damage: rollData.damage,
-      strB: rollData.strB,
+      strB: rollData.actor.data.data.strb,
       element: rollData.element,
       elementDamage: rollData.elementDamage
     }
@@ -170,39 +172,49 @@ export class DiceTPO {
 
   static outputTest(testData){
     let damageString;
-    if(testData.hasDamage)
+    console.log(testData)
+    let damage = testData.damage + testData.SLs
+    let elementDamage = testData.elementDamage
+    if(testData.hasDamage && !testData.weakDamage)
       damageString = `
         <hr>
         <b>Damage:</b>
         <div style="display:flex;justify-content: space-between;">
           <span>
-            Raw <div style="text-align:center">${testData.damage + testData.SLs}</div>
+            Raw <div style="text-align:center">${damage}</div>
           </span>
           &nbsp+&nbsp 
           <span>
-            ${testData.element}<div style="text-align:center">${testData.elementDamage}</div>
+            ${testData.element}<div style="text-align:center">${elementDamage}</div>
           </span>
           &nbsp=&nbsp
           <b style="color:#642422">
             Strong
-            <div style="text-align:center">${testData.damage + testData.SLs}</div>
+            <div style="text-align:center">${damage}</div>
             &nbsp
           </b>
           &nbsp
           <b>
             Neutral
-            <div style="text-align:center">${testData.damage + testData.SLs + testData.elementDamage}</div>
+            <div style="text-align:center">${damage + elementDamage}</div>
           </b>
           &nbsp
           <b style="color:#51632C">
             Weak
-            <div style="text-align:center">${testData.damage + testData.SLs + testData.elementDamage * 3}</div>
+            <div style="text-align:center">${damage + elementDamage * 3}</div>
           </b>
         </div>
       `
+    else if (testData.weakDamage){
+      damageString = `
+      <hr>
+      <b>Weak Damage:</b> ${testData.strB}
+      `
+    }
     else
      damageString = '';
-    let chatContent = `
+    
+     let chatContent = `
       <b>${testData.actorName} | ${testData.name}</b><br>
       <h3> ${testData.result} </h3>
       <hr>
