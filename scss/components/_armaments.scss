@@ -12,6 +12,7 @@
 }
 .combat-container{
   overflow-y: auto;
+  scrollbar-width: thin;
   height: 450px;
 }
 
@@ -95,6 +96,7 @@
   }
   .description {
     background-color: #BFAC8C;
+    color: var(--color-text-dark-1);
     p {
       margin: 0;
     }
@@ -130,6 +132,7 @@
   }
   .description {
     background-color: #BFAC8C;
+    color: var(--color-text-dark-1);
     p {
       margin: 0;
     }
@@ -144,23 +147,18 @@
 
 .At-Will {
   background-color: #51632C;
-  color: var(--color-text-light-2);
 }
 .Encounter {
   background-color: #423151;
-  color: var(--color-text-light-2);
 }
 .Weekly {
   background-color: #642422;
-  color: var(--color-text-light-2);
 }
 .Misc {
   background-color: #984A21;
-  color: var(--color-text-light-2);
 }
 .Upgrade {
   background-color: #12233D;
-  color: var(--color-text-light-2);
 }
 
 .dragover{

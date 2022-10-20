@@ -61,7 +61,8 @@
 .inventory-list{
   overflow-x: clip;
   overflow-y: auto;
-  max-height: 50%;
+  max-height: 30%;
+  scrollbar-width: thin;
 }
 
 .inventory-header{

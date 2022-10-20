@@ -57,6 +57,50 @@ export class tpoItem extends Item {
     description = description.replaceAll("((@cha))", this.actor.getStatData("cha"))
     description = description.replaceAll("((@chab))", this.actor.getStatData("cha", true))
 
+    //Power Keywords
+    //Delay
+    const delayRegExp = /(Delay )(\d+)/g
+    const delayMatches = [...description.matchAll(delayRegExp)]
+    delayMatches.forEach(match => {
+      description = description.replace(match[0], `<a class='rollable' title="${game.i18n.format("KEYWORD.Delay").replaceAll("NUM", match[2])}"><b>Delay ${match[2]}</b></a>`)
+    })
+    //Flexible
+    description = description.replaceAll("Flexible", `<a class='rollable' title="${game.i18n.format("KEYWORD.Flexible")}"><b>Flexible</b></a>`)
+    //Leech
+    const leechRegExp = /(Leech )(\d+)/g
+    const leechMatches = [...description.matchAll(leechRegExp)]
+    leechMatches.forEach(match => {
+      description = description.replace(match[0], `<a class='rollable' title="${game.i18n.format("KEYWORD.Leech").replaceAll("NUM", match[2])}"><b>Leech ${match[2]}</b></a>`)
+    })
+    //Optional
+    description = description.replaceAll("Optional", `<a class='rollable' title="${game.i18n.format("KEYWORD.Optional")}"><b>Optional</b></a>`)
+    //Piercing
+    description = description.replaceAll("Piercing", `<a class='rollable' title="${game.i18n.format("KEYWORD.Piercing")}"><b>Piercing</b></a>`)
+    //Reactive
+    description = description.replaceAll("Reactive", `<a class='rollable' title="${game.i18n.format("KEYWORD.Reactive")}"><b>Reactive</b></a>`)
+    // Launched
+    const launchRegExp = /(Launch )(\d+)/g
+    const launchMatches = [...description.matchAll(launchRegExp)]
+    launchMatches.forEach(match => {
+      description = description.replace(match[0], `
+      <a class='rollable' title="${
+        game.i18n.format("KEYWORD.Launch")
+        .replaceAll("½ NUM", match[2] * 0.5)
+        .replaceAll("NUM", match[2])
+      }"><b>Launch ${match[2]}</b></a>`)
+    })
+    const launchedRegExp = /(Launched )(\d+)/g
+    const launchedMatches = [...description.matchAll(launchedRegExp)]
+    launchedMatches.forEach(match => {
+      description = description.replace(match[0], `
+      <a class='rollable' title="${
+        game.i18n.format("KEYWORD.Launch")
+        .replaceAll("½ NUM", match[2] * 0.5)
+        .replaceAll("NUM", match[2])
+      }"><b>Launched ${match[2]}</b></a>`)    })
+    // Weak
+    description = description.replaceAll("Weak", `<a class='rollable' title="${game.i18n.format("KEYWORD.Weak")}"><b>Weak</b></a>`)
+
     const regexp = /\(\(\#(.*?)\)\)/g;
     const mathMatches = [...description.matchAll(regexp)];
     mathMatches.forEach(match => {

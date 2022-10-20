@@ -138,6 +138,15 @@
   "STATUS.Marked": "Marked",
   "STATUS.Stabilized": "Stabilized",
 
+  "KEYWORD.Delay": "Declare a target. After NUM rounds, at the start of your turn, before you perform any action, immediately perform the listed Power if you are still in range.\rIf you perform an attack while a Delayed Power has not resolved yet, suffer Disadvantage on that attack.",
+  "KEYWORD.Flexible": "This power has effects that key off of the one’s place of the roll.\rFor example, it might say On Even Hit, this means that if the one’s place is even and the attack hits, the following effect will occur. You may also see On #’s where if the one’s place is that number, the effect will occur.\rMultiple effects can trigger off of a roll, for example an On Even Hit and an On 4’s Hit could both trigger if the roll was 34 and the attack hit.",
+  "KEYWORD.Leech": "You may spend up to NUM HP to increase the damage of this attack by the amount of HP spent.\rYou may also heal by reducing the damage the attack dealt by up to NUM, healing your HP by each point reduced.",
+  "KEYWORD.Optional": "If the Power has you make an attack, you can choose to ignore that, and gain the other benefits the Power provides.",
+  "KEYWORD.Piercing": " Damage dealt ignores any Absorption the target has.",
+  "KEYWORD.Reactive": "You may use this Power when it is not currently your turn, provided you meet the use conditions.",
+  "KEYWORD.Launch": "Targets hit by this Power are launched NUM squares away from their initial position. They cannot take Opportunity attacks while sailing through the air.\rLarge targets are launched ½ NUM sq.\rTargets must make an Average (+20) Athletics Test or take ½ NUM Damage, rounding up, and a prone status as they topple to the ground. Succeeding the test means they successfully recover and stay on their feet.\rIf they are launched into another creature, both creatures immediately take ½ NUM Damage, rounding up, and must succeed a Demanding (+10) Athletics Test to remain standing.",
+  "KEYWORD.Weak": "Damage dealt is only StrB raw damage, with no elemental damage on top. Furthermore, SLs are not included in damage calculations.",
+
   "TIP.Species": "Your species determines various stats bonuses and provide other effects.",
   "TIP.HP": "Your HP determines how much physical and mental punishment you can take before being Downed.",
   "TIP.AP": "You start each turn with several Action Points, which can be spent to perform various Actions, but they are also used to move about the field and defend from enemy attacks.\rAt the start of the first non-Surprise Round, you gain 4 AP.\rAfter that, your AP refreshes to 4 AP at the start of your Turn.",
