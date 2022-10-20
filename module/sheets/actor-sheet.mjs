@@ -643,10 +643,15 @@ export class tpoActorSheet extends ActorSheet {
     this._performTest(statOut, testData);
   }
 
-  _onPowerRoll(event){
-    event.preventDefault();
-    const container = $(event.target).parents(".subheader");
-    const power = this.actor.items.get(container.data("power-id")).data;
+  _onPowerRoll(event, power = null){
+    let container = null;
+    if(event){
+      event.preventDefault();
+      container = $(event.target).parents(".subheader");
+    }
+    
+    if(!power)
+      power = this.actor.items.get(container.data("power-id")).data;
     const armament = this.actor.items.get(power.data.parent.id).data;
     
     if(power.data.type === "Encounter" || power.data.type === "Weekly"){

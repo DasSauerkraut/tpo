@@ -151,6 +151,7 @@ export class DiceTPO {
       result = game.i18n.localize("ROLL.Crit") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
 
     //output
+    console.log(rollData.actor)
     return {
       actorName: rollData.actorName,
       result: result,
@@ -164,7 +165,7 @@ export class DiceTPO {
       hasDamage: rollData.hasDamage,
       weakDamage: rollData.weakDamage,
       damage: rollData.damage,
-      strB: rollData.actor.data.data.strb,
+      strB: rollData.actor.data.data.stats.str.bonus,
       element: rollData.element,
       elementDamage: rollData.elementDamage
     }
@@ -172,7 +173,6 @@ export class DiceTPO {
 
   static outputTest(testData){
     let damageString;
-    console.log(testData)
     let damage = testData.damage + testData.SLs
     let elementDamage = testData.elementDamage
     if(testData.hasDamage && !testData.weakDamage)
