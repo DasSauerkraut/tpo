@@ -177,6 +177,7 @@ Hooks.on("updateCombat", (combat) => {
       user: game.user._id,
     };
     ChatMessage.create(chatData, {});
+    UtilsTPO.playContextSound({type: "roundChange"})
 })
 
 // Hooks.on("simple-calendar-date-time-change", (data) => {

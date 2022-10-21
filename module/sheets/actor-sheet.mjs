@@ -49,7 +49,6 @@ export class tpoActorSheet extends ActorSheet {
 
     // Add roll data for TinyMCE editors.
     context.rollData = context.actor.getRollData();
-    console.log(context.rollData)
 
     // Prepare active effects
     context.effects = prepareActiveEffectCategories(this.actor.effects);
@@ -358,7 +357,11 @@ export class tpoActorSheet extends ActorSheet {
                       }
                     }
                   }
-                  this._performTest(skill, testData, 0, 0, `Defending w/ ${selectedSkill}`);;
+                  this._performTest(skill, testData, 0, 0, `Defending w/ ${selectedSkill}`);
+                  if(selectedSkill === "Dodge")
+                    UtilsTPO.playContextSound({type: "combatAction"}, "dodge")
+                  else
+                    UtilsTPO.playContextSound({type: "combatAction"}, "block")
                 }
               },
             },
@@ -519,6 +522,7 @@ export class tpoActorSheet extends ActorSheet {
     item.data.location = location;
 
     await this.actor.updateEmbeddedDocuments("Item", [item]);
+    UtilsTPO.playContextSound({type: "item"}, "itemEquip")
   }
 
   async _onArmamentDrop(event, item){
@@ -547,6 +551,7 @@ export class tpoActorSheet extends ActorSheet {
       
       await this.actor.updateEmbeddedDocuments("Item", [item]);
       await this.actor.updateEmbeddedDocuments("Item", [armament]);
+      UtilsTPO.playContextSound({type: "item"}, "powerEquip")
     }
   }
 
@@ -583,6 +588,7 @@ export class tpoActorSheet extends ActorSheet {
 
       await this.actor.updateEmbeddedDocuments("Item", [item]);
       await this.actor.updateEmbeddedDocuments("Item", [armament]);
+      UtilsTPO.playContextSound({type: "item"}, "powerEquip")
     }
   }
 
@@ -680,8 +686,6 @@ export class tpoActorSheet extends ActorSheet {
       elementDamage: power.data.elementDamageMod
     }
 
-    console.log(testData.weakDamage)
-
     if(skill === undefined){
       skill = {
         name: "Weapon Skill",
@@ -694,6 +698,7 @@ export class tpoActorSheet extends ActorSheet {
     }
 
     this._performTest(skill, testData, armament.data.damage.value, armament.data.elementDamage.value, power.name);
+    UtilsTPO.playContextSound(power, "use")
   }
 
   /**
@@ -763,6 +768,7 @@ export class tpoActorSheet extends ActorSheet {
       this.actor.update({[`data.stats.${dataset.improve}.improvements`]: improvements - 1 })
       this.actor.update({[`data.info.xp.spent`]: xpSpent - cost })
     }
+    UtilsTPO.playContextSound({type: "skill"}, "improve")
   }
 
   /**
@@ -830,6 +836,7 @@ export class tpoActorSheet extends ActorSheet {
       await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
       this.actor.update({[`data.info.xp.spent`]: xpSpent - cost })
     }
+    UtilsTPO.playContextSound(itemToEdit, "improve")
   }
 
   /**
@@ -895,6 +902,7 @@ export class tpoActorSheet extends ActorSheet {
       await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
       this.actor.update({[`data.info.xp.spent`]: xpSpent - cost })
     }
+    UtilsTPO.playContextSound(itemToEdit, "improve")
   }
 
   /**

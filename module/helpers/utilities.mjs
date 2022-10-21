@@ -1,7 +1,6 @@
 import { TPO } from "./config.mjs";
 export class DiceTPO {
   static async rollTest(skill, rollData) {
-    console.log(rollData)
     //calculate target
     const target = skill.data.data.total + rollData.modifier + rollData.difficulty;
 
@@ -151,7 +150,6 @@ export class DiceTPO {
       result = game.i18n.localize("ROLL.Crit") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
 
     //output
-    console.log(rollData.actor)
     return {
       actorName: rollData.actorName,
       result: result,
@@ -280,5 +278,80 @@ export class UtilsTPO {
         <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
       </div>
     `
+  }
+
+  static async playContextSound(item, context = ""){
+    console.log(item);
+    let files;
+    let globalSound = false;
+    await FilePicker.browse("user", "/systems/tpo/sounds/").then(resp => {
+      files = resp.files
+    })
+    let group;
+    switch(item.type){
+      case "skill":
+        if(context === "improve")
+          group = "click"
+        break;
+      case "ability":
+        if(context === "improve")
+          group = "click"
+        break;
+      case "power":
+        globalSound = true;
+        if(item.data.armamentType === "Greatsword" || 
+        item.data.armamentType === "Lance" ||
+        item.data.armamentType === "Battle Standard" ||
+        item.data.armamentType === "Chromatic Sword"
+        )
+          group = "weapon-swing"
+        if(item.data.armamentType === "Leech Blade")
+          group = "hit-normal"
+        if(item.data.armamentType === "Charge Gauntlets")
+          group = "hit-blocked"
+        if(item.data.armamentType === "Arquebus" || item.data.armamentType === "Vapor Launcher"){
+          if(item.name.toLowerCase().includes("reload") || item.name.toLowerCase().includes("shell swap"))
+            group = "weapon_gun-load"
+          else if(item.name.toLowerCase().includes("dragonstake") ||
+          item.name.toLowerCase().includes("grand overture"))
+            group = "weapon_canon-fire"
+          else
+            group = "weapon_gun-fire"
+        }
+        if(item.data.armamentType === "Gunlance"){
+          if(item.data.target.toLowerCase().includes("ranged") || 
+          item.name.toLowerCase().includes("pokeshelling") ||
+          item.name.toLowerCase().includes("blast dash"))
+            group = "weapon_gun-fire"
+          else if (item.name.toLowerCase().includes("slamburst"))
+            group = "weapon_canon-fire"
+          else if(item.data.target.toLowerCase().includes("melee"))
+            group = "weapon-swing"
+        }
+        break;
+      case "item":
+        if(context === "powerEquip")
+          group = "weapon-equip"
+        else if (context === "itemEquip")
+          group = "item-equip"
+        break;
+      case "combatAction":
+        if(context === "dodge")
+          group = "weapon_throw-fire"
+        else if (context === "block")
+          group = "weapon_shield-miss_melee"
+        break;
+      case "roundChange":
+        group = "round-change"
+        break;
+    }
+
+    if(group){
+      const groupedFiles = files.filter(f => f.includes(group))
+      const roll = await new Roll(`1d${groupedFiles.length}`).roll({async: true})
+      let file = groupedFiles[roll.total - 1]
+      console.log(`tpo | Playing Sound: ${file}`)
+      AudioHelper.play({src : file}, globalSound)
+    }
   }
 }
