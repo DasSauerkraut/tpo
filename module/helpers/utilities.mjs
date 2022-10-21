@@ -351,7 +351,7 @@ export class UtilsTPO {
       const roll = await new Roll(`1d${groupedFiles.length}`).roll({async: true})
       let file = groupedFiles[roll.total - 1]
       console.log(`tpo | Playing Sound: ${file}`)
-      AudioHelper.play({src : file}, globalSound)
+      AudioHelper.play({src : file, volume: game.settings.get("core", "globalInterfaceVolume")}, globalSound)
     }
   }
 }
