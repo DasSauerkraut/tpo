@@ -59,19 +59,18 @@ export class DiceTPO {
         const level = rollData.actor.items.getName("Critical Eye").data.data.level;
         if(level > 1)
           hasCritEyeTwo = true;
-        else if(level > 0)
+        if(level > 0)
          hasCritEyeOne = true;
       }
       dice.forEach(roll => {
         if(roll % 11 === 0) {
           crits.push(roll);
-          didCrit = true;
-        } else if(hasCritEyeOne && roll % 5 === 0) {
+        } 
+        if(hasCritEyeOne && roll % 5 === 0 && roll % 10 !== 0) {
           crits.push(roll);
-          didCrit = true;
-        } else if(hasCritEyeTwo && roll % 10 === 0) {
+        } 
+        if(hasCritEyeTwo && roll % 5 === 0) {
           crits.push(roll);
-          didCrit = true;
         }
       })
 
@@ -82,6 +81,7 @@ export class DiceTPO {
         }
         if(selectedCrit && selectedCrit <= target) {
           selectedRoll = selectedCrit;
+          didCrit = true;
         }
         else
           selectedRoll = Math.min(...dice);
@@ -92,6 +92,7 @@ export class DiceTPO {
         }
         if(selectedCrit && selectedCrit > target) {
           selectedRoll = selectedCrit;
+          didCrit = true;
         }
         else
           selectedRoll = Math.max(...dice);
@@ -281,7 +282,6 @@ export class UtilsTPO {
   }
 
   static async playContextSound(item, context = ""){
-    console.log(item);
     let files;
     let globalSound = false;
     await FilePicker.browse("user", "/systems/tpo/sounds/").then(resp => {
@@ -343,6 +343,14 @@ export class UtilsTPO {
         break;
       case "roundChange":
         group = "round-change"
+        break;
+      case "damage":
+        if(context === "major")
+          group = "hit-crit-"
+        else if(context === "minor")
+          group = "hit-blocked_armour"
+        else
+          group = "hit-normal-"
         break;
     }
 

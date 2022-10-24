@@ -180,6 +180,18 @@ Hooks.on("updateCombat", (combat) => {
     UtilsTPO.playContextSound({type: "roundChange"})
 })
 
+Hooks.on("preUpdateActor", (actor, data, diff) => {
+  if(actor.token?.combatant && data.data.derived.hp?.value < actor.data.data.derived.hp?.value && diff.diff){
+    const damageTaken = actor.data.data.derived.hp.value - data.data.derived.hp.value;
+    if(damageTaken >= 10)
+      UtilsTPO.playContextSound({type: "damage"}, "major")
+    else if (damageTaken >= 3)
+      UtilsTPO.playContextSound({type: "damage"}, "normal")
+    else
+      UtilsTPO.playContextSound({type: "damage"}, "minor")
+  }
+})
+
 // Hooks.on("simple-calendar-date-time-change", (data) => {
 //   console.log(data);
 // });

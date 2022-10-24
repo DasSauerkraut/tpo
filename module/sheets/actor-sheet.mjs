@@ -947,7 +947,7 @@ export class tpoActorSheet extends ActorSheet {
     if((this.actor.data.data.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
     (skill.data.data.stat === 'ws' || skill.data.data.stat === 'agi' || skill.data.data.stat === 'will') &&
     (this.actor.data.data.derived.hp.value > this.actor.data.data.derived.bloodied.value) &&
-    this.actor.token.combatant){
+    this.actor.token?.combatant){
       testData.modifier += 10;
     }
 
