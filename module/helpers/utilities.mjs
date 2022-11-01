@@ -69,16 +69,19 @@ export class DiceTPO {
         if(hasCritEyeOne && roll % 5 === 0 && roll % 10 !== 0) {
           crits.push(roll);
         } 
-        if(hasCritEyeTwo && roll % 5 === 0) {
+        else if(hasCritEyeTwo && roll % 5 === 0) {
           crits.push(roll);
         }
       })
+
+      console.log(crits)
 
       if(advantages > 0) {
         //Advantage
         if(crits.length !== 0){
           selectedCrit = Math.min(...crits);
         }
+        console.log(selectedCrit)
         if(selectedCrit && selectedCrit <= target) {
           selectedRoll = selectedCrit;
           didCrit = true;
@@ -90,6 +93,7 @@ export class DiceTPO {
         if(crits.length !== 0){
           selectedCrit = Math.max(...crits);
         }
+        console.log(selectedCrit)
         if(selectedCrit && selectedCrit > target) {
           selectedRoll = selectedCrit;
           didCrit = true;
@@ -98,6 +102,9 @@ export class DiceTPO {
           selectedRoll = Math.max(...dice);
       } else {
         //Normal
+        if(crits.length !== 0)
+          didCrit = true;
+
         selectedRoll = dice[0];
       }
     }
@@ -211,11 +218,16 @@ export class DiceTPO {
       `
     }
     else
-     damageString = '';
-    
+      damageString = '';
+      let critFormat = ''
+      if(testData.result.includes(game.i18n.localize("ROLL.Crit")))
+        if(testData.result.includes(game.i18n.localize("ROLL.Success")))
+          critFormat="critSuccess"
+        else
+          critFormat="critFailure"
      let chatContent = `
       <b>${testData.actorName} | ${testData.name}</b><br>
-      <h3> ${testData.result} </h3>
+      <h3 class="${critFormat}"> ${testData.result} </h3>
       <hr>
       <b>Roll${testData.risk ? ` with Risk` : ''}:</b> ${testData.selectedRoll} vs ${testData.target} <br>
       <b>SLs:</b> ${testData.SLs} <br>
@@ -336,6 +348,7 @@ export class UtilsTPO {
           group = "item-equip"
         break;
       case "combatAction":
+        globalSound = true;
         if(context === "dodge")
           group = "weapon_throw-fire"
         else if (context === "block")
@@ -345,6 +358,7 @@ export class UtilsTPO {
         group = "round-change"
         break;
       case "damage":
+        globalSound = true;
         if(context === "major")
           group = "hit-crit-"
         else if(context === "minor")
@@ -358,8 +372,11 @@ export class UtilsTPO {
       const groupedFiles = files.filter(f => f.includes(group))
       const roll = await new Roll(`1d${groupedFiles.length}`).roll({async: true})
       let file = groupedFiles[roll.total - 1]
-      console.log(`tpo | Playing Sound: ${file}`)
-      AudioHelper.play({src : file, volume: game.settings.get("core", "globalInterfaceVolume")}, globalSound)
+      console.log(`tpo | Playing Sound: ${file}. Volume: ${game.settings.get("core", "globalInterfaceVolume")}`)
+      if(globalSound)
+        AudioHelper.play({src : file, volume: game.settings.get("core", "globalInterfaceVolume"), autoplay: true})
+      else
+        AudioHelper.play({src : file, volume: game.settings.get("core", "globalInterfaceVolume"), autoplay: true}, true)
     }
   }
 }

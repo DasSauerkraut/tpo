@@ -19,6 +19,18 @@
   cursor: pointer;
 }
 
+.critSuccess {
+  color: #51632C;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px #8f8989;
+}
+
+.critFailure {
+  color: #642422;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px #8f8989;
+}
+
 .grid,
 .grid-2col {
   display: grid;

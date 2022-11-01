@@ -112,6 +112,9 @@ Hooks.once("ready", async function() {
 });
 
 Hooks.on("updateCombat", (combat) => {
+  if(!game.user.isGM)
+    return;
+    
   let combatant = canvas.scene.tokens.get(combat.current.tokenId);
   
   combatant.actor.update({"data.derived.ap.value": combatant.actor.data.data.derived.ap.max})
