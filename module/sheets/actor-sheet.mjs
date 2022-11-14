@@ -683,7 +683,8 @@ export class tpoActorSheet extends ActorSheet {
       weakDamage: power.data.isWeak,
       damage: power.data.damageMod,
       element: armament.data.selectedElement.display,
-      elementDamage: power.data.elementDamageMod
+      elementDamage: power.data.elementDamageMod,
+      attacks: power.data.attacks
     }
 
     if(skill === undefined){
@@ -696,9 +697,21 @@ export class tpoActorSheet extends ActorSheet {
         }
       }
     }
-
-    this._performTest(skill, testData, armament.data.damage.value, armament.data.elementDamage.value, power.name);
     UtilsTPO.playContextSound(power, "use")
+    if(testData.attacks < 1){
+      console.log(power)
+      let chatContent = `
+        <b>${this.actor.name} | ${power.name}</b><br>
+        ${power.data.descriptionDisplay}
+      `
+      let chatData = {
+        content: chatContent,
+        user: game.user._id,
+      };
+      ChatMessage.create(chatData, {});
+      return;
+    }
+    this._performTest(skill, testData, armament.data.damage.value, armament.data.elementDamage.value, power.name);
   }
 
   /**

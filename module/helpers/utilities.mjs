@@ -3,7 +3,6 @@ export class DiceTPO {
   static async rollTest(skill, rollData) {
     //calculate target
     const target = skill.data.data.total + rollData.modifier + rollData.difficulty;
-
     //calculate advantages
     let advantages = rollData.advantage - rollData.disadvantage;
     if(Math.abs(advantages) > 100){
@@ -11,228 +10,245 @@ export class DiceTPO {
       advantages = 100 * Math.sign(advantages);
     }
 
-    //roll dice
-    let dice = [];
-    let selectedRoll = 0;
-    let didCrit = false;
-    let autoSuccess = false;
-    let SLs = 0;
-    let result = "";
+    //Not a power, so it should only roll once for 'attacks'
+    if(!rollData.hasDamage)
+      rollData.attacks = 1
 
-    if(rollData.risk){
-      let riskTarget = 50 + advantages * 10;
-      let roll1 = await new Roll("1d100").roll({async: true})
-      await this.showDiceSoNice(roll1);
-      let roll2 = await new Roll("1d100").roll({async: true})
-      await this.showDiceSoNice(roll2);
-      dice.push(roll1.total);
-      dice.push(roll2.total);
+    let results = [];
+    for (let i = 0; i < rollData.attacks; i++) {
+      let dice = [];
+      let selectedRoll = 0;
+      let didCrit = false;
+      let autoSuccess = false;
+      let SLs = 0;
+      let result = "";
 
-      if(Math.abs(roll1.total - riskTarget) > Math.abs(roll2.total - riskTarget))
-        selectedRoll = roll1.total;
-      else
-        selectedRoll = roll2.total;
+      if(rollData.risk){
+        let riskTarget = 50 + advantages * 10;
+        let roll1 = await new Roll("1d100").roll({async: true})
+        await this.showDiceSoNice(roll1);
+        let roll2 = await new Roll("1d100").roll({async: true})
+        await this.showDiceSoNice(roll2);
+        dice.push(roll1.total);
+        dice.push(roll2.total);
 
-      if(selectedRoll % 11 === 0)
-        didCrit = true;
+        if(Math.abs(roll1.total - riskTarget) > Math.abs(roll2.total - riskTarget))
+          selectedRoll = roll1.total;
+        else
+          selectedRoll = roll2.total;
 
-    } else {
-      if(advantages !== 0){
-        let roll = await new Roll(`${Math.abs(advantages)+1}d100${advantages > 0 ? 'kl' : 'kh' }`).roll({async: true})
-        console.log(roll)
-        await this.showDiceSoNice(roll);
-        roll.terms[0].results.forEach(die => {
-          dice.push(die.result)
+        if(selectedRoll % 11 === 0)
+          didCrit = true;
+
+      } else {
+        if(advantages !== 0){
+          let roll = await new Roll(`${Math.abs(advantages)+1}d100${advantages > 0 ? 'kl' : 'kh' }`).roll({async: true})
+          console.log(roll)
+          await this.showDiceSoNice(roll);
+          roll.terms[0].results.forEach(die => {
+            dice.push(die.result)
+          })
+        } else {
+          let roll = await new Roll("1d100").roll({async: true})
+          await this.showDiceSoNice(roll);
+          dice.push(roll.terms[0].results[0].result);
+        }
+        dice.sort((a, b) => {return a - b});
+
+        let selectedCrit = null;
+        let crits = [];
+        let hasCritEyeOne = false;
+        let hasCritEyeTwo = false;
+        if(rollData.actor && rollData.actor.items.getName("Critical Eye")){
+          const level = rollData.actor.items.getName("Critical Eye").data.data.level;
+          if(level > 1)
+            hasCritEyeTwo = true;
+          if(level > 0)
+          hasCritEyeOne = true;
+        }
+        dice.forEach(roll => {
+          if(roll % 11 === 0) {
+            crits.push(roll);
+          } 
+          if(hasCritEyeOne && roll % 5 === 0 && roll % 10 !== 0) {
+            crits.push(roll);
+          } 
+          else if(hasCritEyeTwo && roll % 5 === 0) {
+            crits.push(roll);
+          }
         })
-      } else {
-        let roll = await new Roll("1d100").roll({async: true})
-        await this.showDiceSoNice(roll);
-        dice.push(roll.terms[0].results[0].result);
+
+        if(advantages > 0) {
+          //Advantage
+          if(crits.length !== 0){
+            selectedCrit = Math.min(...crits);
+          }
+          if(selectedCrit && selectedCrit <= target) {
+            selectedRoll = selectedCrit;
+            didCrit = true;
+          }
+          else
+            selectedRoll = Math.min(...dice);
+        } else if (advantages < 0) {
+          //Disadvantage
+          if(crits.length !== 0){
+            selectedCrit = Math.max(...crits);
+          }
+          if(selectedCrit && selectedCrit > target) {
+            selectedRoll = selectedCrit;
+            didCrit = true;
+          }
+          else
+            selectedRoll = Math.max(...dice);
+        } else {
+          //Normal
+          if(crits.length !== 0)
+            didCrit = true;
+
+          selectedRoll = dice[0];
+        }
       }
-      dice.sort((a, b) => {return a - b});
+      
 
-      let selectedCrit = null;
-      let crits = [];
-      let hasCritEyeOne = false;
-      let hasCritEyeTwo = false;
-      if(rollData.actor && rollData.actor.items.getName("Critical Eye")){
-        const level = rollData.actor.items.getName("Critical Eye").data.data.level;
-        if(level > 1)
-          hasCritEyeTwo = true;
-        if(level > 0)
-         hasCritEyeOne = true;
+      //compare vs target
+      let didTestSucceed = selectedRoll <= target;
+      // Auto success/failure
+      if(selectedRoll <= 5 && !didTestSucceed){
+        didTestSucceed = true;
+        autoSuccess = true;
+      }else if (selectedRoll >= 95 && didTestSucceed){
+        didTestSucceed = false;
+        autoSuccess = true;
       }
-      dice.forEach(roll => {
-        if(roll % 11 === 0) {
-          crits.push(roll);
-        } 
-        if(hasCritEyeOne && roll % 5 === 0 && roll % 10 !== 0) {
-          crits.push(roll);
-        } 
-        else if(hasCritEyeTwo && roll % 5 === 0) {
-          crits.push(roll);
-        }
-      })
 
-      console.log(crits)
+      //get SLs
+      if(didCrit && didTestSucceed && !autoSuccess)
+        SLs = Math.floor((target - 1) / 10);
+      else if (didCrit && !didTestSucceed && !autoSuccess)
+        SLs = Math.floor((target - 100) / 10);
+      else if (!autoSuccess)
+        SLs = Math.floor((target - selectedRoll) / 10);
+      else 
+        SLs = didTestSucceed ? 1 : -1;
 
-      if(advantages > 0) {
-        //Advantage
-        if(crits.length !== 0){
-          selectedCrit = Math.min(...crits);
-        }
-        console.log(selectedCrit)
-        if(selectedCrit && selectedCrit <= target) {
-          selectedRoll = selectedCrit;
-          didCrit = true;
-        }
-        else
-          selectedRoll = Math.min(...dice);
-      } else if (advantages < 0) {
-        //Disadvantage
-        if(crits.length !== 0){
-          selectedCrit = Math.max(...crits);
-        }
-        console.log(selectedCrit)
-        if(selectedCrit && selectedCrit > target) {
-          selectedRoll = selectedCrit;
-          didCrit = true;
-        }
-        else
-          selectedRoll = Math.max(...dice);
-      } else {
-        //Normal
-        if(crits.length !== 0)
-          didCrit = true;
-
-        selectedRoll = dice[0];
-      }
-    }
-    
-
-    //compare vs target
-    let didTestSucceed = selectedRoll <= target;
-    // Auto success/failure
-    if(selectedRoll <= 5 && !didTestSucceed){
-      didTestSucceed = true;
-      autoSuccess = true;
-    }else if (selectedRoll >= 95 && didTestSucceed){
-      didTestSucceed = false;
-      autoSuccess = true;
-    }
-
-    //get SLs
-    if(didCrit && didTestSucceed && !autoSuccess)
-      SLs = Math.floor((target - 1) / 10);
-    else if (didCrit && !didTestSucceed && !autoSuccess)
-      SLs = Math.floor((target - 100) / 10);
-    else if (!autoSuccess)
-      SLs = Math.floor((target - selectedRoll) / 10);
-    else 
-      SLs = didTestSucceed ? 1 : -1;
-
-    switch (Math.abs(SLs)) {
-      case 0:
-      case 1:
-        result = game.i18n.localize("ROLL.Marginal") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
-        break;
-      case 2:
-      case 3:
-        result = didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure");
-        break;
-      case 4:
-      case 5:
-        result = game.i18n.localize("ROLL.Impressive") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
-        break;
-      case 6:
-        result = game.i18n.localize("ROLL.Astounding") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
-        break;
-    
-      default:
-        if(Math.abs(SLs) > 6)
+      switch (Math.abs(SLs)) {
+        case 0:
+        case 1:
+          result = game.i18n.localize("ROLL.Marginal") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
+          break;
+        case 2:
+        case 3:
+          result = didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure");
+          break;
+        case 4:
+        case 5:
+          result = game.i18n.localize("ROLL.Impressive") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
+          break;
+        case 6:
           result = game.i18n.localize("ROLL.Astounding") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
-        break;
-    }
+          break;
+      
+        default:
+          if(Math.abs(SLs) > 6)
+            result = game.i18n.localize("ROLL.Astounding") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
+          break;
+      }
 
-    if(didCrit)
-      result = game.i18n.localize("ROLL.Crit") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
+      if(didCrit)
+        result = game.i18n.localize("ROLL.Crit") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
 
-    //output
+      //output
+      results.push({
+        selectedRoll: selectedRoll,
+        SLs: SLs,
+        dice: dice,
+        result: result,
+      })
+    } 
+    //roll dice
     return {
       actorName: rollData.actorName,
-      result: result,
       skill: skill,
-      name: rollData.name ? rollData.name : skill.name,
       risk: rollData.risk,
-      selectedRoll: selectedRoll,
       target: target,
-      SLs: SLs,
-      dice: dice,
+      name: rollData.name ? rollData.name : skill.name,
       hasDamage: rollData.hasDamage,
+      strB: rollData.actor.data.data.stats.str.bonus,
       weakDamage: rollData.weakDamage,
       damage: rollData.damage,
-      strB: rollData.actor.data.data.stats.str.bonus,
       element: rollData.element,
-      elementDamage: rollData.elementDamage
-    }
+      elementDamage: rollData.elementDamage,
+      results: results
+    };
   }
 
   static outputTest(testData){
-    let damageString;
-    let damage = testData.damage + testData.SLs
+    console.log(testData)
+    let damageString = ``;
     let elementDamage = testData.elementDamage
-    if(testData.hasDamage && !testData.weakDamage)
-      damageString = `
-        <hr>
-        <b>Damage:</b>
-        <div style="display:flex;justify-content: space-between;">
-          <span>
-            Raw <div style="text-align:center">${damage}</div>
-          </span>
-          &nbsp+&nbsp 
-          <span>
-            ${testData.element}<div style="text-align:center">${elementDamage}</div>
-          </span>
-          &nbsp=&nbsp
-          <b style="color:#642422">
-            Strong
-            <div style="text-align:center">${damage}</div>
+    let testOutput = '';
+    testData.results.forEach((test) => {
+      let damage = testData.damage + test.SLs
+      if(testData.hasDamage && !testData.weakDamage)
+        damageString = `
+          <br />
+          <b>Damage:</b>
+          <div style="display:flex;justify-content:space-between;height: 34px;">
+            <span>
+              Raw <div style="text-align:center">${damage}</div>
+            </span>
+            &nbsp+&nbsp 
+            <span>
+              ${testData.element}<div style="text-align:center">${elementDamage}</div>
+            </span>
+            &nbsp=&nbsp
+            <b style="color:#642422">
+              Strong
+              <div style="text-align:center">${damage}</div>
+              &nbsp
+            </b>
             &nbsp
-          </b>
-          &nbsp
-          <b>
-            Neutral
-            <div style="text-align:center">${damage + elementDamage}</div>
-          </b>
-          &nbsp
-          <b style="color:#51632C">
-            Weak
-            <div style="text-align:center">${damage + elementDamage * 3}</div>
-          </b>
-        </div>
-      `
-    else if (testData.weakDamage){
-      damageString = `
-      <hr>
-      <b>Weak Damage:</b> ${testData.strB}
-      `
-    }
-    else
-      damageString = '';
+            <b>
+              Neutral
+              <div style="text-align:center">${damage + elementDamage}</div>
+            </b>
+            &nbsp
+            <b style="color:#51632C">
+              Weak
+              <div style="text-align:center">${damage + elementDamage * 3}</div>
+            </b>
+          </div>
+        `
+      else if (testData.weakDamage){
+        damageString = `
+        <hr>
+        <b>Weak Damage:</b> ${testData.strB}
+        `
+      }
+
       let critFormat = ''
-      if(testData.result.includes(game.i18n.localize("ROLL.Crit")))
-        if(testData.result.includes(game.i18n.localize("ROLL.Success")))
+      if(test.result.includes(game.i18n.localize("ROLL.Crit")))
+        if(test.result.includes(game.i18n.localize("ROLL.Success")))
           critFormat="critSuccess"
         else
           critFormat="critFailure"
-     let chatContent = `
+      
+      let testDice = '';
+      if(test.dice.length > 1)
+        testDice = `<b>Dice:</b> ${test.dice.join(', ')}`
+      testOutput += `
+        <hr>
+        <h3 class="${critFormat}"> ${test.result} </h3>
+        <b>Roll${testData.risk ? ` with Risk` : ''}:</b> ${test.selectedRoll} vs ${testData.target} <br>
+        <b>SLs:</b> ${test.SLs} <br>
+        ${testDice}
+        ${damageString}
+      `
+    })
+    let chatContent = `
       <b>${testData.actorName} | ${testData.name}</b><br>
-      <h3 class="${critFormat}"> ${testData.result} </h3>
-      <hr>
-      <b>Roll${testData.risk ? ` with Risk` : ''}:</b> ${testData.selectedRoll} vs ${testData.target} <br>
-      <b>SLs:</b> ${testData.SLs} <br>
-      <b>Dice:</b> ${testData.dice.join(', ')}
-     ${damageString}`
+      ${testOutput}
+    `
     let chatData = {
       content: chatContent,
       user: game.user._id,
@@ -295,7 +311,7 @@ export class UtilsTPO {
 
   static async playContextSound(item, context = ""){
     let files;
-    let globalSound = false;
+    let localSound = true;
     await FilePicker.browse("user", "/systems/tpo/sounds/").then(resp => {
       files = resp.files
     })
@@ -310,7 +326,7 @@ export class UtilsTPO {
           group = "click"
         break;
       case "power":
-        globalSound = true;
+        localSound = false;
         if(item.data.armamentType === "Greatsword" || 
         item.data.armamentType === "Lance" ||
         item.data.armamentType === "Battle Standard" ||
@@ -348,7 +364,7 @@ export class UtilsTPO {
           group = "item-equip"
         break;
       case "combatAction":
-        globalSound = true;
+        localSound = false;
         if(context === "dodge")
           group = "weapon_throw-fire"
         else if (context === "block")
@@ -358,7 +374,7 @@ export class UtilsTPO {
         group = "round-change"
         break;
       case "damage":
-        globalSound = true;
+        localSound = false;
         if(context === "major")
           group = "hit-crit-"
         else if(context === "minor")
@@ -372,11 +388,8 @@ export class UtilsTPO {
       const groupedFiles = files.filter(f => f.includes(group))
       const roll = await new Roll(`1d${groupedFiles.length}`).roll({async: true})
       let file = groupedFiles[roll.total - 1]
-      console.log(`tpo | Playing Sound: ${file}. Volume: ${game.settings.get("core", "globalInterfaceVolume")}`)
-      if(globalSound)
-        AudioHelper.play({src : file, volume: game.settings.get("core", "globalInterfaceVolume"), autoplay: true})
-      else
-        AudioHelper.play({src : file, volume: game.settings.get("core", "globalInterfaceVolume"), autoplay: true}, true)
+      console.log(`tpo | Playing Sound: ${file}. Volume: ${game.settings.get("core", "globalInterfaceVolume")}. Local: ${localSound}`)
+      AudioHelper.play({src : file, volume: game.settings.get("core", "globalInterfaceVolume"), autoplay: true}, localSound)
     }
   }
 }

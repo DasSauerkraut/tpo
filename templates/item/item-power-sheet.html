@@ -21,6 +21,10 @@
           <label class="resource-label">Elemental Damage</label>
         </div>
         <div class="resource">
+          <input type="text" name="data.attacks" value="{{data.attacks}}" data-dtype="Number"/>
+          <label class="resource-label">Number of Attacks</label>
+        </div>
+        <div class="resource">
           Weak Damage: 
           {{#if data.isWeak}}
             <input id="weak-toggle" type="checkbox" checked data-dtype="Boolean"/>

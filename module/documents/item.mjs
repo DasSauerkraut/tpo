@@ -29,6 +29,10 @@ export class tpoItem extends Item {
       this.data.data.value = this.data.data.improvements + this.data.data.mod - this.data.data.malus;
       this.data.data.level = Math.floor(this.data.data.value / 20)
     }
+    if(this.data.type === "power"){
+      if(this.data.data.attacks === undefined)
+        this.data.data.attacks = 1;
+    }
   }
 
   formatDescription(description){
