@@ -42,6 +42,26 @@
               </div>
             </div>
             <div class="expandable" style="max-height: 1000px" data-item-id="{{armament._id}}">
+              {{#ifEquals armament.data.armamentType "Lance"}}
+                <div class="stamina">
+                  Stamina:
+                  {{#if armament.flags.tpo.stamina.pointOne}}
+                    <input id="pointOne" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
+                  {{else}}
+                    <input id="pointOne" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
+                  {{/if}}
+                  {{#if armament.flags.tpo.stamina.pointTwo}}
+                    <input id="pointTwo" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
+                  {{else}}
+                    <input id="pointTwo" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
+                  {{/if}}
+                  {{#if armament.flags.tpo.stamina.pointThree}}
+                    <input id="pointThree" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
+                  {{else}}
+                    <input id="pointThree" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
+                  {{/if}}
+                </div>
+              {{/ifEquals}}
               {{#ifEquals armament.data.armamentType "Arquebus"}}
                 {{#if armament.flags.tpo.loadedAmmo.isEjected}}
                   Loaded Ammo: 

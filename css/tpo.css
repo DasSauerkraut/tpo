@@ -1135,6 +1135,22 @@
   font-size: 14px;
 }
 
+.tpo .stamina {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.tpo .stamina .stamina-checkbox {
+  -webkit-filter: grayscale(0%);
+  height: 15px;
+  accent-color: #642422;
+  margin: 0px;
+}
+
 .tpo .abilities {
   text-align: center;
   margin-top: 3px;

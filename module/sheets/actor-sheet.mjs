@@ -122,8 +122,9 @@ export class tpoActorSheet extends ActorSheet {
       }
     });
 
-    //Ammo Selection
+    //--------------------------ARMAMENT SPECIFIC-------------------------//
     html.find(".loaded-input").change(this._onAmmoChange.bind(this));
+    html.find(".stamina-checkbox").change(this._onStaminaChange.bind(this));
 
     // Active Effect management
     html.find(".effect-control").click(ev => onManageActiveEffect(ev, this.actor));
@@ -243,6 +244,14 @@ export class tpoActorSheet extends ActorSheet {
     let flag = {};
     flag[select] = event.currentTarget.value
     await item.setFlag('tpo', 'loadedAmmo', flag)
+  }
+
+  async _onStaminaChange(event) {
+    const li = $(event.currentTarget).parents(".expandable");
+    const select = $(event.currentTarget).attr('id');
+    const item = this.actor.items.get(li.data("itemId"));
+    const prev = await item.getFlag('tpo', `stamina.${select}`)
+    await item.setFlag('tpo', `stamina.${select}`, !prev)
   }
 
   _onPowerOrArmamentEdit(event) {

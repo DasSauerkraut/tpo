@@ -174,3 +174,14 @@
   font-family: $font-primary;
   font-size: 14px;
 }
+
+.stamina {
+  display: flex;
+  align-items: center;
+  .stamina-checkbox{
+    -webkit-filter: grayscale(0%);
+    height: 15px;
+    accent-color: #642422;
+    margin: 0px;
+  }
+}

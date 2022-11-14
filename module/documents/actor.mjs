@@ -229,6 +229,17 @@ export class tpoActor extends Actor {
             await i.setFlag('tpo', 'loadedAmmo.max', 1)
         }
 
+        //---------------------Lance Stuff----------------------------------//
+        if(i.data.data.armamentType === "Lance"){
+          if(i.getFlag('tpo', 'stamina') === undefined)
+            await i.setFlag('tpo', 'stamina', {
+              pointOne: true,
+              pointTwo: true,
+              pointThree: true,
+            })
+        }
+
+
       } else if(i.type == "power" && !i.data.data.parent.hasParent){
         unsortedPowers.push(i.data);
         inventory.nonEnc.push(i.data)
