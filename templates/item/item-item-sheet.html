@@ -12,6 +12,14 @@
           <label class="resource-label">Encumberence</label>
           <input type="text" name="data.enc" value="{{data.enc}}" data-dtype="Number"/>
         </div>
+        <div class="money-header">
+          <div class="money-grid grid grid-4col">
+            <span class="money"><input class="money-field" type="text" name="data.value.l" value="{{data.value.l}}" data-dtype="Number"/>ℓ</span>
+            <span class="money"><input class="money-field" type="text" name="data.value.s" value="{{data.value.s}}" data-dtype="Number"/>s</span>
+            <span class="money"><input class="money-field" type="text" name="data.value.c" value="{{data.value.c}}" data-dtype="Number"/>c = </span>
+            <div class="money-total">{{data.value.total}}ℓ</div>
+          </div>
+          <span class="money-label">Value</span>
         <div class="resource">
           <label class="resource-label">Stackable</label>
           TODO

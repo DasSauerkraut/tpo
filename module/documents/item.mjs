@@ -11,6 +11,8 @@ export class tpoItem extends Item {
     // preparation methods overridden (such as prepareBaseData()).
     super.prepareData();
     this.data.data.descriptionDisplay = this.formatDescription(this.data.data.description)
+    if(this.data.data.value)
+      this.data.data.value.total = (this.data.data.value.l + this.data.data.value.s/20 + this.data.data.value.c/200).toFixed(2)
     
     if(this.data.type === "armament"){
       this.data.data.damage.value = this.data.data.damage.base + this.data.data.damage.upgrades;

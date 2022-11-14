@@ -302,7 +302,13 @@
     "types": ["item", "skill", "armament", "power", "ability"],
     "templates": {
       "base": {
-        "description": ""
+        "description": "",
+        "value": {
+          "l": 0,
+          "s": 0,
+          "c": 0,
+          "total": 0
+        }
       },
       "physical": {
         "location": "chest",
@@ -369,6 +375,7 @@
       "isWeak": false,
       "elementDamageMod": 0,
       "used": false,
+      "attacks": 0,
       "parent": {
         "hasParent": false,
         "id": ""
