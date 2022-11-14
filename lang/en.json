@@ -93,6 +93,10 @@
   "SYS.ExceedsAP": "Using this Power will exceed your remaining AP.",
   "SYS.ExceedsMaxAdvantage": "TPO | Advantage/Disadvantage cannot exceed 100",
   "SYS.Rest": "Rest and Recover HP",
+  "SYS.NoAmmoLoaded": "TPO | No ammunition is currently loaded!",
+  "SYS.LoadArquebus": "Load Arquebus",
+  "SYS.EjectMagazine": "Eject Magazine",
+  "SYS.CannotLoadBoth": "TPO | Cannot load both barrels with one Reload, unless you use the Emergency Reload Power.",
 
   "ROLL.Marginal": "Marginal",
   "ROLL.Impressive": "Impressive",

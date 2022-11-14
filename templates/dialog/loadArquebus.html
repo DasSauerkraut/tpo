@@ -1,0 +1,35 @@
+<div class="load-dialog">
+  {{#if isEjected}}
+  <div>
+    Load Ammo: 
+    <select id="slotOne" class="loaded-input" type="text" name="slotOne">
+      {{#select loaded.slotOne}}
+      <option value="Unloaded">Unloaded</option>
+      {{#each ammo as |power id|}}
+      <option value="{{power.name}}">{{power.name}}</option>
+      {{/each}}
+      {{/select}}
+    </select>
+    {{#greaterThan maxLoaded 1}}
+    <select id="slotTwo" class="loaded-input" type="text" name="slotTwo">
+      {{#select loaded.slotTwo}}
+      <option value="Unloaded">Unloaded</option>
+        {{#each ammo as |power id|}}
+        <option value="{{power.name}}">{{power.name}}</option>
+        {{/each}}
+      {{/select}}
+    </select>
+    {{/greaterThan}}
+    {{#greaterThan maxLoaded 2}}
+    <select id="slotThree" class="loaded-input" type="text" name="slotThree">
+      {{#select loaded.slotThree}}
+      <option value="Unloaded">Unloaded</option>
+        {{#each ammo as |power id|}}
+        <option value="{{power.name}}">{{power.name}}</option>
+        {{/each}}
+      {{/select}}
+      </select>
+    {{/greaterThan}}
+  </div>
+  {{/if}}
+</div>

@@ -164,3 +164,13 @@
 .dragover{
   background-color: #5e5c52d1;
 }
+
+.loaded-input{
+  text-align: center;
+  margin: 0;
+  border-radius: 0px;
+  border: 0px;
+  border-bottom: 1px solid var(--color-border-light-tertiary);
+  font-family: $font-primary;
+  font-size: 14px;
+}

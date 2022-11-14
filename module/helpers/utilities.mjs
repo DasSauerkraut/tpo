@@ -392,4 +392,117 @@ export class UtilsTPO {
       AudioHelper.play({src : file, volume: game.settings.get("core", "globalInterfaceVolume"), autoplay: true}, localSound)
     }
   }
+
+  static async arquebusPowerHelper(actor, power){
+    const armament = actor.items.get(power.data.parent.id);
+    const hasMagazine = armament.data.data.upgrades.some(upg => {return upg.name === 'Magazine'})
+    const hasDoubleBarreled = armament.data.data.upgrades.some(upg => {return upg.name === 'Double Barreled'})
+    const loaded = armament.getFlag('tpo', 'loadedAmmo')
+
+    if(power.name === 'Fire' || power.name === 'Drakegonne' || power.name === 'Dragonstake' || power.name === 'Wyrmsnare' ||
+    power.name === 'Grand Overture' || power.name === 'Overwatch') {
+      //Uses Ammo
+      if(hasDoubleBarreled){
+        if(loaded.slotOne !== 'Unloaded')
+          await armament.setFlag('tpo', 'loadedAmmo.slotOne', 'Unloaded')
+        else if(loaded.slotTwo !== 'Unloaded')
+          await armament.setFlag('tpo', 'loadedAmmo.slotTwo', 'Unloaded')
+        else
+          ui.notifications.warn(game.i18n.format('SYS.NoAmmoLoaded'));
+      } else if (hasMagazine) {
+        if(loaded.slotOne !== 'Unloaded')
+          await armament.setFlag('tpo', 'loadedAmmo.slotOne', 'Unloaded')
+        else if(loaded.slotTwo !== 'Unloaded')
+          await armament.setFlag('tpo', 'loadedAmmo.slotTwo', 'Unloaded')
+        else if(loaded.slotThree !== 'Unloaded')
+          await armament.setFlag('tpo', 'loadedAmmo.slotThree', 'Unloaded')
+        else
+          ui.notifications.warn(game.i18n.format('SYS.NoAmmoLoaded'));
+      } else {
+        if(loaded.slotOne !== 'Unloaded')
+          await armament.setFlag('tpo', 'loadedAmmo.slotOne', 'Unloaded')
+        else
+          ui.notifications.warn(game.i18n.format('SYS.NoAmmoLoaded'));
+      }
+    } else if (power.name.includes('Reload')) {
+      let response = {}
+      let callback = (html) => {
+        response = {
+          'slotOne': html.find('[name="slotOne"]').val(),
+          'slotTwo': html.find('[name="slotTwo"]').val(),
+          'slotThree': html.find('[name="slotThree"]').val(),
+          'eject': html.find('[name="eject"]').is(':checked')
+        }
+        return response;
+      }
+
+      //Makes sure the Is Ejected check does not happen when the magazine upgrade is not installed.
+      let isEjected = loaded.isEjected;
+      if(!hasMagazine)
+        isEjected = true;
+
+      const loadData = {
+        ammo: armament.data.data.miscPowers,
+        hasDoubleBarreled: hasDoubleBarreled,
+        hasMagazine: hasMagazine,
+        isEjected: isEjected,
+        maxLoaded: loaded.max,
+        loaded: loaded
+      }
+
+      console.log(loadData)
+      let title = isEjected ? game.i18n.localize("SYS.LoadArquebus") : game.i18n.localize("SYS.EjectMagazine") 
+  
+      renderTemplate('systems/tpo/templates/dialog/loadArquebus.html', loadData).then(dlg => {
+        new Dialog({
+          title: title,
+          content: dlg,
+          buttons: {
+            rollButton: {
+              label: title,
+              callback: async html => {
+                callback(html);
+                console.log(response)
+                if(hasMagazine){
+                  if(loaded.isEjected){
+                    await armament.setFlag('tpo', 'loadedAmmo.slotOne', response.slotOne)
+                    await armament.setFlag('tpo', 'loadedAmmo.slotTwo', response.slotTwo)
+                    await armament.setFlag('tpo', 'loadedAmmo.slotThree', response.slotThree)
+                    //AP Cost Increase
+                    if(response.slotTwo !== 'Unloaded' || response.slotThree !== 'Unloaded'){
+                      if(2 > actor.data.data.derived.ap.value)
+                        ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
+                      await actor.update({[`data.derived.ap.value`]: actor.data.data.derived.ap.value - 2 })
+                      await armament.setFlag('tpo', 'loadedAmmo.isEjected', false)
+                    }
+                    UtilsTPO.playContextSound(power, "use")
+                  } else {
+                    await armament.setFlag('tpo', 'loadedAmmo.isEjected', true)
+                    await armament.setFlag('tpo', 'loadedAmmo.slotOne', 'Unloaded')
+                    await armament.setFlag('tpo', 'loadedAmmo.slotTwo', 'Unloaded')
+                    await armament.setFlag('tpo', 'loadedAmmo.slotThree', 'Unloaded')
+                  }
+                } else if (hasDoubleBarreled){
+                  const slotOneDiffers = response.slotOne !== loaded.slotOne
+                  const slotTwoDiffers = response.slotTwo !== loaded.slotTwo
+                  if(slotOneDiffers && slotTwoDiffers && power.name !== 'Emergency Reload'){
+                    ui.notifications.error(game.i18n.format('SYS.CannotLoadBoth'));
+                    await actor.update({[`data.derived.ap.value`]: actor.data.data.derived.ap.value + 2 })
+                  } else {
+                    await armament.setFlag('tpo', 'loadedAmmo.slotOne', response.slotOne)
+                    await armament.setFlag('tpo', 'loadedAmmo.slotTwo', response.slotTwo)
+                    UtilsTPO.playContextSound(power, "use")
+                  }
+                } else {
+                  await armament.setFlag('tpo', 'loadedAmmo.slotOne', response.slotOne)
+                  UtilsTPO.playContextSound(power, "use")
+                }
+              }
+            },
+          },
+          default: "rollButton"
+        }).render(true);
+      });
+    }
+  }
 }

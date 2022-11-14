@@ -122,6 +122,9 @@ export class tpoActorSheet extends ActorSheet {
       }
     });
 
+    //Ammo Selection
+    html.find(".loaded-input").change(this._onAmmoChange.bind(this));
+
     // Active Effect management
     html.find(".effect-control").click(ev => onManageActiveEffect(ev, this.actor));
 
@@ -231,6 +234,15 @@ export class tpoActorSheet extends ActorSheet {
       $(".unequipped-powers").removeClass("dragover");
       this._onPowerUnequip(ev, JSON.parse(ev.originalEvent.dataTransfer.getData("text/plain")).data)
     })
+  }
+
+  async _onAmmoChange(event) {
+    const li = $(event.currentTarget).parents(".expandable");
+    const select = $(event.currentTarget).attr('id');
+    const item = this.actor.items.get(li.data("itemId"));
+    let flag = {};
+    flag[select] = event.currentTarget.value
+    await item.setFlag('tpo', 'loadedAmmo', flag)
   }
 
   _onPowerOrArmamentEdit(event) {
@@ -671,6 +683,13 @@ export class tpoActorSheet extends ActorSheet {
       ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
     this.actor.update({[`data.derived.ap.value`]: this.actor.data.data.derived.ap.value - power.data.apCost })
 
+    if(armament.data.armamentType === 'Arquebus')
+      UtilsTPO.arquebusPowerHelper(this.actor, power)
+
+    if(!power.name.includes("Reload"))
+      UtilsTPO.playContextSound(power, "use")
+    
+
     let skill = this.actor.items.getName(`Weapon (${armament.data.skill})`);
 
     let testData = {
@@ -697,7 +716,6 @@ export class tpoActorSheet extends ActorSheet {
         }
       }
     }
-    UtilsTPO.playContextSound(power, "use")
     if(testData.attacks < 1){
       console.log(power)
       let chatContent = `

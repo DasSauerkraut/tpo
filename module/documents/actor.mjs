@@ -164,7 +164,7 @@ export class tpoActor extends Actor {
     actorData.data.derived.encumbrance.locations.rScabbard.owned = false;
     actorData.data.derived.encumbrance.locations.rPouch.owned = false;
 
-    actorData.items.forEach( i => {
+    actorData.items.forEach( async i => {
       if(i.data.data.splendor){
         actorData.data.info.splendor.items += i.data.data.splendor;
       }
@@ -218,6 +218,16 @@ export class tpoActor extends Actor {
 
         inventory[i.data.data.location].push(i.data)
         actorData.data.derived.encumbrance.locations[i.data.data.location].value += i.data.data.enc;
+
+        //----------------------Arquebus Specific Stuff--------------------//
+        if(i.data.data.armamentType === "Arquebus"){
+          if(i.data.data.upgrades.some(upg => {return upg.name === 'Double Barreled'}))
+            await i.setFlag('tpo', 'loadedAmmo.max', 2)
+          else if(i.data.data.upgrades.some(upg => {return upg.name === 'Magazine'}))
+            await i.setFlag('tpo', 'loadedAmmo.max', 3)
+          else
+            await i.setFlag('tpo', 'loadedAmmo.max', 1)
+        }
 
       } else if(i.type == "power" && !i.data.data.parent.hasParent){
         unsortedPowers.push(i.data);
