@@ -224,3 +224,106 @@ TPO.statuses = [
     description: "You're dead bruh."
   },
 ]
+
+TPO.injuries = [
+  {
+    label: "INJURY.FashionableScar",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "A dramatic cut along forehead or nose that should scar up nicely. Gain a Bleeding 1 Status. Once the wound has healed up, in an appropriate context, you can gain Advantage on a social roll, you can only do this once per encounter"
+  },
+  {
+    label: "INJURY.StunningBlow",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "Gain a Stunned and Prone status as you are knocked to the ground"
+  },
+  {
+    label: "INJURY.FleshWound",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "Take Ongoing Damage 4"
+  },
+  {
+    label: "INJURY.LightsOut",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "Gain an Unconscious and Prone status, suffering 1d10 damage as you collapse to the floor"
+  },
+  {
+    label: "INJURY.NastyGash",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "Gain a Bleeding 3 Status and take Ongoing Damage 3 until someone can attempt to staunch the bleeding with a successful Average (+20) Heal Test or Challenging (+0) Intellect Test"
+  },
+  {
+    label: "INJURY.Disorientated",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "The blow knocks you about, disorientating you. Make a Demanding (+10) Endurance Test, if you fail, immediately make a basic attack directed at the nearest creature, allied or not. Gain a Stunned Status."
+  },
+  {
+    label: "INJURY.BrokenNose",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "Gain a Stunned Condition. Until healed, suffer Disadvantage on all Language, Haggle, Intimidation, and Persuasion Tests. This will heal in 20+2d10 days"
+  },
+  {
+    label: "INJURY.BrokeItem",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "A random item, determined by the GM, breaks, rendering it useless. The item cannot be a Power Slate or Armament"
+  },
+  {
+    label: "INJURY.TornLigament",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "Your ankle rolls in an unnatural way, tearing the tendons within. Your Movement is halved and suffer a -10 modifier on any rolls involving your feet or movement. This will heal in 30+2d10 days, but a successful Average (+20) Heal Test performed on the same day as the injury can reduce the heal time by 10 days. This can only be done once."
+  },
+  {
+    label: "INJURY.Tinnitus",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "The force of the strike causes a long-lasting ringing in your ears. Until healed, suffer Disadvantage on all Perception and Intuition tests involving hearing. This will heal in 50+2d10 days"
+  },
+  {
+    label: "INJURY.TornMuscle",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "Until healed, whenever you perform a test that would require use of your primary arm, suffer Disadvantage on that roll. This will heal in 30+2d10 days."
+  },
+  {
+    label: "INJURY.Infected",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "While not having an immediate effect, the injury you suffered starts to fester a day after receiving the wound. Every day that passes, your Max HP is reduced by 1 while this Injury persists. Should your Max HP be reduced to 0, you die. Every day, someone may attempt a Difficult (-10) Heal Test or a Very Hard (-40) Intellect Test. After 5 successful Tests, this Injury is healed and your Max HP returns to normal."
+  },
+  {
+    label: "INJURY.GrievousWound",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: " Gain a Bleeding 4 Status and take Ongoing Damage 5. Until this injury heals, whenever you roll on the Injury table, you must roll twice and take the worst result. Healing this wound requires Surgery (Demanding)."
+  },
+  {
+    label: "INJURY.SmashedMouth",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "The blow crushes your jaw, causing you to lose 1d10 teeth and breaking it. Gain a Stunned Status. Make a Hard (-20) Endurance Test or gain the Unconscious Condition. Until your jaw heals, you can only eat liquids and suffer Disadvantage on all social tests. This will heal in 30+2d10 days, after which you need to make a successful Average (+20) Endurance Test or the bone will set improperly, giving you a permanent -10 to Charisma."
+  },
+  {
+    label: "INJURY.BrokenLimb",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "A bone in one of your limb’s snaps. To determine the affected limb, refer to the Injured Limb table on the previous page. Until healed, any test that involves the affected limb has 2 Disadvantages. If the affected limb is a leg, your Movement is halved. This injury will heal in 30+1d10 days and unless you succeed an Average (+20) Endurance Test, the bone will set improperly, giving you a permanent -10 to rolls related to that limb."
+  },
+  {
+    label: "INJURY.StabbedEye",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "The blade slips right into your eye. Gain a Bleeding 6 and Stunned Status that cannot be removed until you receive medical attention. Make an Average (+20) Endurance Test, success means you keep your eye, otherwise it is ruined, permanently blinded by the blow causing you to have Disadvantage on all Perception tests. If you can reach someone who can perform Surgery within a week of having your eye ruined, they may attempt to save you eye with a Surgery (Hard) roll. If the eye is not ruined, normal eyesight will return in 30+2d10 days."
+  },
+  {
+    label: "INJURY.SeveredMuscles",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "The musculature in one of your limbs is shredded. Refer to the Injured Limb table on the previous page to determine the affected limb. Until healed, any test that involves the affected limb has 2 Disadvantages. This injury will not start to heal until you have received Surgery (Average), after which you will heal 20+1d10 days."
+  },
+  {
+    label: "INJURY.LoseALimb",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "A limb is cleanly severed. To determine the affected limb, refer to the Injured Limb table on the previous page. You cannot use that limb anymore. If the affected limb is a leg, you cannot take the Dodge action and tests involving your legs will have 2 Disadvantages. If the affected limb is an arm or hand, you will have 2 Disadvantages on all tests requiring the use of both hands. Prosthetics can reduce the penalty of having a missing limb."
+  },
+  {
+    label: "INJURY.InternalBleeding",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "Gain a Bleeding 4 Status and take Ongoing Damage 2. These cannot be removed as normal, instead they can only be removed with Surgery (Challenging). At the end of each day this Injury persists, perform an Easy (+40) Endurance Test. Failing this test means that you gain an Infected Injury as well."
+  },
+  {
+    label: "INJURY.Decapitated",
+    icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
+    description: "Your head goes sailing off in a lazy arc. You are dead."
+  }
+]

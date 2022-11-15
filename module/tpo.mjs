@@ -126,6 +126,7 @@ Hooks.on("updateCombat", (combat) => {
       <div>${combatant.actor.data.name} is under the following effects!<div>
     `
   }
+
   let bleedings = [];
   let exhausteds = [];
   let ongoings = [];
@@ -147,21 +148,29 @@ Hooks.on("updateCombat", (combat) => {
       paralyzeds.push(effect);
       return;
     }
-    let description = TPO.statuses.filter(s => {
+    let lookup = TPO.statuses.filter(s => {
       return game.i18n.format(s.label) === effect.data.label;
     });
 
-    if(description.length === 0)
-      description = "No Description."
-    else
-      description = description[0].description;
-    
+    let isInjury;
+    if(lookup.length === 0){
+      lookup = TPO.injuries.filter(s => {
+        return game.i18n.format(s.label) === effect.data.label;
+      });
+      isInjury = lookup.length !== 0
+    }
 
+    let description;
+    if(lookup.length === 0){
+      description = "No Description."
+     }else
+      description = lookup[0].description;
+    
     statuses += `
       <br>
       <b>${effect.data.label}</b>
       <div style="display:flex;">
-        <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${effect.data.icon}" alt="${effect.data.label}">
+        <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${isInjury ? lookup[0].icon : effect.data.icon}" alt="${effect.data.label}">
         <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
       </div>
     `
