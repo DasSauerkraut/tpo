@@ -758,4 +758,22 @@ export class UtilsTPO {
       }
     })
   }
+
+  static async leechBladeHelper(actor, power){
+    return new Promise(resolve => {
+      const armament = actor.items.get(power.data.parent.id);
+      const hasSpite = armament.data.data.upgrades.some(upg => {return upg.name === 'Spite'})
+      const leechRegExp = /(Leech )(\d+)/g
+      const leechMatches = [...power.data.description.matchAll(leechRegExp)]
+      console.log(leechMatches)
+
+      if(leechMatches.length > 0){
+        if(hasSpite && actor.data.data.derived.hp.value < actor.data.data.derived.bloodied.value){
+          console.log(leechMatches[0][2])
+          resolve(leechMatches[0][2])
+        }
+      }
+      resolve()
+    })
+  }
 }

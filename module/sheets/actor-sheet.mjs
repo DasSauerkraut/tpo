@@ -799,6 +799,8 @@ export class tpoActorSheet extends ActorSheet {
       await UtilsTPO.battleStandardHelper(this.actor, power).then(() => this._preformPower(power, armament))
     } else if(armament.data.armamentType === 'Vapor Launcher'){
       await UtilsTPO.vaporLauncherHelper(this.actor, power).then((ammo) => this._preformPower(power, armament, {ammo: ammo}))
+    } else if(armament.data.armamentType === 'Leech Blade'){
+      await UtilsTPO.leechBladeHelper(this.actor, power).then((damageBns) => this._preformPower(power, armament, {damageBns: damageBns}))
     } else {
       this._preformPower(power, armament)
     }
@@ -807,9 +809,14 @@ export class tpoActorSheet extends ActorSheet {
   _preformPower(power, armament, options = {}){
     let usesAmmo = false;
     let ammo;
+    let damage;
     if(options.ammo){
       ammo = this.actor.items.getName(options.ammo).data
       usesAmmo = true;
+    }
+
+    if(options.damageBns){
+      damage = usesAmmo ? Number(ammo.data.damageMod) + Number(options.damageBns) : Number(power.data.damageMod) + Number(options.damageBns);
     }
 
     if(!power.name.includes("Reload"))
@@ -825,7 +832,7 @@ export class tpoActorSheet extends ActorSheet {
       difficulty: 0,
       hasDamage: true,
       weakDamage: usesAmmo ? ammo.data.isWeak : power.data.isWeak,
-      damage: usesAmmo ? ammo.data.damageMod : power.data.damageMod,
+      damage: damage,
       element: armament.data.selectedElement.display,
       elementDamage: usesAmmo ? ammo.data.elementDamageMod : power.data.elementDamageMod,
       attacks: power.data.attacks
