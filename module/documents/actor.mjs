@@ -253,6 +253,18 @@ export class tpoActor extends Actor {
             await i.setFlag('tpo', 'orders', [])
           }
         }
+
+        //------------------Vapor Launcher--------------------------------//
+        if(i.data.data.armamentType === "Vapor Launcher"){
+          if(i.getFlag('tpo', 'magazine') === undefined){
+            await i.setFlag('tpo', 'magazine', {
+              slotOne: 'Unloaded',
+              slotTwo: 'Unloaded',
+              slotThree: 'Unloaded',
+            })
+          }
+        }
+
       } else if(i.type == "power" && !i.data.data.parent.hasParent){
         unsortedPowers.push(i.data);
         inventory.nonEnc.push(i.data)

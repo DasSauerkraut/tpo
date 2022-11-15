@@ -42,6 +42,33 @@
               </div>
             </div>
             <div class="expandable" style="max-height: 1000px" data-item-id="{{armament._id}}">
+              {{#ifEquals armament.data.armamentType "Vapor Launcher"}}
+                Magazine: 
+                <select id="slotOne" class="shell-input" name="armament.flags.tpo.magazine.slotOne" type="text" value="{{armament.flags.tpo.magazine.slotOne}}">
+                {{#select armament.flags.tpo.magazine.slotOne}}
+                  <option value="Unloaded">Unloaded</option>
+                  {{#each armament.data.miscPowers as |power id|}}
+                  <option value="{{power.name}}">{{power.name}}</option>
+                  {{/each}}
+                {{/select}}
+                </select>
+                <select id="slotTwo" class="shell-input" name="armament.flags.tpo.magazine.slotTwo" type="text" value="{{armament.flags.tpo.magazine.slotTwo}}">
+                  {{#select armament.flags.tpo.magazine.slotTwo}}
+                    <option value="Unloaded">Unloaded</option>
+                    {{#each armament.data.miscPowers as |power id|}}
+                    <option value="{{power.name}}">{{power.name}}</option>
+                    {{/each}}
+                  {{/select}}
+                  </select>
+                <select id="slotThree" class="shell-input" name="armament.flags.tpo.magazine.slotThree" type="text" value="{{armament.flags.tpo.magazine.slotThree}}">
+                  {{#select armament.flags.tpo.magazine.slotThree}}
+                    <option value="Unloaded">Unloaded</option>
+                    {{#each armament.data.miscPowers as |power id|}}
+                    <option value="{{power.name}}">{{power.name}}</option>
+                    {{/each}}
+                  {{/select}}
+                  </select>
+              {{/ifEquals}}
               {{#ifEquals armament.data.armamentType "Battle Standard"}}
                 <div class="orders">
                   Command Queue: 

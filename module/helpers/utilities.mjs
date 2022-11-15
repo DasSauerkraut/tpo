@@ -394,207 +394,292 @@ export class UtilsTPO {
   }
 
   static async arquebusPowerHelper(actor, power){
-    const armament = actor.items.get(power.data.parent.id);
-    const hasMagazine = armament.data.data.upgrades.some(upg => {return upg.name === 'Magazine'})
-    const hasDoubleBarreled = armament.data.data.upgrades.some(upg => {return upg.name === 'Double Barreled'})
-    const loaded = armament.getFlag('tpo', 'loadedAmmo')
+    return new Promise(async (resolve) => {
+      const armament = actor.items.get(power.data.parent.id);
+      const hasMagazine = armament.data.data.upgrades.some(upg => {return upg.name === 'Magazine'})
+      const hasDoubleBarreled = armament.data.data.upgrades.some(upg => {return upg.name === 'Double Barreled'})
+      const loaded = armament.getFlag('tpo', 'loadedAmmo')
 
-    if(power.name === 'Fire' || power.name === 'Drakegonne' || power.name === 'Dragonstake' || power.name === 'Wyrmsnare' ||
-    power.name === 'Grand Overture' || power.name === 'Overwatch') {
-      //Uses Ammo
-      if(hasDoubleBarreled){
-        if(loaded.slotOne !== 'Unloaded')
-          await armament.setFlag('tpo', 'loadedAmmo.slotOne', 'Unloaded')
-        else if(loaded.slotTwo !== 'Unloaded')
-          await armament.setFlag('tpo', 'loadedAmmo.slotTwo', 'Unloaded')
-        else
-          ui.notifications.warn(game.i18n.format('SYS.NoAmmoLoaded'));
-      } else if (hasMagazine) {
-        if(loaded.slotOne !== 'Unloaded')
-          await armament.setFlag('tpo', 'loadedAmmo.slotOne', 'Unloaded')
-        else if(loaded.slotTwo !== 'Unloaded')
-          await armament.setFlag('tpo', 'loadedAmmo.slotTwo', 'Unloaded')
-        else if(loaded.slotThree !== 'Unloaded')
-          await armament.setFlag('tpo', 'loadedAmmo.slotThree', 'Unloaded')
-        else
-          ui.notifications.warn(game.i18n.format('SYS.NoAmmoLoaded'));
-      } else {
-        if(loaded.slotOne !== 'Unloaded')
-          await armament.setFlag('tpo', 'loadedAmmo.slotOne', 'Unloaded')
-        else
-          ui.notifications.warn(game.i18n.format('SYS.NoAmmoLoaded'));
-      }
-    } else if (power.name.includes('Reload')) {
-      let response = {}
-      let callback = (html) => {
-        response = {
-          'slotOne': html.find('[name="slotOne"]').val(),
-          'slotTwo': html.find('[name="slotTwo"]').val(),
-          'slotThree': html.find('[name="slotThree"]').val(),
-          'eject': html.find('[name="eject"]').is(':checked')
+      if(power.name === 'Fire' || power.name === 'Drakegonne' || power.name === 'Dragonstake' || power.name === 'Wyrmsnare' ||
+      power.name === 'Grand Overture' || power.name === 'Overwatch') {
+        //Uses Ammo
+        if(hasDoubleBarreled){
+          if(loaded.slotOne !== 'Unloaded')
+            await armament.setFlag('tpo', 'loadedAmmo.slotOne', 'Unloaded')
+          else if(loaded.slotTwo !== 'Unloaded')
+            await armament.setFlag('tpo', 'loadedAmmo.slotTwo', 'Unloaded')
+          else
+            ui.notifications.warn(game.i18n.format('SYS.NoAmmoLoaded'));
+        } else if (hasMagazine) {
+          if(loaded.slotOne !== 'Unloaded')
+            await armament.setFlag('tpo', 'loadedAmmo.slotOne', 'Unloaded')
+          else if(loaded.slotTwo !== 'Unloaded')
+            await armament.setFlag('tpo', 'loadedAmmo.slotTwo', 'Unloaded')
+          else if(loaded.slotThree !== 'Unloaded')
+            await armament.setFlag('tpo', 'loadedAmmo.slotThree', 'Unloaded')
+          else
+            ui.notifications.warn(game.i18n.format('SYS.NoAmmoLoaded'));
+        } else {
+          if(loaded.slotOne !== 'Unloaded')
+            await armament.setFlag('tpo', 'loadedAmmo.slotOne', 'Unloaded')
+          else
+            ui.notifications.warn(game.i18n.format('SYS.NoAmmoLoaded'));
         }
-        return response;
-      }
+        resolve()
+      } else if (power.name.includes('Reload')) {
+        let response = {}
+        let callback = (html) => {
+          response = {
+            'slotOne': html.find('[name="slotOne"]').val(),
+            'slotTwo': html.find('[name="slotTwo"]').val(),
+            'slotThree': html.find('[name="slotThree"]').val(),
+            'eject': html.find('[name="eject"]').is(':checked')
+          }
+          return response;
+        }
 
-      //Makes sure the Is Ejected check does not happen when the magazine upgrade is not installed.
-      let isEjected = loaded.isEjected;
-      if(!hasMagazine)
-        isEjected = true;
+        //Makes sure the Is Ejected check does not happen when the magazine upgrade is not installed.
+        let isEjected = loaded.isEjected;
+        if(!hasMagazine)
+          isEjected = true;
 
-      const loadData = {
-        ammo: armament.data.data.miscPowers,
-        hasDoubleBarreled: hasDoubleBarreled,
-        hasMagazine: hasMagazine,
-        isEjected: isEjected,
-        maxLoaded: loaded.max,
-        loaded: loaded
-      }
+        const loadData = {
+          ammo: armament.data.data.miscPowers,
+          hasDoubleBarreled: hasDoubleBarreled,
+          hasMagazine: hasMagazine,
+          isEjected: isEjected,
+          maxLoaded: loaded.max,
+          loaded: loaded
+        }
 
-      let title = isEjected ? game.i18n.localize("SYS.LoadArquebus") : game.i18n.localize("SYS.EjectMagazine") 
-  
-      renderTemplate('systems/tpo/templates/dialog/loadArquebus.html', loadData).then(dlg => {
-        new Dialog({
-          title: title,
-          content: dlg,
-          buttons: {
-            rollButton: {
-              label: title,
-              callback: async html => {
-                callback(html);
-                console.log(response)
-                if(hasMagazine){
-                  if(loaded.isEjected){
-                    await armament.setFlag('tpo', 'loadedAmmo.slotOne', response.slotOne)
-                    await armament.setFlag('tpo', 'loadedAmmo.slotTwo', response.slotTwo)
-                    await armament.setFlag('tpo', 'loadedAmmo.slotThree', response.slotThree)
-                    //AP Cost Increase
-                    if(response.slotTwo !== 'Unloaded' || response.slotThree !== 'Unloaded'){
-                      if(2 > actor.data.data.derived.ap.value)
-                        ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
-                      await actor.update({[`data.derived.ap.value`]: actor.data.data.derived.ap.value - 2 })
-                      await armament.setFlag('tpo', 'loadedAmmo.isEjected', false)
+        let title = isEjected ? game.i18n.localize("SYS.LoadArquebus") : game.i18n.localize("SYS.EjectMagazine") 
+    
+        renderTemplate('systems/tpo/templates/dialog/loadArquebus.html', loadData).then(dlg => {
+          new Dialog({
+            title: title,
+            content: dlg,
+            buttons: {
+              rollButton: {
+                label: title,
+                callback: async html => {
+                  callback(html);
+                  console.log(response)
+                  if(hasMagazine){
+                    if(loaded.isEjected){
+                      await armament.setFlag('tpo', 'loadedAmmo.slotOne', response.slotOne)
+                      await armament.setFlag('tpo', 'loadedAmmo.slotTwo', response.slotTwo)
+                      await armament.setFlag('tpo', 'loadedAmmo.slotThree', response.slotThree)
+                      //AP Cost Increase
+                      if(response.slotTwo !== 'Unloaded' || response.slotThree !== 'Unloaded'){
+                        if(2 > actor.data.data.derived.ap.value)
+                          ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
+                        await actor.update({[`data.derived.ap.value`]: actor.data.data.derived.ap.value - 2 })
+                        await armament.setFlag('tpo', 'loadedAmmo.isEjected', false)
+                      }
+                      UtilsTPO.playContextSound(power, "use")
+                    } else {
+                      await armament.setFlag('tpo', 'loadedAmmo.isEjected', true)
+                      await armament.setFlag('tpo', 'loadedAmmo.slotOne', 'Unloaded')
+                      await armament.setFlag('tpo', 'loadedAmmo.slotTwo', 'Unloaded')
+                      await armament.setFlag('tpo', 'loadedAmmo.slotThree', 'Unloaded')
                     }
-                    UtilsTPO.playContextSound(power, "use")
-                  } else {
-                    await armament.setFlag('tpo', 'loadedAmmo.isEjected', true)
-                    await armament.setFlag('tpo', 'loadedAmmo.slotOne', 'Unloaded')
-                    await armament.setFlag('tpo', 'loadedAmmo.slotTwo', 'Unloaded')
-                    await armament.setFlag('tpo', 'loadedAmmo.slotThree', 'Unloaded')
-                  }
-                } else if (hasDoubleBarreled){
-                  const slotOneDiffers = response.slotOne !== loaded.slotOne
-                  const slotTwoDiffers = response.slotTwo !== loaded.slotTwo
-                  if(slotOneDiffers && slotTwoDiffers && power.name !== 'Emergency Reload'){
-                    ui.notifications.error(game.i18n.format('SYS.CannotLoadBoth'));
-                    await actor.update({[`data.derived.ap.value`]: actor.data.data.derived.ap.value + 2 })
+                  } else if (hasDoubleBarreled){
+                    const slotOneDiffers = response.slotOne !== loaded.slotOne
+                    const slotTwoDiffers = response.slotTwo !== loaded.slotTwo
+                    if(slotOneDiffers && slotTwoDiffers && power.name !== 'Emergency Reload'){
+                      ui.notifications.error(game.i18n.format('SYS.CannotLoadBoth'));
+                      await actor.update({[`data.derived.ap.value`]: actor.data.data.derived.ap.value + 2 })
+                    } else {
+                      await armament.setFlag('tpo', 'loadedAmmo.slotOne', response.slotOne)
+                      await armament.setFlag('tpo', 'loadedAmmo.slotTwo', response.slotTwo)
+                      UtilsTPO.playContextSound(power, "use")
+                    }
                   } else {
                     await armament.setFlag('tpo', 'loadedAmmo.slotOne', response.slotOne)
-                    await armament.setFlag('tpo', 'loadedAmmo.slotTwo', response.slotTwo)
                     UtilsTPO.playContextSound(power, "use")
                   }
-                } else {
-                  await armament.setFlag('tpo', 'loadedAmmo.slotOne', response.slotOne)
-                  UtilsTPO.playContextSound(power, "use")
+                  resolve()
                 }
-              }
+              },
             },
-          },
-          default: "rollButton"
-        }).render(true);
-      });
-    }
+            default: "rollButton"
+          }).render(true);
+        });
+      }
+    })
   }
 
   static async battleStandardHelper(actor, power){
-    const armament = actor.items.get(power.data.parent.id);
-    let orderArray = await armament.getFlag('tpo', `orders`)
+    return new Promise(async (resolve) => {
+      const armament = actor.items.get(power.data.parent.id);
+      let orderArray = await armament.getFlag('tpo', `orders`)
 
-    if(power.name.includes("Ordered")){
-      const loadData = {
-        genius: power.name === "Ordered Genius"
-      }
-      let response = {}
-
-      let callback = (html) => {
-        response = {
-          'orderOne': html.find('[name="orderOne"]').val(),
-          'orderTwo': html.find('[name="orderTwo"]').val(),
+      if(power.name.includes("Ordered")){
+        const loadData = {
+          genius: power.name === "Ordered Genius"
         }
-        return response;
-      }
+        let response = {}
 
-      renderTemplate('systems/tpo/templates/dialog/orderPicker.html', loadData).then(dlg => {
-        new Dialog({
-          title: game.i18n.localize("SYS.SelectOrder"),
-          content: dlg,
-          buttons: {
-            rollButton: {
-              label: game.i18n.localize("SYS.SelectOrder"),
-              callback: async html => {
-                callback(html);
-                console.log(response)
-                orderArray.push({
-                  id: Date.now(),
-                  value: response.orderOne
-                })
-                if(response.orderTwo !== undefined){
+        let callback = (html) => {
+          response = {
+            'orderOne': html.find('[name="orderOne"]').val(),
+            'orderTwo': html.find('[name="orderTwo"]').val(),
+          }
+          return response;
+        }
+
+        renderTemplate('systems/tpo/templates/dialog/orderPicker.html', loadData).then(dlg => {
+          new Dialog({
+            title: game.i18n.localize("SYS.SelectOrder"),
+            content: dlg,
+            buttons: {
+              rollButton: {
+                label: game.i18n.localize("SYS.SelectOrder"),
+                callback: async html => {
+                  callback(html);
+                  console.log(response)
                   orderArray.push({
                     id: Date.now(),
-                    value: response.orderTwo
+                    value: response.orderOne
                   })
+                  if(response.orderTwo !== undefined){
+                    orderArray.push({
+                      id: Date.now(),
+                      value: response.orderTwo
+                    })
+                  }
+                  await armament.setFlag('tpo', `orders`, orderArray)
+                  resolve();
                 }
-                await armament.setFlag('tpo', `orders`, orderArray)
-              }
+              },
             },
-          },
-          default: "rollButton"
-        }).render(true);
-      });
-    }
-    // else if(power.name === "Execute Commands"){
-    //   const commands = armament.data.data.miscPowers;
-    //   console.log(commands)
-    //   const loadData = {
-    //     orders: orderArray,
-    //     commands: commands
-    //   }
-    //   let response = {}
+            default: "rollButton"
+          }).render(true);
+        });
+      }
+      // else if(power.name === "Execute Commands"){
+      //   const commands = armament.data.data.miscPowers;
+      //   console.log(commands)
+      //   const loadData = {
+      //     orders: orderArray,
+      //     commands: commands
+      //   }
+      //   let response = {}
 
-    //   let callback = (html) => {
-    //     response = {
-    //       'orderOne': html.find('[name="orderOne"]').val(),
-    //       'orderTwo': html.find('[name="orderTwo"]').val(),
-    //     }
-    //     return response;
-    //   }
+      //   let callback = (html) => {
+      //     response = {
+      //       'orderOne': html.find('[name="orderOne"]').val(),
+      //       'orderTwo': html.find('[name="orderTwo"]').val(),
+      //     }
+      //     return response;
+      //   }
 
-    //   renderTemplate('systems/tpo/templates/dialog/orderPicker.html', loadData).then(dlg => {
-    //     new Dialog({
-    //       title: game.i18n.localize("SYS.SelectOrder"),
-    //       content: dlg,
-    //       buttons: {
-    //         rollButton: {
-    //           label: game.i18n.localize("SYS.SelectOrder"),
-    //           callback: async html => {
-    //             callback(html);
-    //             console.log(response)
-    //             orderArray.push({
-    //               id: Date.now(),
-    //               value: response.orderOne
-    //             })
-    //             if(response.orderTwo !== undefined){
-    //               orderArray.push({
-    //                 id: Date.now(),
-    //                 value: response.orderTwo
-    //               })
-    //             }
-    //             await armament.setFlag('tpo', `orders`, orderArray)
-    //           }
-    //         },
-    //       },
-    //       default: "rollButton"
-    //     }).render(true);
-    //   });
-    // }
+      //   renderTemplate('systems/tpo/templates/dialog/orderPicker.html', loadData).then(dlg => {
+      //     new Dialog({
+      //       title: game.i18n.localize("SYS.SelectOrder"),
+      //       content: dlg,
+      //       buttons: {
+      //         rollButton: {
+      //           label: game.i18n.localize("SYS.SelectOrder"),
+      //           callback: async html => {
+      //             callback(html);
+      //             console.log(response)
+      //             orderArray.push({
+      //               id: Date.now(),
+      //               value: response.orderOne
+      //             })
+      //             if(response.orderTwo !== undefined){
+      //               orderArray.push({
+      //                 id: Date.now(),
+      //                 value: response.orderTwo
+      //               })
+      //             }
+      //             await armament.setFlag('tpo', `orders`, orderArray)
+      //           }
+      //         },
+      //       },
+      //       default: "rollButton"
+      //     }).render(true);
+      //   });
+      // }
+    })
+  }
+
+  static async vaporLauncherHelper(actor, power){
+    return new Promise((resolve) => {
+      const armament = actor.items.get(power.data.parent.id);
+      const loaded = armament.getFlag('tpo', 'magazine')
+
+      if(power.name === 'Fire Shell' || power.data.description.includes("Discard 1 shell in the magazine, then")){
+        const loadData = {
+          loaded: loaded
+        }
+        let response = {}
+
+        let callback = (html) => {
+          response = {
+            'picked': html.find('[name="picker"]').val(),
+          }
+          return response;
+        }
+
+        const title = power.name === 'Fire Shell' ?  game.i18n.localize("SYS.FireShell") : game.i18n.localize("SYS.DiscardShell")
+
+        renderTemplate('systems/tpo/templates/dialog/shellPicker.html', loadData).then(dlg => {
+          new Dialog({
+            title: title,
+            content: dlg,
+            buttons: {
+              rollButton: {
+                label: title,
+                callback: async html => {
+                  callback(html);
+                  await armament.setFlag('tpo', `magazine.${response.picked}`, 'Unloaded')
+                  resolve()
+                }
+              },
+            },
+            default: "rollButton"
+          }).render(true);
+        });
+      } else if (power.name === 'Reload'){
+        const loadData = {
+          ammo: armament.data.data.miscPowers,
+          maxLoaded: 3,
+          isEjected: true
+        }
+        let response = {}
+
+        let callback = (html) => {
+          response = {
+            'slotOne': html.find('[name="slotOne"]').val(),
+            'slotTwo': html.find('[name="slotTwo"]').val(),
+            'slotThree': html.find('[name="slotThree"]').val(),
+          }
+          return response;
+        }
+
+        renderTemplate('systems/tpo/templates/dialog/loadArquebus.html', loadData).then(dlg => {
+          new Dialog({
+            title: game.i18n.localize("SYS.LoadShells"),
+            content: dlg,
+            buttons: {
+              rollButton: {
+                label: game.i18n.localize("SYS.LoadShells"),
+                callback: async html => {
+                  callback(html);
+                    await armament.setFlag('tpo', 'magazine.slotOne', response.slotOne)
+                    await armament.setFlag('tpo', 'magazine.slotTwo', response.slotTwo)
+                    await armament.setFlag('tpo', 'magazine.slotThree', response.slotThree)
+                    UtilsTPO.playContextSound(power, "use")
+                    resolve()
+                }
+              },
+            },
+            default: "rollButton"
+          }).render(true);
+        });
+      }
+    })
   }
 }

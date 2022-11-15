@@ -124,6 +124,7 @@ export class tpoActorSheet extends ActorSheet {
 
     //--------------------------ARMAMENT SPECIFIC-------------------------//
     html.find(".loaded-input").change(this._onAmmoChange.bind(this));
+    html.find(".shell-input").change(this._onShellChange.bind(this));
     html.find(".stamina-checkbox").change(this._onStaminaChange.bind(this));
     html.find(".add-order").click(this._addOrder.bind(this))
     html.find(".order-input").change(this._changeOrder.bind(this))
@@ -247,6 +248,15 @@ export class tpoActorSheet extends ActorSheet {
     let flag = {};
     flag[select] = event.currentTarget.value
     await item.setFlag('tpo', 'loadedAmmo', flag)
+  }
+
+  async _onShellChange(event) {
+    const li = $(event.currentTarget).parents(".expandable");
+    const select = $(event.currentTarget).attr('id');
+    const item = this.actor.items.get(li.data("itemId"));
+    let flag = {};
+    flag[select] = event.currentTarget.value
+    await item.setFlag('tpo', 'magazine', flag)
   }
 
   async _onStaminaChange(event) {
@@ -712,7 +722,7 @@ export class tpoActorSheet extends ActorSheet {
     this._performTest(statOut, testData);
   }
 
-  _onPowerRoll(event, power = null){
+  async _onPowerRoll(event, power = null){
     let container = null;
     if(event){
       event.preventDefault();
@@ -734,15 +744,21 @@ export class tpoActorSheet extends ActorSheet {
       ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
     this.actor.update({[`data.derived.ap.value`]: this.actor.data.data.derived.ap.value - power.data.apCost })
 
-    if(armament.data.armamentType === 'Arquebus')
-      UtilsTPO.arquebusPowerHelper(this.actor, power)
-    if(armament.data.armamentType === 'Battle Standard')
-      UtilsTPO.battleStandardHelper(this.actor, power)
-
     if(!power.name.includes("Reload"))
       UtilsTPO.playContextSound(power, "use")
-    
 
+    if(armament.data.armamentType === 'Arquebus'){
+      await UtilsTPO.arquebusPowerHelper(this.actor, power).then(() => this._preformPower(power, armament))
+    } else if(armament.data.armamentType === 'Battle Standard'){
+      await UtilsTPO.battleStandardHelper(this.actor, power).then(() => this._preformPower(power, armament))
+    } else if(armament.data.armamentType === 'Vapor Launcher'){
+      await UtilsTPO.vaporLauncherHelper(this.actor, power).then(() => this._preformPower(power, armament))
+    } else {
+      this._preformPower(power, armament)
+    }
+  }
+
+  _preformPower(power, armament){
     let skill = this.actor.items.getName(`Weapon (${armament.data.skill})`);
 
     let testData = {

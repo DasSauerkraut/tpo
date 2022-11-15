@@ -97,6 +97,9 @@
   "SYS.LoadArquebus": "Load Arquebus",
   "SYS.EjectMagazine": "Eject Magazine",
   "SYS.SelectOrder": "Select Order(s)",
+  "SYS.FireShell": "Fire Shell",
+  "SYS.DiscardShell": "Discard Shell",
+  "SYS.LoadShells": "Load Shells",
   "SYS.CannotLoadBoth": "TPO | Cannot load both barrels with one Reload, unless you use the Emergency Reload Power.",
 
   "ROLL.Marginal": "Marginal",
