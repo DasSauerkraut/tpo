@@ -733,8 +733,6 @@ export class tpoActorSheet extends ActorSheet {
       power = this.actor.items.get(container.data("power-id")).data;
     const armament = this.actor.items.get(power.data.parent.id).data;
 
-    console.log(power.data.attacks)
-    
     if(power.data.type === "Encounter" || power.data.type === "Weekly"){
       if(power.data.used)
         ui.notifications.info(game.i18n.format('SYS.PowerUsed'));
@@ -745,24 +743,29 @@ export class tpoActorSheet extends ActorSheet {
     if(power.data.apCost > this.actor.data.data.derived.ap.value)
       ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
     this.actor.update({[`data.derived.ap.value`]: this.actor.data.data.derived.ap.value - power.data.apCost })
-
-    if(!power.name.includes("Reload"))
-      UtilsTPO.playContextSound(power, "use")
     
-    console.log(power.data.attacks)
-
     if(armament.data.armamentType === 'Arquebus'){
-      await UtilsTPO.arquebusPowerHelper(this.actor, power).then(() => this._preformPower(power, armament))
+      await UtilsTPO.arquebusPowerHelper(this.actor, power).then((ammo) => this._preformPower(power, armament, {ammo: ammo}))
     } else if(armament.data.armamentType === 'Battle Standard'){
       await UtilsTPO.battleStandardHelper(this.actor, power).then(() => this._preformPower(power, armament))
     } else if(armament.data.armamentType === 'Vapor Launcher'){
-      await UtilsTPO.vaporLauncherHelper(this.actor, power).then(() => this._preformPower(power, armament))
+      await UtilsTPO.vaporLauncherHelper(this.actor, power).then((ammo) => this._preformPower(power, armament, {ammo: ammo}))
     } else {
       this._preformPower(power, armament)
     }
   }
 
-  _preformPower(power, armament){
+  _preformPower(power, armament, options = {}){
+    let usesAmmo = false;
+    let ammo;
+    if(options.ammo){
+      ammo = this.actor.items.getName(options.ammo).data
+      usesAmmo = true;
+    }
+
+    if(!power.name.includes("Reload"))
+      UtilsTPO.playContextSound(power, "use")
+
     let skill = this.actor.items.getName(`Weapon (${armament.data.skill})`);
 
     let testData = {
@@ -772,10 +775,10 @@ export class tpoActorSheet extends ActorSheet {
       risk: false,
       difficulty: 0,
       hasDamage: true,
-      weakDamage: power.data.isWeak,
-      damage: power.data.damageMod,
+      weakDamage: usesAmmo ? ammo.data.isWeak : power.data.isWeak,
+      damage: usesAmmo ? ammo.data.damageMod : power.data.damageMod,
       element: armament.data.selectedElement.display,
-      elementDamage: power.data.elementDamageMod,
+      elementDamage: usesAmmo ? ammo.data.elementDamageMod : power.data.elementDamageMod,
       attacks: power.data.attacks
     }
 

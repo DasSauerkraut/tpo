@@ -403,29 +403,36 @@ export class UtilsTPO {
       if(power.name === 'Fire' || power.name === 'Drakegonne' || power.name === 'Dragonstake' || power.name === 'Wyrmsnare' ||
       power.name === 'Grand Overture' || power.name === 'Overwatch' || power.data.type === "Misc") {
         //Uses Ammo
+        let firedAmmo;
         if(hasDoubleBarreled){
-          if(loaded.slotOne !== 'Unloaded')
+          if(loaded.slotOne !== 'Unloaded'){
+            firedAmmo = loaded.slotOne;
             await armament.setFlag('tpo', 'loadedAmmo.slotOne', 'Unloaded')
-          else if(loaded.slotTwo !== 'Unloaded')
+          }else if(loaded.slotTwo !== 'Unloaded'){
+            firedAmmo = loaded.slotTwo;
             await armament.setFlag('tpo', 'loadedAmmo.slotTwo', 'Unloaded')
-          else
+          }else
             ui.notifications.warn(game.i18n.format('SYS.NoAmmoLoaded'));
         } else if (hasMagazine) {
-          if(loaded.slotOne !== 'Unloaded')
+          if(loaded.slotOne !== 'Unloaded'){
+            firedAmmo = loaded.slotOne;
             await armament.setFlag('tpo', 'loadedAmmo.slotOne', 'Unloaded')
-          else if(loaded.slotTwo !== 'Unloaded')
+          }else if(loaded.slotTwo !== 'Unloaded'){
+            firedAmmo = loaded.slotTwo;
             await armament.setFlag('tpo', 'loadedAmmo.slotTwo', 'Unloaded')
-          else if(loaded.slotThree !== 'Unloaded')
+          }else if(loaded.slotThree !== 'Unloaded'){
+            firedAmmo = loaded.slotThree;
             await armament.setFlag('tpo', 'loadedAmmo.slotThree', 'Unloaded')
-          else
+          }else
             ui.notifications.warn(game.i18n.format('SYS.NoAmmoLoaded'));
         } else {
-          if(loaded.slotOne !== 'Unloaded')
+          if(loaded.slotOne !== 'Unloaded'){
+            firedAmmo = loaded.slotOne;
             await armament.setFlag('tpo', 'loadedAmmo.slotOne', 'Unloaded')
-          else
+          }else
             ui.notifications.warn(game.i18n.format('SYS.NoAmmoLoaded'));
         }
-        resolve()
+        resolve(firedAmmo)
       } else if (power.name.includes('Reload')) {
         let response = {}
         let callback = (html) => {
@@ -638,8 +645,9 @@ export class UtilsTPO {
                 label: title,
                 callback: async html => {
                   callback(html);
+                  const firedShell = armament.getFlag('tpo', `magazine.${response.picked}`)
                   await armament.setFlag('tpo', `magazine.${response.picked}`, 'Unloaded')
-                  resolve()
+                  power.name === 'Fire Shell' ? resolve(firedShell) : resolve()
                 }
               },
             },
