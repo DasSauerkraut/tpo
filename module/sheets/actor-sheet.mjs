@@ -809,12 +809,12 @@ export class tpoActorSheet extends ActorSheet {
   _preformPower(power, armament, options = {}){
     let usesAmmo = false;
     let ammo;
-    let damage;
     if(options.ammo){
       ammo = this.actor.items.getName(options.ammo).data
       usesAmmo = true;
     }
 
+    let damage = usesAmmo ? ammo.data.damageMod : power.data.damageMod;
     if(options.damageBns){
       damage = usesAmmo ? Number(ammo.data.damageMod) + Number(options.damageBns) : Number(power.data.damageMod) + Number(options.damageBns);
     }
