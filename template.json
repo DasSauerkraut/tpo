@@ -375,7 +375,7 @@
       "isWeak": false,
       "elementDamageMod": 0,
       "used": false,
-      "attacks": 0,
+      "attacks": 1,
       "parent": {
         "hasParent": false,
         "id": ""

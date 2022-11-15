@@ -732,6 +732,8 @@ export class tpoActorSheet extends ActorSheet {
     if(!power)
       power = this.actor.items.get(container.data("power-id")).data;
     const armament = this.actor.items.get(power.data.parent.id).data;
+
+    console.log(power.data.attacks)
     
     if(power.data.type === "Encounter" || power.data.type === "Weekly"){
       if(power.data.used)
@@ -746,6 +748,8 @@ export class tpoActorSheet extends ActorSheet {
 
     if(!power.name.includes("Reload"))
       UtilsTPO.playContextSound(power, "use")
+    
+    console.log(power.data.attacks)
 
     if(armament.data.armamentType === 'Arquebus'){
       await UtilsTPO.arquebusPowerHelper(this.actor, power).then(() => this._preformPower(power, armament))
@@ -786,7 +790,6 @@ export class tpoActorSheet extends ActorSheet {
       }
     }
     if(testData.attacks < 1){
-      console.log(power)
       let chatContent = `
         <b>${this.actor.name} | ${power.name}</b><br>
         ${power.data.descriptionDisplay}

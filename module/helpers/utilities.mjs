@@ -401,7 +401,7 @@ export class UtilsTPO {
       const loaded = armament.getFlag('tpo', 'loadedAmmo')
 
       if(power.name === 'Fire' || power.name === 'Drakegonne' || power.name === 'Dragonstake' || power.name === 'Wyrmsnare' ||
-      power.name === 'Grand Overture' || power.name === 'Overwatch') {
+      power.name === 'Grand Overture' || power.name === 'Overwatch' || power.data.type === "Misc") {
         //Uses Ammo
         if(hasDoubleBarreled){
           if(loaded.slotOne !== 'Unloaded')
@@ -505,6 +505,8 @@ export class UtilsTPO {
             default: "rollButton"
           }).render(true);
         });
+      } else {
+        resolve()
       }
     })
   }
@@ -556,6 +558,8 @@ export class UtilsTPO {
             default: "rollButton"
           }).render(true);
         });
+      } else {
+        resolve()
       }
       // else if(power.name === "Execute Commands"){
       //   const commands = armament.data.data.miscPowers;
@@ -679,6 +683,8 @@ export class UtilsTPO {
             default: "rollButton"
           }).render(true);
         });
+      } else {
+        resolve()
       }
     })
   }
