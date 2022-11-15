@@ -336,33 +336,82 @@ export class tpoActorSheet extends ActorSheet {
       difficulty: 0,
     };
 
-    let selectedHeal;
-    let healOptions = ["No Supplies", "Poor Supplies", "Common Supplies", "Fine Supplies", "Safe Location"]
-    let callback = (html) => {
-      selectedHeal = html.find('[name="heal"]').val();
+    let selectedSupply;
+    let selectedSkill;
+    let assisting = 0;
+
+    let healOptions = {
+      supplies: [
+        "No Supplies (SL HP)", 
+        "Poor Supplies (SL + 2 HP)", 
+        "Common Supplies (SL * 2 HP)", 
+        "Fine Supplies (SL * 3 HP, Advantage)", 
+        "Safe Location (SL * 2 HP)"
+      ],
+      hasHeal: this.actor.items.getName("Heal") ? true : false
     }
-    renderTemplate('systems/tpo/templates/dialog/combatActionPicker.html', healOptions).then(dlg => {
+    let callback = (html) => {
+      selectedSupply = html.find('[name="supplies"]').val();
+      selectedSkill = html.find('[name="skill"]').val();
+      assisting = Number(html.find('[name="assist"]').val());
+    }
+    renderTemplate('systems/tpo/templates/dialog/restPicker.html', healOptions).then(dlg => {
       new Dialog({
         title: game.i18n.localize("SYS.Rest"),
         content: dlg,
         buttons: {
           rollButton: {
             label: game.i18n.localize("SYS.Rest"),
-            callback: html => {
+            callback: async html => {
               callback(html);
-              skill = this.actor.items.getName(selectedHeal);
+              if(selectedSupply.includes("Fine"))
+                testData.advantage = 1;
+
+              testData["resting"] = {
+                supply: selectedSupply,
+                assisting: assisting
+              };
+
+              if(selectedSkill === "Heal")
+                testData.difficulty = 20
+
+              skill = this.actor.items.getName(selectedSkill);
 
               if(skill === undefined){
                 skill = {
-                  name: "Weapon Skill",
+                  name: "Constitution",
                   data: {
                     data: {
-                      total: this.actor.data.data.stats.ws.value
+                      total: this.actor.data.data.stats.con.value
                     },
                   }
                 }
               }
-              this._performTest(skill, testData, 0, 0, `Defending w/ ${selectedSkill}`);;
+              const result = await this._performTest(skill, testData, 0, 0, `Resting w/ ${selectedSkill}`);
+              let heal = 0;
+              const SLs = result.results[0].SLs
+              switch (selectedSupply) {
+                case "No Supplies (SL HP)":
+                  heal = SLs < 1 ? 1 + assisting : SLs + assisting
+                  break;
+                case "Poor Supplies (SL + 2 HP)":
+                  heal = SLs < 1 ? 1 + assisting : SLs + 2 + assisting
+                  break;
+                case "Common Supplies (SL * 2 HP)":
+                  heal = SLs < 1 ? 1 + assisting : SLs * 2 + assisting
+                  break;
+                case "Fine Supplies (SL * 3 HP, Advantage)":
+                  heal = SLs < 1 ? 1+ assisting : SLs * 3 + assisting
+                  break;
+                case "Safe Location (SL * 2 HP)":
+                  heal = SLs < 1 ? 1 + assisting : SLs * 2 + assisting
+                  break;
+                default:
+                  break;
+              }
+              const currentHp = this.actor.data.data.derived.hp.value;
+              const maxHp = this.actor.data.data.derived.hp.max;
+              this.actor.update({[`data.derived.hp.value`]: currentHp + heal > maxHp ? maxHp : currentHp + heal })
             }
           },
         },
@@ -1029,73 +1078,78 @@ export class tpoActorSheet extends ActorSheet {
   }
 
   async _performTest(skill, testData = {}, armamentDmg = 0, armamentEleDmg = 0, name = null){
-    if(Object.keys(testData).length === 0){
-      testData = {
-        hasDamage: false,
-        advantage: 0,
-        disadvantage: 0,
-        modifier: 0,
-        risk: false,
-        weakDamage: false,
-        difficulty: 20,
-        damage: 0,
-        name: null
+    return new Promise(resolve => {
+      if(Object.keys(testData).length === 0){
+        testData = {
+          hasDamage: false,
+          advantage: 0,
+          disadvantage: 0,
+          modifier: 0,
+          risk: false,
+          weakDamage: false,
+          difficulty: 20,
+          damage: 0,
+          name: null
+        }
       }
-    }
-
-    testData.actor = this.actor
-
-    if(name) testData.name = name;
-
-    testData.target = skill.data.data.total;
-
-    //Narvid Racial Bonus
-    if((this.actor.data.data.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
-    (skill.data.data.stat === 'ws' || skill.data.data.stat === 'agi' || skill.data.data.stat === 'will') &&
-    (this.actor.data.data.derived.hp.value > this.actor.data.data.derived.bloodied.value) &&
-    this.actor.token?.combatant){
-      testData.modifier += 10;
-    }
-
-    //Raivo Racial Bonus
-    if((this.actor.data.data.details.species.value === game.i18n.format("SPECIES.Raivoaa")) && 
-    (skill.data.data.stat === 'ws' || skill.data.data.stat === 'agi' || skill.data.data.stat === 'will') &&
-    (this.actor.data.data.derived.hp.value <= this.actor.data.data.derived.bloodied.value) &&
-    this.actor.token.combatant){
-      testData.advantage += 1;
-    }
-
-    testData.actorName = this.actor.name;
-
-    let callback = (html) => {
-      testData.advantage = Number(html.find('[name="advantage"]').val());
-      testData.disadvantage = Number(html.find('[name="disadvantage"]').val());
-      testData.modifier = Number(html.find('[name="modifier"]').val());
-      testData.risk = html.find('[name="risk"]').is(':checked');
-      testData.difficulty = Number(html.find('[name="difficulty"]').val());
-      testData.damage = Number(html.find('[name="damage"]').val()) + this.actor.data.data.stats.str.bonus + armamentDmg;
-      testData.weakDamage = html.find('[name="weak-damage"]').is(':checked');
-      testData.elementDamage = Number(html.find('[name="elementDamage"]').val()) + armamentEleDmg;
-      return testData;
-    }
-
-    let completedRoll = {}
-    renderTemplate('systems/tpo/templates/dialog/rollTest.html', testData).then(dlg => {
-      new Dialog({
-        title: game.i18n.localize("SYS.PerformTest"),
-        content: dlg,
-        buttons: {
-          rollButton: {
-            label: game.i18n.localize("SYS.PerformTest"),
-            callback: html => {
-              callback(html);
-              DiceTPO.rollTest(skill, testData).then(result => {return DiceTPO.outputTest(result);});
-            }
+  
+      testData.actor = this.actor
+  
+      if(name) testData.name = name;
+  
+      testData.target = skill.data.data.total;
+  
+      //Narvid Racial Bonus
+      if((this.actor.data.data.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
+      (skill.data.data.stat === 'ws' || skill.data.data.stat === 'agi' || skill.data.data.stat === 'will') &&
+      (this.actor.data.data.derived.hp.value > this.actor.data.data.derived.bloodied.value) &&
+      this.actor.token?.combatant){
+        testData.modifier += 10;
+      }
+  
+      //Raivo Racial Bonus
+      if((this.actor.data.data.details.species.value === game.i18n.format("SPECIES.Raivoaa")) && 
+      (skill.data.data.stat === 'ws' || skill.data.data.stat === 'agi' || skill.data.data.stat === 'will') &&
+      (this.actor.data.data.derived.hp.value <= this.actor.data.data.derived.bloodied.value) &&
+      this.actor.token.combatant){
+        testData.advantage += 1;
+      }
+  
+      testData.actorName = this.actor.name;
+  
+      let callback = (html) => {
+        testData.advantage = Number(html.find('[name="advantage"]').val());
+        testData.disadvantage = Number(html.find('[name="disadvantage"]').val());
+        testData.modifier = Number(html.find('[name="modifier"]').val());
+        testData.risk = html.find('[name="risk"]').is(':checked');
+        testData.difficulty = Number(html.find('[name="difficulty"]').val());
+        testData.damage = Number(html.find('[name="damage"]').val()) + this.actor.data.data.stats.str.bonus + armamentDmg;
+        testData.weakDamage = html.find('[name="weak-damage"]').is(':checked');
+        testData.elementDamage = Number(html.find('[name="elementDamage"]').val()) + armamentEleDmg;
+        return testData;
+      }
+  
+      let completedRoll = {}
+      renderTemplate('systems/tpo/templates/dialog/rollTest.html', testData).then(dlg => {
+        new Dialog({
+          title: game.i18n.localize("SYS.PerformTest"),
+          content: dlg,
+          buttons: {
+            rollButton: {
+              label: game.i18n.localize("SYS.PerformTest"),
+              callback: html => {
+                callback(html);
+                DiceTPO.rollTest(skill, testData).then(result => {
+                  DiceTPO.outputTest(result);
+                  resolve(result)
+                });
+              }
+            },
           },
-        },
-        default: "rollButton"
-      }).render(true);
-    });
+          default: "rollButton"
+        }).render(true);
+      });
+    })
   }
 
   _onArmamentExpand(event) {

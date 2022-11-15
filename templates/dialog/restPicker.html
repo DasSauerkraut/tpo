@@ -1,0 +1,19 @@
+<div>
+  <span>Select Supplies: </span>
+  <select name="supplies">
+    {{#each supplies as |supply id|}}
+      <option value="{{supply}}">{{supply}}</option>
+    {{/each}}
+  </select>
+  <br>
+  <span>Select Skill: </span>
+  <select name="skill">
+    {{#if hasHeal}}
+      <option value="Heal">Heal - <b>Average (+20)</b></option>
+    {{/if}}
+    <option value="Endurance">Endurance - <b>Challenging (+0)</b></option>
+  </select>
+  <br>
+  <span>Party Members Assisting: </span>
+  <input type="text" name="assist" value=0 data-dtype="Number" style="width: 50px;"/>
+</div>

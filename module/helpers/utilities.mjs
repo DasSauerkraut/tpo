@@ -10,6 +10,8 @@ export class DiceTPO {
       advantages = 100 * Math.sign(advantages);
     }
 
+    console.log(rollData)
+
     //Not a power, so it should only roll once for 'attacks'
     if(!rollData.hasDamage)
       rollData.attacks = 1
@@ -178,20 +180,41 @@ export class DiceTPO {
       damage: rollData.damage,
       element: rollData.element,
       elementDamage: rollData.elementDamage,
+      testData: rollData,
       results: results
     };
   }
 
   static outputTest(testData){
-    console.log(testData)
     let damageString = ``;
     let elementDamage = testData.elementDamage
     let testOutput = '';
+    let healString = '';
+    let testSymbol = '';
     testData.results.forEach((test) => {
       let damage = testData.damage + test.SLs
-      if(testData.hasDamage && !testData.weakDamage)
+      if(testData.hasDamage && !testData.weakDamage){
+        switch (testData.element) {
+          case "Fire ":
+            testSymbol = '<i class="fas fa-fire"></i>'
+            break;
+          case "Elec. ":
+            testSymbol = '<i class="fas fa-bolt"></i>'
+            break;
+          case "Water ":
+            testSymbol = '<i class="fas fa-tint"></i>'
+            break;
+          case "Ice ":
+            testSymbol = '<i class="far fa-snowflake"></i>'
+            break;
+          case "Dragon ":
+            testSymbol = '<i class="fas fa-dragon"></i>'
+            break;
+          default:
+            testSymbol = '<i class="fas fa-fist-raised"></i>';
+            break;
+        }
         damageString = `
-          <br />
           <b>Damage:</b>
           <div style="display:flex;justify-content:space-between;height: 34px;">
             <span>
@@ -219,11 +242,49 @@ export class DiceTPO {
             </b>
           </div>
         `
-      else if (testData.weakDamage){
+      }else if (testData.weakDamage){
+        testSymbol = '<i class="fas fa-fist-raised"></i>';
         damageString = `
-        <hr>
         <b>Weak Damage:</b> ${testData.strB}
         `
+      }
+      if(testData.testData.resting){
+        testSymbol = '<i class="fas fa-heartbeat"></i>'
+        const assisting = testData.testData.resting.assisting
+        switch (testData.testData.resting.supply) {
+          case "No Supplies (SL HP)":
+            healString = `
+              <b>Resting with no Supplies:</b><br>
+              ${testData.actorName} healed ${test.SLs < 1 ? 1 + assisting : test.SLs + assisting} HP.
+            `
+            break;
+          case "Poor Supplies (SL + 2 HP)":
+            healString = `
+              <b>Resting with Poor Supplies:</b><br>
+              ${testData.actorName} healed ${test.SLs < 1 ? 1 + assisting : test.SLs + 2 + assisting} HP.
+            `
+            break;
+          case "Common Supplies (SL * 2 HP)":
+            healString = `
+              <b>Resting with Common Supplies:</b><br>
+              ${testData.actorName} healed ${test.SLs < 1 ? 1 + assisting : test.SLs * 2 + assisting} HP.
+            `
+            break;
+          case "Fine Supplies (SL * 3 HP, Advantage)":
+            healString = `
+              <b>Resting with Fine Supplies:</b><br>
+              ${testData.actorName} healed ${test.SLs < 1 ? 1+ assisting : test.SLs * 3 + assisting} HP.
+            `
+            break;
+          case "Safe Location (SL * 2 HP)":
+            healString = `
+              <b>Resting in a safe location:</b><br>
+              ${testData.actorName} healed ${test.SLs < 1 ? 1 + assisting : test.SLs * 2 + assisting} HP.
+            `
+            break;
+          default:
+            break;
+        }
       }
 
       let critFormat = ''
@@ -235,18 +296,19 @@ export class DiceTPO {
       
       let testDice = '';
       if(test.dice.length > 1)
-        testDice = `<b>Dice:</b> ${test.dice.join(', ')}`
+        testDice = `<b>Dice:</b> ${test.dice.join(', ')} <br>`
       testOutput += `
         <hr>
         <h3 class="${critFormat}"> ${test.result} </h3>
         <b>Roll${testData.risk ? ` with Risk` : ''}:</b> ${test.selectedRoll} vs ${testData.target} <br>
         <b>SLs:</b> ${test.SLs} <br>
-        ${testDice}
+        ${testDice} 
         ${damageString}
+        ${healString}
       `
     })
     let chatContent = `
-      <b>${testData.actorName} | ${testData.name}</b><br>
+      <b>${testSymbol} ${testData.actorName} | ${testData.name}</b><br>
       ${testOutput}
     `
     let chatData = {
