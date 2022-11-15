@@ -125,6 +125,9 @@ export class tpoActorSheet extends ActorSheet {
     //--------------------------ARMAMENT SPECIFIC-------------------------//
     html.find(".loaded-input").change(this._onAmmoChange.bind(this));
     html.find(".stamina-checkbox").change(this._onStaminaChange.bind(this));
+    html.find(".add-order").click(this._addOrder.bind(this))
+    html.find(".order-input").change(this._changeOrder.bind(this))
+    html.find(".order-input").mousedown(this._deleteOrder.bind(this))
 
     // Active Effect management
     html.find(".effect-control").click(ev => onManageActiveEffect(ev, this.actor));
@@ -252,6 +255,45 @@ export class tpoActorSheet extends ActorSheet {
     const item = this.actor.items.get(li.data("itemId"));
     const prev = await item.getFlag('tpo', `stamina.${select}`)
     await item.setFlag('tpo', `stamina.${select}`, !prev)
+  }
+
+  async _addOrder(event){
+    const li = $(event.currentTarget).parents(".expandable");
+    const item = this.actor.items.get(li.data("itemId"));
+    let orderArray = await item.getFlag('tpo', `orders`)
+    
+    orderArray.push({
+      id: Date.now(),
+      value: "up"
+    })
+    await item.setFlag('tpo', `orders`, orderArray)
+  }
+
+  async _changeOrder(event){
+    const li = $(event.currentTarget).parents(".expandable");
+    const item = this.actor.items.get(li.data("itemId"));
+    const select = Number($(event.currentTarget).attr('id'));
+    let orderArray = await item.getFlag('tpo', `orders`)
+    const index = orderArray.findIndex(order => {return order.id === select})
+
+    orderArray[index] = {
+      id: select,
+      value: event.currentTarget.value
+    };
+    await item.setFlag('tpo', `orders`, orderArray)
+  }
+
+  async _deleteOrder(event){
+    if(event.button !== 0) {
+      const li = $(event.currentTarget).parents(".expandable");
+      const item = this.actor.items.get(li.data("itemId"));
+      const select = Number($(event.currentTarget).attr('id'));
+      let orderArray = await item.getFlag('tpo', `orders`)
+      const index = orderArray.findIndex(order => {return order.id === select})
+
+      orderArray.splice(index, 1);
+      await item.setFlag('tpo', `orders`, orderArray)
+    }
   }
 
   _onPowerOrArmamentEdit(event) {
@@ -694,6 +736,8 @@ export class tpoActorSheet extends ActorSheet {
 
     if(armament.data.armamentType === 'Arquebus')
       UtilsTPO.arquebusPowerHelper(this.actor, power)
+    if(armament.data.armamentType === 'Battle Standard')
+      UtilsTPO.battleStandardHelper(this.actor, power)
 
     if(!power.name.includes("Reload"))
       UtilsTPO.playContextSound(power, "use")

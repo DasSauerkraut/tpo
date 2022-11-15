@@ -246,6 +246,13 @@ export class tpoActor extends Actor {
           if(i.data.data.upgrades.some(upg => {return upg.name === 'Phial Capacity III'}) && i.getFlag('tpo', 'stamina.pointSix') === undefined)
             await i.setFlag('tpo', 'stamina', {pointSix: true, maxCap: 6})
         }
+
+        //--------------------Battle Standard----------------------------------//
+        if(i.data.data.armamentType === "Battle Standard"){
+          if(i.getFlag('tpo', 'orders') === undefined){
+            await i.setFlag('tpo', 'orders', [])
+          }
+        }
       } else if(i.type == "power" && !i.data.data.parent.hasParent){
         unsortedPowers.push(i.data);
         inventory.nonEnc.push(i.data)

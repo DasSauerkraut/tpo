@@ -450,7 +450,6 @@ export class UtilsTPO {
         loaded: loaded
       }
 
-      console.log(loadData)
       let title = isEjected ? game.i18n.localize("SYS.LoadArquebus") : game.i18n.localize("SYS.EjectMagazine") 
   
       renderTemplate('systems/tpo/templates/dialog/loadArquebus.html', loadData).then(dlg => {
@@ -504,5 +503,98 @@ export class UtilsTPO {
         }).render(true);
       });
     }
+  }
+
+  static async battleStandardHelper(actor, power){
+    const armament = actor.items.get(power.data.parent.id);
+    let orderArray = await armament.getFlag('tpo', `orders`)
+
+    if(power.name.includes("Ordered")){
+      const loadData = {
+        genius: power.name === "Ordered Genius"
+      }
+      let response = {}
+
+      let callback = (html) => {
+        response = {
+          'orderOne': html.find('[name="orderOne"]').val(),
+          'orderTwo': html.find('[name="orderTwo"]').val(),
+        }
+        return response;
+      }
+
+      renderTemplate('systems/tpo/templates/dialog/orderPicker.html', loadData).then(dlg => {
+        new Dialog({
+          title: game.i18n.localize("SYS.SelectOrder"),
+          content: dlg,
+          buttons: {
+            rollButton: {
+              label: game.i18n.localize("SYS.SelectOrder"),
+              callback: async html => {
+                callback(html);
+                console.log(response)
+                orderArray.push({
+                  id: Date.now(),
+                  value: response.orderOne
+                })
+                if(response.orderTwo !== undefined){
+                  orderArray.push({
+                    id: Date.now(),
+                    value: response.orderTwo
+                  })
+                }
+                await armament.setFlag('tpo', `orders`, orderArray)
+              }
+            },
+          },
+          default: "rollButton"
+        }).render(true);
+      });
+    }
+    // else if(power.name === "Execute Commands"){
+    //   const commands = armament.data.data.miscPowers;
+    //   console.log(commands)
+    //   const loadData = {
+    //     orders: orderArray,
+    //     commands: commands
+    //   }
+    //   let response = {}
+
+    //   let callback = (html) => {
+    //     response = {
+    //       'orderOne': html.find('[name="orderOne"]').val(),
+    //       'orderTwo': html.find('[name="orderTwo"]').val(),
+    //     }
+    //     return response;
+    //   }
+
+    //   renderTemplate('systems/tpo/templates/dialog/orderPicker.html', loadData).then(dlg => {
+    //     new Dialog({
+    //       title: game.i18n.localize("SYS.SelectOrder"),
+    //       content: dlg,
+    //       buttons: {
+    //         rollButton: {
+    //           label: game.i18n.localize("SYS.SelectOrder"),
+    //           callback: async html => {
+    //             callback(html);
+    //             console.log(response)
+    //             orderArray.push({
+    //               id: Date.now(),
+    //               value: response.orderOne
+    //             })
+    //             if(response.orderTwo !== undefined){
+    //               orderArray.push({
+    //                 id: Date.now(),
+    //                 value: response.orderTwo
+    //               })
+    //             }
+    //             await armament.setFlag('tpo', `orders`, orderArray)
+    //           }
+    //         },
+    //       },
+    //       default: "rollButton"
+    //     }).render(true);
+    //   });
+    // }
   }
 }

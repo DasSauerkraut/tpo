@@ -96,6 +96,7 @@
   "SYS.NoAmmoLoaded": "TPO | No ammunition is currently loaded!",
   "SYS.LoadArquebus": "Load Arquebus",
   "SYS.EjectMagazine": "Eject Magazine",
+  "SYS.SelectOrder": "Select Order(s)",
   "SYS.CannotLoadBoth": "TPO | Cannot load both barrels with one Reload, unless you use the Emergency Reload Power.",
 
   "ROLL.Marginal": "Marginal",

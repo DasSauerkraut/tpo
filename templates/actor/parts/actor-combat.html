@@ -42,6 +42,22 @@
               </div>
             </div>
             <div class="expandable" style="max-height: 1000px" data-item-id="{{armament._id}}">
+              {{#ifEquals armament.data.armamentType "Battle Standard"}}
+                <div class="orders">
+                  Command Queue: 
+                  {{#each armament.flags.tpo.orders as |order id|}}
+                    <select id="{{order.id}}" class="order-input" name="order.value" type="text" value="{{order.value}}" title="Right Click to Delete">
+                    {{#select order.value}}
+                      <option value="left">←</option>
+                      <option value="right">→</option>
+                      <option value="up">↑</option>
+                      <option value="down">↓</option>
+                    {{/select}}
+                    </select>
+                  {{/each}}
+                  <i class="fas fa-plus-circle rollable add-order"></i>
+                </div>
+              {{/ifEquals}}
               {{#ifEquals armament.data.armamentType "Lance"}}
                 <div class="stamina">
                   Stamina:
