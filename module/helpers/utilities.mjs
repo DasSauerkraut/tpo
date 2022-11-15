@@ -261,7 +261,7 @@ export class DiceTPO {
           case "Poor Supplies (SL + 2 HP)":
             healString = `
               <b>Resting with Poor Supplies:</b><br>
-              ${testData.actorName} healed ${test.SLs < 1 ? 1 + assisting : test.SLs + 2 + assisting} HP.
+              ${testData.actorName} healed ${test.SLs < 1 ? 1 + assisting + 2: test.SLs + 2 + assisting} HP.
             `
             break;
           case "Common Supplies (SL * 2 HP)":

@@ -639,7 +639,7 @@
   position: relative;
 }
 
-.tpo .resource-label .rest {
+.tpo #hp-heal {
   position: absolute;
   right: 5px;
   color: var(--color-text-dark-secondary);
