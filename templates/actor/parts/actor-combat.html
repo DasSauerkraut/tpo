@@ -62,6 +62,47 @@
                   {{/if}}
                 </div>
               {{/ifEquals}}
+              {{#ifEquals armament.data.armamentType "Gunlance"}}
+                <div class="stamina">
+                  Phials:
+                  {{#if armament.flags.tpo.stamina.pointOne}}
+                    <input id="pointOne" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
+                  {{else}}
+                    <input id="pointOne" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
+                  {{/if}}
+                  {{#if armament.flags.tpo.stamina.pointTwo}}
+                    <input id="pointTwo" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
+                  {{else}}
+                    <input id="pointTwo" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
+                  {{/if}}
+                  {{#if armament.flags.tpo.stamina.pointThree}}
+                    <input id="pointThree" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
+                  {{else}}
+                    <input id="pointThree" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
+                  {{/if}}
+                  {{#greaterThan armament.flags.tpo.stamina.maxCap 3}}
+                    {{#if armament.flags.tpo.stamina.pointFour}}
+                      <input id="pointFour" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
+                    {{else}}
+                      <input id="pointFour" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
+                    {{/if}}
+                  {{/greaterThan}}
+                  {{#greaterThan armament.flags.tpo.stamina.maxCap 4}}
+                    {{#if armament.flags.tpo.stamina.pointFive}}
+                      <input id="pointFive" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
+                    {{else}}
+                      <input id="pointFive" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
+                    {{/if}}
+                  {{/greaterThan}}
+                  {{#greaterThan armament.flags.tpo.stamina.maxCap 5}}
+                    {{#if armament.flags.tpo.stamina.pointSix}}
+                      <input id="pointSix" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
+                    {{else}}
+                      <input id="pointSix" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
+                    {{/if}}
+                  {{/greaterThan}}
+                </div>
+              {{/ifEquals}}
               {{#ifEquals armament.data.armamentType "Arquebus"}}
                 {{#if armament.flags.tpo.loadedAmmo.isEjected}}
                   Loaded Ammo: 

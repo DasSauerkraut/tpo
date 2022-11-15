@@ -229,17 +229,23 @@ export class tpoActor extends Actor {
             await i.setFlag('tpo', 'loadedAmmo.max', 1)
         }
 
-        //---------------------Lance Stuff----------------------------------//
-        if(i.data.data.armamentType === "Lance"){
-          if(i.getFlag('tpo', 'stamina') === undefined)
+        //---------------------Gun/Lance Stuff----------------------------------//
+        if(i.data.data.armamentType === "Lance" || i.data.data.armamentType === "Gunlance"){
+          if(i.getFlag('tpo', 'stamina') === undefined){
             await i.setFlag('tpo', 'stamina', {
               pointOne: true,
               pointTwo: true,
               pointThree: true,
+              maxCap: 3
             })
+          }
+          if(i.data.data.upgrades.some(upg => {return upg.name === 'Phial Capacity I'}) && i.getFlag('tpo', 'stamina.pointFour') === undefined)
+            await i.setFlag('tpo', 'stamina', {pointFour: true, maxCap: 4})
+          if(i.data.data.upgrades.some(upg => {return upg.name === 'Phial Capacity II'})&& i.getFlag('tpo', 'stamina.pointFive') === undefined)
+            await i.setFlag('tpo', 'stamina', {pointFive: true, maxCap: 5})
+          if(i.data.data.upgrades.some(upg => {return upg.name === 'Phial Capacity III'}) && i.getFlag('tpo', 'stamina.pointSix') === undefined)
+            await i.setFlag('tpo', 'stamina', {pointSix: true, maxCap: 6})
         }
-
-
       } else if(i.type == "power" && !i.data.data.parent.hasParent){
         unsortedPowers.push(i.data);
         inventory.nonEnc.push(i.data)
