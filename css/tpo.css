@@ -1508,6 +1508,10 @@
   color: #a19f93d1;
 }
 
+.tpo .money-header .money-grid .money-convert:hover {
+  color: black;
+}
+
 .tpo .money-header .money-field {
   border-radius: 0px;
   border: 0px;

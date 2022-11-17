@@ -7,7 +7,7 @@ import { tpoItemSheet } from "./sheets/item-sheet.mjs";
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { TPO } from "./helpers/config.mjs";
-import { UtilsTPO } from "./helpers/utilities.mjs";
+import { DiceTPO, UtilsTPO } from "./helpers/utilities.mjs";
 
 
 /* -------------------------------------------- */
@@ -112,85 +112,13 @@ Hooks.once("ready", async function() {
 });
 
 Hooks.on("updateCombat", (combat) => {
-  if(!game.user.isGM)
-    return;
-    
-  let combatant = canvas.scene.tokens.get(combat.current.tokenId);
-  
-  combatant.actor.update({"data.derived.ap.value": combatant.actor.data.data.derived.ap.max})
-
-  let statuses = ``;
-  if(combatant.actor.data.effects.size !== 0){
-    statuses = `
-      <hr>
-      <div>${combatant.actor.data.name} is under the following effects!<div>
-    `
-  }
-
-  let bleedings = [];
-  let exhausteds = [];
-  let ongoings = [];
-  let paralyzeds = [];
-  combatant.actor.data.effects.forEach(effect => {
-    if(effect.data.label.includes("Bleeding")){
-      bleedings.push(effect);
-      return;
-    }
-    if(effect.data.label.includes("Exhausted")){
-      exhausteds.push(effect);
-      return;
-    }
-    if(effect.data.label.includes("Ongoing")){
-      ongoings.push(effect);
-      return;
-    }
-    if(effect.data.label.includes("Paralyzed")){
-      paralyzeds.push(effect);
-      return;
-    }
-    let lookup = TPO.statuses.filter(s => {
-      return game.i18n.format(s.label) === effect.data.label;
-    });
-
-    let isInjury;
-    if(lookup.length === 0){
-      lookup = TPO.injuries.filter(s => {
-        return game.i18n.format(s.label) === effect.data.label;
-      });
-      isInjury = lookup.length !== 0
-    }
-
-    let description;
-    if(lookup.length === 0){
-      description = "No Description."
-     }else
-      description = lookup[0].description;
-    
-    statuses += `
-      <br>
-      <b>${effect.data.label}</b>
-      <div style="display:flex;">
-        <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${isInjury ? lookup[0].icon : effect.data.icon}" alt="${effect.data.label}">
-        <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
-      </div>
-    `
-  });
-
-  if(bleedings.length > 0) statuses += UtilsTPO.formatRatingStatus(bleedings);
-  if(exhausteds.length > 0) statuses += UtilsTPO.formatRatingStatus(exhausteds);
-  if(ongoings.length > 0) statuses += UtilsTPO.formatRatingStatus(ongoings);
-  if(paralyzeds.length > 0) statuses += UtilsTPO.formatRatingStatus(paralyzeds);
-
-  let chatContent = `
-      <h3>${combatant.actor.data.name}'s turn!</h3> 
-      ${statuses}`
-    let chatData = {
-      content: chatContent,
-      user: game.user._id,
-    };
-    ChatMessage.create(chatData, {});
-    UtilsTPO.playContextSound({type: "roundChange"})
+  UtilsTPO.onRoundChange(combat);
 })
+
+Hooks.on("getChatLogEntryContext", (html, options) => {
+  UtilsTPO.addResolveRerollToChatCard(options);
+  // UtilsTPO.addSplendorRerollToChatCard(options);
+});
 
 Hooks.on("preUpdateActor", (actor, data, diff) => {
   if(actor.token?.combatant && data.data.derived.hp?.value < actor.data.data.derived.hp?.value && diff.diff){

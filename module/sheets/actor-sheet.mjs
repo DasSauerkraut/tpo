@@ -1178,8 +1178,10 @@ export class tpoActorSheet extends ActorSheet {
         testData.elementDamage = Number(html.find('[name="elementDamage"]').val()) + armamentEleDmg;
         return testData;
       }
+
+      skill.data.total = skill.data.data.total;
+      console.log(skill)
   
-      let completedRoll = {}
       renderTemplate('systems/tpo/templates/dialog/rollTest.html', testData).then(dlg => {
         new Dialog({
           title: game.i18n.localize("SYS.PerformTest"),
@@ -1189,8 +1191,10 @@ export class tpoActorSheet extends ActorSheet {
               label: game.i18n.localize("SYS.PerformTest"),
               callback: html => {
                 callback(html);
-                DiceTPO.rollTest(skill, testData).then(result => {
-                  DiceTPO.outputTest(result);
+                DiceTPO.rollTest(duplicate(skill), testData).then(result => {
+                  DiceTPO.prepareChatCard(result).then(context => {
+                    DiceTPO.createChatCard(context.chatData, context.chatContext)
+                  });
                   resolve(result)
                 });
               }
@@ -1235,9 +1239,8 @@ export class tpoActorSheet extends ActorSheet {
    * @param {Event} event   The originating click event
    * @private
    */
-  _onResolveToggle(event){
+  async _onResolveToggle(event){
     const element = event.currentTarget;
-    console.log(element.id);
-    this.actor.update({[`data.info.resolve.${element.id}`]: !this.actor.data.data.info.resolve[element.id] })
+    await this.actor.update({[`data.info.resolve.${element.id}`]: !this.actor.data.data.info.resolve[element.id] })
   }
 }

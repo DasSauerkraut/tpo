@@ -2,15 +2,14 @@ import { TPO } from "./config.mjs";
 export class DiceTPO {
   static async rollTest(skill, rollData) {
     //calculate target
-    const target = skill.data.data.total + rollData.modifier + rollData.difficulty;
+    console.log(skill)
+    const target = skill.data.total + rollData.modifier + rollData.difficulty;
     //calculate advantages
     let advantages = rollData.advantage - rollData.disadvantage;
     if(Math.abs(advantages) > 100){
       ui.notifications.warn(game.i18n.format('SYS.ExceedsMaxAdvantage'));
       advantages = 100 * Math.sign(advantages);
     }
-
-    console.log(rollData)
 
     //Not a power, so it should only roll once for 'attacks'
     if(!rollData.hasDamage)
@@ -170,6 +169,7 @@ export class DiceTPO {
     //roll dice
     return {
       actorName: rollData.actorName,
+      actorId: rollData.actor.data._id,
       skill: skill,
       risk: rollData.risk,
       target: target,
@@ -185,12 +185,13 @@ export class DiceTPO {
     };
   }
 
-  static outputTest(testData){
+  static async prepareChatCard(testData, rerolled = false){
     let damageString = ``;
     let elementDamage = testData.elementDamage
     let testOutput = '';
     let healString = '';
     let testSymbol = '';
+
     testData.results.forEach((test) => {
       let damage = testData.damage + test.SLs
       if(testData.hasDamage && !testData.weakDamage){
@@ -307,15 +308,34 @@ export class DiceTPO {
         ${healString}
       `
     })
+
     let chatContent = `
-      <b>${testSymbol} ${testData.actorName} | ${testData.name}</b><br>
+      <b>${testSymbol} ${testData.actorName} | ${rerolled ? 'Rerolled' : ''} ${testData.name}</b><br>
       ${testOutput}
     `
     let chatData = {
       content: chatContent,
       user: game.user._id,
     };
-    ChatMessage.create(chatData, {});
+    return {
+      chatData: chatData,
+      chatContext: {
+        rerolled: rerolled,
+        testData: duplicate(testData.testData),
+        actorId: testData.actorId,
+        skill: duplicate(testData.skill)
+      }
+    }
+  }
+
+  static async createChatCard(chatData, chatContext){
+    const message = await ChatMessage.create(chatData, {});
+    await message.setFlag('tpo', 'context', {
+      rerolled: chatContext.rerolled,
+      testData: chatContext.testData,
+      actorId: chatContext.actorId,
+      skill: chatContext.skill
+    })
   }
 
   static async showDiceSoNice(roll) {
@@ -451,7 +471,7 @@ export class UtilsTPO {
       const roll = await new Roll(`1d${groupedFiles.length}`).roll({async: true})
       let file = groupedFiles[roll.total - 1]
       console.log(`tpo | Playing Sound: ${file}. Volume: ${game.settings.get("core", "globalInterfaceVolume")}. Local: ${localSound}`)
-      AudioHelper.play({src : file, volume: game.settings.get("core", "globalInterfaceVolume"), autoplay: true}, localSound)
+      AudioHelper.play({src : file, volume: game.settings.get("core", "globalInterfaceVolume"), autoplay: true}, !localSound)
     }
   }
 
@@ -763,17 +783,184 @@ export class UtilsTPO {
     return new Promise(resolve => {
       const armament = actor.items.get(power.data.parent.id);
       const hasSpite = armament.data.data.upgrades.some(upg => {return upg.name === 'Spite'})
+      const hasVitalLeech = armament.data.data.upgrades.some(upg => {return upg.name === 'Vital Leech'})
+      const hasSpiritualLeech = armament.data.data.upgrades.some(upg => {return upg.name === 'Spiritual Leech'})
       const leechRegExp = /(Leech )(\d+)/g
       const leechMatches = [...power.data.description.matchAll(leechRegExp)]
-      console.log(leechMatches)
 
       if(leechMatches.length > 0){
+        const leechValue = leechMatches[0][2];
+        let damageChange = 0;
+        let hpChange = 0;
+
         if(hasSpite && actor.data.data.derived.hp.value < actor.data.data.derived.bloodied.value){
-          console.log(leechMatches[0][2])
-          resolve(leechMatches[0][2])
+          damageChange = leechValue;
         }
+        resolve(damageChange)
       }
       resolve()
     })
+  }
+
+  static addResolveRerollToChatCard(options){
+    options.push({
+      name: game.i18n.localize("SYS.Reroll"),
+      icon: '<i class="fas fa-dice"></i>',
+      condition: (li) => {
+        const message = game.messages.get(li.data("message-id"))
+        const context = message.getFlag('tpo', 'context')
+        return !context.rerolled
+      },
+      callback: li => {
+        const message = game.messages.get(li.data("message-id"))
+        let context = message.getFlag('tpo', 'context')
+        const actor = game.actors.get(context.actorId)
+        console.log(context.skill)
+        if(!context.rerolled){
+          context.testData.actor = actor;
+          console.log(context.skill)
+          DiceTPO.rollTest(context.skill, context.testData).then(result => {
+            DiceTPO.prepareChatCard(result, true).then(chatCard => {
+              DiceTPO.createChatCard(chatCard.chatData, chatCard.chatContext)
+            })
+          })
+          message.setFlag('tpo', 'context.rerolled', true)
+          // UtilsTPO.removeResolve(context.actorId)
+        }
+      }
+    })
+  }
+
+  static addSplendorRerollToChatCard(options){
+    console.log(options)
+    options.push({
+      name: game.i18n.localize("SYS.RerollWithSplendor"),
+      icon: '<i class="fas fa-crown"></i>',
+      condition: (li) => {
+        const message = game.messages.get(li.data("message-id"))
+        const context = message.getFlag('tpo', 'context')
+        const actor = game.actors.get(context.actorId)
+        console.log(actor.data.data.info.splendor)
+        return (!context.rerolled && actor.data.data.info.splendor.rerolls > 0)
+      },
+      callback: li => {
+        const message = game.messages.get(li.data("message-id"))
+        let context = message.getFlag('tpo', 'context')
+        const actor = game.actors.get(context.actorId)
+        if(!context.rerolled && actor.data.data.info.splendor.rerolls > 0){
+          context.testData.actor = actor;
+          DiceTPO.rollTest(context.skill, context.testData).then(result => {
+            DiceTPO.prepareChatCard(result, true).then(chatCard => {
+              DiceTPO.createChatCard(chatCard.chatData, chatCard.chatContext)
+            })
+          })
+          message.setFlag('tpo', 'context.rerolled', true)
+        }
+      }
+    })
+  }
+
+  static hasResolve(actorId){
+    const actor = game.actors.get(actorId)
+    console.log(`resolve 1 ${actor.data.data.info.resolve.resolve1}`)
+    console.log(`resolve 2 ${actor.data.data.info.resolve.resolve2}`)
+    console.log(`resolve 3 ${actor.data.data.info.resolve.resolve3}`)
+    console.log(`total ${(actor.data.data.info.resolve.resolve1 || actor.data.data.info.resolve.resolve2 || actor.data.data.info.resolve.resolve3)}`)
+    return (actor.data.data.info.resolve.resolve1 || actor.data.data.info.resolve.resolve2 || actor.data.data.info.resolve.resolve3);
+  }
+
+  static async removeResolve(actorId){
+    const actor = game.actors.get(actorId)
+    if(actor.data.data.info.resolve.resolve3) {
+      console.log("RM res3")
+      await actor.update({[`data.info.resolve.resolve3`]: false })
+    } else if(actor.data.data.info.resolve.resolve2) {
+      console.log("RM res2")
+      await actor.update({[`data.info.resolve.resolve2`]: false })
+    } else if(actor.data.data.info.resolve.resolve1) {
+      console.log("RM res1")
+      await actor.update({[`data.info.resolve.resolve1`]: false })
+    }
+  }
+
+  static onRoundChange(combat){
+    if(!game.user.isGM)
+    return;
+    
+  let combatant = canvas.scene.tokens.get(combat.current.tokenId);
+  
+  combatant.actor.update({"data.derived.ap.value": combatant.actor.data.data.derived.ap.max})
+
+  let statuses = ``;
+  if(combatant.actor.data.effects.size !== 0){
+    statuses = `
+      <hr>
+      <div>${combatant.actor.data.name} is under the following effects!<div>
+    `
+  }
+
+  let bleedings = [];
+  let exhausteds = [];
+  let ongoings = [];
+  let paralyzeds = [];
+  combatant.actor.data.effects.forEach(effect => {
+    if(effect.data.label.includes("Bleeding")){
+      bleedings.push(effect);
+      return;
+    }
+    if(effect.data.label.includes("Exhausted")){
+      exhausteds.push(effect);
+      return;
+    }
+    if(effect.data.label.includes("Ongoing")){
+      ongoings.push(effect);
+      return;
+    }
+    if(effect.data.label.includes("Paralyzed")){
+      paralyzeds.push(effect);
+      return;
+    }
+    let lookup = TPO.statuses.filter(s => {
+      return game.i18n.format(s.label) === effect.data.label;
+    });
+
+    let isInjury;
+    if(lookup.length === 0){
+      lookup = TPO.injuries.filter(s => {
+        return game.i18n.format(s.label) === effect.data.label;
+      });
+      isInjury = lookup.length !== 0
+    }
+
+    let description;
+    if(lookup.length === 0){
+      description = "No Description."
+     }else
+      description = lookup[0].description;
+    
+    statuses += `
+      <br>
+      <b>${effect.data.label}</b>
+      <div style="display:flex;">
+        <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${isInjury ? lookup[0].icon : effect.data.icon}" alt="${effect.data.label}">
+        <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
+      </div>
+    `
+  });
+
+  if(bleedings.length > 0) statuses += UtilsTPO.formatRatingStatus(bleedings);
+  if(exhausteds.length > 0) statuses += UtilsTPO.formatRatingStatus(exhausteds);
+  if(ongoings.length > 0) statuses += UtilsTPO.formatRatingStatus(ongoings);
+  if(paralyzeds.length > 0) statuses += UtilsTPO.formatRatingStatus(paralyzeds);
+
+  let chatContent = `
+      <h3>${combatant.actor.data.name}'s turn!</h3> 
+      ${statuses}`
+    let chatData = {
+      content: chatContent,
+      user: game.user._id,
+    };
+    ChatMessage.create(chatData, {});
+    UtilsTPO.playContextSound({type: "roundChange"})
   }
 }

@@ -101,6 +101,9 @@
   "SYS.DiscardShell": "Discard Shell",
   "SYS.LoadShells": "Load Shells",
   "SYS.CannotLoadBoth": "TPO | Cannot load both barrels with one Reload, unless you use the Emergency Reload Power.",
+  "SYS.RerollWithResolve": "Spend a Resolve to reroll this Test",
+  "SYS.Reroll": "Reroll this Test",
+  "SYS.RerollWithSplendor": "Use your Splendor to reroll this Test",
 
   "ROLL.Marginal": "Marginal",
   "ROLL.Impressive": "Impressive",
