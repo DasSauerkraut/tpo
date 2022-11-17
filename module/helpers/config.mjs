@@ -259,7 +259,7 @@ TPO.injuries = [
   {
     label: "INJURY.BrokenNose",
     icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
-    description: "Gain a Stunned Condition. Until healed, suffer Disadvantage on all Language, Haggle, Intimidation, and Persuasion Tests. This will heal in 20+2d10 days"
+    description: "Gain a Stunned Condition. Until healed, suffer Disadvantage on all Charm, Haggle, Intimidation, and Persuasion Tests. This will heal in 20+2d10 days."
   },
   {
     label: "INJURY.BrokeItem",

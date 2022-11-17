@@ -122,6 +122,8 @@ export class tpoActorSheet extends ActorSheet {
       }
     });
 
+    html.find('.money-convert').mousedown(this._onMoneyConvert.bind(this));
+
     //--------------------------ARMAMENT SPECIFIC-------------------------//
     html.find(".loaded-input").change(this._onAmmoChange.bind(this));
     html.find(".shell-input").change(this._onShellChange.bind(this));
@@ -239,6 +241,47 @@ export class tpoActorSheet extends ActorSheet {
       $(".unequipped-powers").removeClass("dragover");
       this._onPowerUnequip(ev, JSON.parse(ev.originalEvent.dataTransfer.getData("text/plain")).data)
     })
+  }
+
+  async _onMoneyConvert(event){
+    const action = $(event.currentTarget).data('action');
+    const money = this.actor.data.data.derived.encumbrance.money
+    switch (action) {
+      case "silverToPound":
+        if(money.s >= 20){
+          await this.actor.update({[`data.derived.encumbrance.money.l`]: money.l + 1 })
+          await this.actor.update({[`data.derived.encumbrance.money.s`]: money.s - 20 })
+        }else{
+          ui.notifications.error(game.i18n.format('ERROR.NotEnoughSilverToPound'));
+        }
+        break;
+      case "poundToSilver":
+        if(money.l >= 1){
+          await this.actor.update({[`data.derived.encumbrance.money.l`]: money.l - 1 })
+          await this.actor.update({[`data.derived.encumbrance.money.s`]: money.s + 20 })
+        }else{
+          ui.notifications.error(game.i18n.format('ERROR.NotEnoughPound'));
+        }
+        break;
+      case "copperToSilver":
+        if(money.c >= 10){
+          await this.actor.update({[`data.derived.encumbrance.money.c`]: money.c - 10 })
+          await this.actor.update({[`data.derived.encumbrance.money.s`]: money.s + 1 })
+        }else{
+          ui.notifications.error(game.i18n.format('ERROR.NotEnoughCopper'));
+        }
+        break;
+      case "silverToCopper":
+        if(money.s >= 1){
+          await this.actor.update({[`data.derived.encumbrance.money.c`]: money.c + 10 })
+          await this.actor.update({[`data.derived.encumbrance.money.s`]: money.s - 1 })
+        }else{
+          ui.notifications.error(game.i18n.format('ERROR.NotEnoughSilverToCopper'));
+        }
+        break;
+      default:
+        break;
+    }
   }
 
   async _onAmmoChange(event) {

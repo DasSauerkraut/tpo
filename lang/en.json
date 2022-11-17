@@ -193,6 +193,12 @@
   "TIP.Fate": "Your Fates reveal aspects of your Character's virtues and vices.\rYou may invoke a Fate to prevent yourself from dying. If invoked in this manner during combat, you will be removed from the encounter in some manner.\rYou may also invoke a Fate to choose the number rolled on a Test.\r\rAfter a Fate has been invoked, it cannot be invoked again.\rUse the checkboxes to note if a fate has been invoked.",
   "TIP.XP": "Over the course of your adventure, you will gain XP. Generally, you gain 7-10XP at the end of each session. But you can gain more by accomplishing one of your character's aspirations.\rWhen you have some downtime and a safe location, you can spend XP to improve Stats, Skills, and Abilities.",
 
+  "ERROR.NotEnoughPound": "TPO | You do not have a pound to convert to 20 sylfrings!",
+  "ERROR.NotEnoughSilverToPound": "TPO | You do not have enough sylfrings to convert to a pound!",
+  "ERROR.NotEnoughSilverToCopper": "TPO | You do not have a sylfring to convert to 10 cyperen!",
+  "ERROR.NotEnoughCopper": "TPO | You do not have enough cyperen to convert to a sylfring!",
+
+
   "ERROR.StatImpCap": "TPO | Cannot Improve Stat past the Improvement cap!",
   "ERROR.StatNoXp": "TPO | Cannot Improve Stat, not enough XP!",
   "ERROR.StatLessThanZero": "TPO | Cannot degrade Stat below 0 Improvements!",

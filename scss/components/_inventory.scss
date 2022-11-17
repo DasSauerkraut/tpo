@@ -105,7 +105,12 @@
   flex-direction: column;
   align-items: center;
   .money-grid{
-    gap: 0px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    .money-convert{
+      color: #a19f93d1;;
+    }
   }
   .money-field{
     border-radius: 0px;

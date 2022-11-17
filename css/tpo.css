@@ -1495,7 +1495,17 @@
 }
 
 .tpo .money-header .money-grid {
-  gap: 0px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 5px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.tpo .money-header .money-grid .money-convert {
+  color: #a19f93d1;
 }
 
 .tpo .money-header .money-field {

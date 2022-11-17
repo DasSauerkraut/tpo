@@ -2,7 +2,15 @@
   <div class="money-header">
     <div class="money-grid grid grid-4col">
       <span class="money"><input class="money-field" type="text" name="data.derived.encumbrance.money.l" value="{{data.derived.encumbrance.money.l}}" data-dtype="Number"/>ℓ</span>
+      <span>
+        <i class="fas fa-caret-left rollable money-convert" title="1ℓ ← 20s" data-action="silverToPound"></i>
+        <i class="fas fa-caret-right rollable money-convert" title="1ℓ → 20s" data-action="poundToSilver"></i>
+      </span>
       <span class="money"><input class="money-field" type="text" name="data.derived.encumbrance.money.s" value="{{data.derived.encumbrance.money.s}}" data-dtype="Number"/>s</span>
+      <span>
+        <i class="fas fa-caret-left rollable money-convert" title="1s ← 10c" data-action="copperToSilver"></i>
+        <i class="fas fa-caret-right rollable money-convert" title="1s → 10c" data-action="silverToCopper"></i>
+      </span>
       <span class="money"><input class="money-field" type="text" name="data.derived.encumbrance.money.c" value="{{data.derived.encumbrance.money.c}}" data-dtype="Number"/>c = </span>
       <div class="money-total">{{data.derived.encumbrance.money.total}}ℓ</div>
     </div>
