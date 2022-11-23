@@ -10,6 +10,7 @@ export class tpoItem extends Item {
     // As with the actor class, items are documents that can have their data
     // preparation methods overridden (such as prepareBaseData()).
     super.prepareData();
+    const actor = this.actor
     this.data.data.descriptionDisplay = this.formatDescription(this.data.data.description)
     if(this.data.data.value)
       this.data.data.value.total = (this.data.data.value.l + this.data.data.value.s/20 + this.data.data.value.c/200).toFixed(2)
@@ -32,6 +33,10 @@ export class tpoItem extends Item {
     if(this.data.type === "power"){
       if(this.data.data.attacks === undefined)
         this.data.data.attacks = 1;
+    }
+    if(this.data.type === "skill" && actor?.data?.data){
+      const stat = actor.data.data.stats[this.data.data.stat].initial + actor.data.data.stats[this.data.data.stat].improvements + actor.data.data.stats[this.data.data.stat].modifier
+      this.data.data.total = stat + this.data.data.improvements;
     }
   }
 

@@ -132,11 +132,6 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
   }
 })
 
-// Hooks.on("simple-calendar-date-time-change", (data) => {
-//   console.log(data);
-// });
-
-
 /* -------------------------------------------- */
 /*  Hotbar Macros                               */
 /* -------------------------------------------- */

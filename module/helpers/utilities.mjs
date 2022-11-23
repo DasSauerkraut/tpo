@@ -2,15 +2,20 @@ import { TPO } from "./config.mjs";
 export class DiceTPO {
   static async rollTest(skill, rollData) {
     //calculate target
-    console.log(skill)
-    const target = skill.data.total + rollData.modifier + rollData.difficulty;
+    let target;
+    if(skill.data?.data?.total)
+      target = skill.data.data.total + rollData.modifier + rollData.difficulty;
+    else if(skill.data?.total){
+      target = skill.data.total + rollData.modifier + rollData.difficulty;
+    } else {
+      target = rollData.target + rollData.modifier + rollData.difficulty
+    }
     //calculate advantages
     let advantages = rollData.advantage - rollData.disadvantage;
     if(Math.abs(advantages) > 100){
       ui.notifications.warn(game.i18n.format('SYS.ExceedsMaxAdvantage'));
       advantages = 100 * Math.sign(advantages);
     }
-
     //Not a power, so it should only roll once for 'attacks'
     if(!rollData.hasDamage)
       rollData.attacks = 1
@@ -169,7 +174,10 @@ export class DiceTPO {
     //roll dice
     return {
       actorName: rollData.actorName,
-      actorId: rollData.actor.data._id,
+      actorId: {
+        isToken: rollData.actor.parent !== null,
+        id: rollData.actor.parent !== null ? rollData.actor.parent.data._id : rollData.actor.data._id,
+      },
       skill: skill,
       risk: rollData.risk,
       target: target,
@@ -804,28 +812,36 @@ export class UtilsTPO {
 
   static addResolveRerollToChatCard(options){
     options.push({
-      name: game.i18n.localize("SYS.Reroll"),
+      name: game.i18n.localize("SYS.RerollWithResolve"),
       icon: '<i class="fas fa-dice"></i>',
       condition: (li) => {
         const message = game.messages.get(li.data("message-id"))
         const context = message.getFlag('tpo', 'context')
-        return !context.rerolled
+        let actor;
+        if(context.actorId.isToken)
+          actor = canvas.scene.tokens.get(context.actorId.id).getActor()
+        else
+          actor = game.actors.get(context.actorId.id)
+        return !context.rerolled && UtilsTPO.hasResolve(actor)
       },
       callback: li => {
         const message = game.messages.get(li.data("message-id"))
         let context = message.getFlag('tpo', 'context')
-        const actor = game.actors.get(context.actorId)
-        console.log(context.skill)
-        if(!context.rerolled){
+        let actor;
+        if(context.actorId.isToken)
+          actor = canvas.scene.tokens.get(context.actorId.id).getActor()
+        else
+          actor = game.actors.get(context.actorId.id)
+        if(!context.rerolled && UtilsTPO.hasResolve(actor)){
           context.testData.actor = actor;
-          console.log(context.skill)
-          DiceTPO.rollTest(context.skill, context.testData).then(result => {
+          const skill = actor.items.get(context.skill._id)
+          DiceTPO.rollTest(skill ? skill : context.skill, context.testData).then(result => {
             DiceTPO.prepareChatCard(result, true).then(chatCard => {
               DiceTPO.createChatCard(chatCard.chatData, chatCard.chatContext)
             })
           })
           message.setFlag('tpo', 'context.rerolled', true)
-          // UtilsTPO.removeResolve(context.actorId)
+          UtilsTPO.removeResolve(actor)
         }
       }
     })
@@ -860,25 +876,16 @@ export class UtilsTPO {
     })
   }
 
-  static hasResolve(actorId){
-    const actor = game.actors.get(actorId)
-    console.log(`resolve 1 ${actor.data.data.info.resolve.resolve1}`)
-    console.log(`resolve 2 ${actor.data.data.info.resolve.resolve2}`)
-    console.log(`resolve 3 ${actor.data.data.info.resolve.resolve3}`)
-    console.log(`total ${(actor.data.data.info.resolve.resolve1 || actor.data.data.info.resolve.resolve2 || actor.data.data.info.resolve.resolve3)}`)
+  static hasResolve(actor){
     return (actor.data.data.info.resolve.resolve1 || actor.data.data.info.resolve.resolve2 || actor.data.data.info.resolve.resolve3);
   }
 
-  static async removeResolve(actorId){
-    const actor = game.actors.get(actorId)
+  static async removeResolve(actor){
     if(actor.data.data.info.resolve.resolve3) {
-      console.log("RM res3")
       await actor.update({[`data.info.resolve.resolve3`]: false })
     } else if(actor.data.data.info.resolve.resolve2) {
-      console.log("RM res2")
       await actor.update({[`data.info.resolve.resolve2`]: false })
     } else if(actor.data.data.info.resolve.resolve1) {
-      console.log("RM res1")
       await actor.update({[`data.info.resolve.resolve1`]: false })
     }
   }

@@ -1179,9 +1179,6 @@ export class tpoActorSheet extends ActorSheet {
         return testData;
       }
 
-      skill.data.total = skill.data.data.total;
-      console.log(skill)
-  
       renderTemplate('systems/tpo/templates/dialog/rollTest.html', testData).then(dlg => {
         new Dialog({
           title: game.i18n.localize("SYS.PerformTest"),
@@ -1191,7 +1188,7 @@ export class tpoActorSheet extends ActorSheet {
               label: game.i18n.localize("SYS.PerformTest"),
               callback: html => {
                 callback(html);
-                DiceTPO.rollTest(duplicate(skill), testData).then(result => {
+                DiceTPO.rollTest(skill, testData).then(result => {
                   DiceTPO.prepareChatCard(result).then(context => {
                     DiceTPO.createChatCard(context.chatData, context.chatContext)
                   });
