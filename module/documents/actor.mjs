@@ -315,8 +315,16 @@ export class tpoActor extends Actor {
 
     const locations = ['lScabbard','lThigh', 'lHip', 'lPouch', 'chest', 'backpack', 'rScabbard', 'rThigh', 'rHip', 'rPouch']
 
-    actorData.flags.tpo['overencumbered']['total'] = 0;
-    locations.forEach(location => {
+    if(!actorData.flags.tpo)
+      actorData.flags['tpo'] = {
+        overencumbered: {
+          total: 0
+        }
+      }
+    else
+      actorData.flags.tpo['overencumbered']['total'] = 0;
+    
+      locations.forEach(location => {
       inventory[location] = UtilsTPO.sortAlphabetically(inventory[location]);
       let overenc = actorData.data.derived.encumbrance.locations[location].value - actorData.data.derived.encumbrance.locations[location].max
       if(location === 'chest')
