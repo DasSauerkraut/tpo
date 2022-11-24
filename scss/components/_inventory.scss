@@ -1,6 +1,11 @@
 .inventory-section{
   h2 {
-    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    i {
+      font-size: 15px;
+    }
     .containerDelete {
       font-size: 14px;
     }

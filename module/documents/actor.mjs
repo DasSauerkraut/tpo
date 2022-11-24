@@ -313,16 +313,22 @@ export class tpoActor extends Actor {
     activeAbilities = UtilsTPO.sortAlphabetically(activeAbilities);
     inactiveAbilities = UtilsTPO.sortAlphabetically(inactiveAbilities);
 
-    inventory.lScabbard = UtilsTPO.sortAlphabetically(inventory.lScabbard);
-    inventory.lThigh = UtilsTPO.sortAlphabetically(inventory.lThigh);
-    inventory.lHip = UtilsTPO.sortAlphabetically(inventory.lHip);
-    inventory.lPouch = UtilsTPO.sortAlphabetically(inventory.lPouch);
-    inventory.chest = UtilsTPO.sortAlphabetically(inventory.chest);
-    inventory.backpack = UtilsTPO.sortAlphabetically(inventory.backpack);
-    inventory.rScabbard = UtilsTPO.sortAlphabetically(inventory.rScabbard);
-    inventory.rThigh = UtilsTPO.sortAlphabetically(inventory.rThigh);
-    inventory.rHip = UtilsTPO.sortAlphabetically(inventory.rHip);
-    inventory.rPouch = UtilsTPO.sortAlphabetically(inventory.rPouch);
+    const locations = ['lScabbard','lThigh', 'lHip', 'lPouch', 'chest', 'backpack', 'rScabbard', 'rThigh', 'rHip', 'rPouch']
+
+    actorData.flags.tpo['overencumbered']['total'] = 0;
+    locations.forEach(location => {
+      inventory[location] = UtilsTPO.sortAlphabetically(inventory[location]);
+      let overenc = actorData.data.derived.encumbrance.locations[location].value - actorData.data.derived.encumbrance.locations[location].max
+      if(location === 'chest')
+        overenc = actorData.data.derived.encumbrance.locations[location].value - (actorData.data.stats.str.bonus + 1)
+
+      if(overenc > 0 && !location.includes('Scabbard')){
+        actorData.flags.tpo['overencumbered'][location] = true;
+        actorData.flags.tpo['overencumbered']['total'] += overenc;
+      } else {
+        actorData.flags.tpo['overencumbered'][location] = false;
+      }
+    })
 
     actorData.data.basicSkills = basicSkills;
     actorData.data.advancedOrGroupedSkills = advancedOrGroupedSkills;

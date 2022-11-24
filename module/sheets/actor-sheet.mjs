@@ -676,8 +676,6 @@ export class tpoActorSheet extends ActorSheet {
       const itemHeader = $(event.target).parents(".inventory-section");
       location = itemHeader.data("location");
     }
-    console.log(location);
-    console.log(this.actor.data.data.inventory[location]);
 
     if (this.actor.data.data.inventory[location].some(itm => itm._id === item._id)) {
       console.log('Contains dupe, bailing out');

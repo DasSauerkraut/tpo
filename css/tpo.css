@@ -1341,7 +1341,19 @@
 }
 
 .tpo .inventory-section h2 {
-  text-align: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.tpo .inventory-section h2 i {
+  font-size: 15px;
 }
 
 .tpo .inventory-section h2 .containerDelete {

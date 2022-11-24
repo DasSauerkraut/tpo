@@ -848,21 +848,27 @@ export class UtilsTPO {
   }
 
   static addSplendorRerollToChatCard(options){
-    console.log(options)
     options.push({
       name: game.i18n.localize("SYS.RerollWithSplendor"),
       icon: '<i class="fas fa-crown"></i>',
       condition: (li) => {
         const message = game.messages.get(li.data("message-id"))
         const context = message.getFlag('tpo', 'context')
-        const actor = game.actors.get(context.actorId)
-        console.log(actor.data.data.info.splendor)
+        let actor;
+        if(context.actorId.isToken)
+          actor = canvas.scene.tokens.get(context.actorId.id).getActor()
+        else
+          actor = game.actors.get(context.actorId.id)
         return (!context.rerolled && actor.data.data.info.splendor.rerolls > 0)
       },
       callback: li => {
         const message = game.messages.get(li.data("message-id"))
         let context = message.getFlag('tpo', 'context')
-        const actor = game.actors.get(context.actorId)
+        let actor;
+        if(context.actorId.isToken)
+          actor = canvas.scene.tokens.get(context.actorId.id).getActor()
+        else
+          actor = game.actors.get(context.actorId.id)
         if(!context.rerolled && actor.data.data.info.splendor.rerolls > 0){
           context.testData.actor = actor;
           DiceTPO.rollTest(context.skill, context.testData).then(result => {
@@ -892,82 +898,102 @@ export class UtilsTPO {
 
   static onRoundChange(combat){
     if(!game.user.isGM)
-    return;
+      return;
+      
+    let combatant = canvas.scene.tokens.get(combat.current.tokenId);
     
-  let combatant = canvas.scene.tokens.get(combat.current.tokenId);
-  
-  combatant.actor.update({"data.derived.ap.value": combatant.actor.data.data.derived.ap.max})
+    combatant.actor.update({"data.derived.ap.value": combatant.actor.data.data.derived.ap.max})
 
-  let statuses = ``;
-  if(combatant.actor.data.effects.size !== 0){
-    statuses = `
-      <hr>
-      <div>${combatant.actor.data.name} is under the following effects!<div>
-    `
-  }
+    let statuses = ``;
+    if(combatant.actor.data.effects.size !== 0){
+      statuses = `
+        <hr>
+        <div>${combatant.actor.data.name} is under the following effects!<div>
+      `
+    }
 
-  let bleedings = [];
-  let exhausteds = [];
-  let ongoings = [];
-  let paralyzeds = [];
-  combatant.actor.data.effects.forEach(effect => {
-    if(effect.data.label.includes("Bleeding")){
-      bleedings.push(effect);
-      return;
-    }
-    if(effect.data.label.includes("Exhausted")){
-      exhausteds.push(effect);
-      return;
-    }
-    if(effect.data.label.includes("Ongoing")){
-      ongoings.push(effect);
-      return;
-    }
-    if(effect.data.label.includes("Paralyzed")){
-      paralyzeds.push(effect);
-      return;
-    }
-    let lookup = TPO.statuses.filter(s => {
-      return game.i18n.format(s.label) === effect.data.label;
-    });
-
-    let isInjury;
-    if(lookup.length === 0){
-      lookup = TPO.injuries.filter(s => {
+    let bleedings = [];
+    let exhausteds = [];
+    let ongoings = [];
+    let paralyzeds = [];
+    combatant.actor.data.effects.forEach(effect => {
+      if(effect.data.label.includes("Bleeding")){
+        bleedings.push(effect);
+        return;
+      }
+      if(effect.data.label.includes("Exhausted")){
+        exhausteds.push(effect);
+        return;
+      }
+      if(effect.data.label.includes("Ongoing")){
+        ongoings.push(effect);
+        return;
+      }
+      if(effect.data.label.includes("Paralyzed")){
+        paralyzeds.push(effect);
+        return;
+      }
+      let lookup = TPO.statuses.filter(s => {
         return game.i18n.format(s.label) === effect.data.label;
       });
-      isInjury = lookup.length !== 0
+
+      let isInjury;
+      if(lookup.length === 0){
+        lookup = TPO.injuries.filter(s => {
+          return game.i18n.format(s.label) === effect.data.label;
+        });
+        isInjury = lookup.length !== 0
+      }
+
+      let description;
+      if(lookup.length === 0){
+        description = "No Description."
+      }else
+        description = lookup[0].description;
+      
+      statuses += `
+        <br>
+        <b>${effect.data.label}</b>
+        <div style="display:flex;">
+          <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${isInjury ? lookup[0].icon : effect.data.icon}" alt="${effect.data.label}">
+          <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
+        </div>
+      `
+    });
+
+    if(bleedings.length > 0) statuses += UtilsTPO.formatRatingStatus(bleedings);
+    if(exhausteds.length > 0) statuses += UtilsTPO.formatRatingStatus(exhausteds);
+    if(ongoings.length > 0) statuses += UtilsTPO.formatRatingStatus(ongoings);
+    if(paralyzeds.length > 0) statuses += UtilsTPO.formatRatingStatus(paralyzeds);
+
+    const overencumbered = combatant.actor.getFlag('tpo', 'overencumbered')
+    if(overencumbered.total > 0){
+
+      let description = 'Movement is reduced by 1sq.'
+      if(overencumbered.total > 4)
+        description = 'Cannot move.<br>Disadvantage on all physical actions.'
+      else if (overencumbered.total > 2)
+        description = 'Movement reduced by 2sq.<br>Disadvantage on all physical actions'
+
+      statuses += `
+        <br>
+        <b>Overencumbered ${overencumbered.total}</b>
+        <div style="display:flex;">
+          <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="icons/svg/barrel.svg" alt="overencumbered">
+          <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
+        </div>
+      `
     }
 
-    let description;
-    if(lookup.length === 0){
-      description = "No Description."
-     }else
-      description = lookup[0].description;
-    
-    statuses += `
-      <br>
-      <b>${effect.data.label}</b>
-      <div style="display:flex;">
-        <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${isInjury ? lookup[0].icon : effect.data.icon}" alt="${effect.data.label}">
-        <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
-      </div>
-    `
-  });
-
-  if(bleedings.length > 0) statuses += UtilsTPO.formatRatingStatus(bleedings);
-  if(exhausteds.length > 0) statuses += UtilsTPO.formatRatingStatus(exhausteds);
-  if(ongoings.length > 0) statuses += UtilsTPO.formatRatingStatus(ongoings);
-  if(paralyzeds.length > 0) statuses += UtilsTPO.formatRatingStatus(paralyzeds);
-
-  let chatContent = `
-      <h3>${combatant.actor.data.name}'s turn!</h3> 
-      ${statuses}`
-    let chatData = {
-      content: chatContent,
-      user: game.user._id,
-    };
-    ChatMessage.create(chatData, {});
-    UtilsTPO.playContextSound({type: "roundChange"})
+    let chatContent = `
+        <h3>${combatant.actor.data.name}'s turn!</h3>
+        AP refreshed to ${combatant.actor.data.data.derived.ap.max}.
+        ${statuses}`
+      let chatData = {
+        content: chatContent,
+        user: game.user._id,
+      };
+      ChatMessage.create(chatData, {});
+      UtilsTPO.playContextSound({type: "roundChange"})
   }
 }
