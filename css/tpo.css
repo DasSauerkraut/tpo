@@ -1340,39 +1340,66 @@
   margin-top: -8px;
 }
 
-.tpo .inventory-section h2 {
+.tpo .inventory-col {
+  height: 400px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.tpo .inventory-col h2 {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  height: 20px;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  background: #d9d9cd;
 }
 
-.tpo .inventory-section h2 i {
+.tpo .inventory-col h2 i {
   font-size: 15px;
 }
 
-.tpo .inventory-section h2 .containerDelete {
+.tpo .inventory-col h2 .containerDelete {
   font-size: 14px;
 }
 
-.tpo .inventory-section .ap {
+.tpo .inventory-col .sticky-1 {
+  position: sticky;
+  top: 0px;
+}
+
+.tpo .inventory-col .sticky-2 {
+  position: sticky;
+  bottom: 41px;
+  top: 21px;
+}
+
+.tpo .inventory-col .sticky-3 {
+  position: sticky;
+  top: 41px;
+  bottom: 21px;
+}
+
+.tpo .inventory-col .sticky-4 {
+  position: sticky;
+  bottom: 0px;
+}
+
+.tpo .inventory-col .inventory-section .ap {
+  text-align: center;
   font-size: 12px;
 }
 
-.tpo .inventory-section .cap {
-  text-align: center;
-}
-
-.tpo .inventory-section .header {
+.tpo .inventory-col .inventory-section .header {
   font-weight: bold;
 }
 
-.tpo .inventory-section .header .field {
+.tpo .inventory-col .inventory-section .header .field {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1384,23 +1411,23 @@
   align-items: center;
 }
 
-.tpo .inventory-section ul {
+.tpo .inventory-col .inventory-section ul {
   min-height: 20%;
 }
 
-.tpo .inventory-section .inventory-item {
+.tpo .inventory-col .inventory-section .inventory-item {
   background-color: #b5b3a487;
   border-radius: 3px;
   margin-bottom: 3px;
   padding: 1px;
 }
 
-.tpo .inventory-section .inventory-item .name {
+.tpo .inventory-col .inventory-section .inventory-item .name {
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
 }
 
-.tpo .inventory-section .inventory-item .field {
+.tpo .inventory-col .inventory-section .inventory-item .field {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1412,36 +1439,29 @@
   align-items: center;
 }
 
-.tpo .inventory-section .inventory-item .expandable {
+.tpo .inventory-col .inventory-section .inventory-item .expandable {
   position: relative;
 }
 
-.tpo .inventory-section .inventory-item .expandable .itemDelete {
+.tpo .inventory-col .inventory-section .inventory-item .expandable .itemDelete {
   position: absolute;
   font-size: 12px;
   right: 3px;
   top: 2px;
 }
 
-.tpo .inventory-section .inventory-item .expandable .description {
+.tpo .inventory-col .inventory-section .inventory-item .expandable .description {
   font-size: 12px;
   border-top: 1px solid black;
 }
 
-.tpo .inventory-section .inventory-item:nth-child(2n) {
+.tpo .inventory-col .inventory-section .inventory-item:nth-child(2n) {
   background-color: #a19f93d1;
 }
 
-.tpo .inventory-section ul {
+.tpo .inventory-col .inventory-section ul {
   list-style: none;
   padding: 0px;
-}
-
-.tpo .inventory-list {
-  overflow-x: clip;
-  overflow-y: auto;
-  max-height: 30%;
-  scrollbar-width: thin;
 }
 
 .tpo .inventory-header {

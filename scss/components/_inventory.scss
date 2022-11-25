@@ -1,8 +1,13 @@
-.inventory-section{
+.inventory-col{
+  height: 400px;
+  overflow-y: auto;
+  scrollbar-width: thin;
   h2 {
     justify-content: center;
     display: flex;
+    height: 20px;
     align-items: center;
+    background: #d9d9cd;
     i {
       font-size: 15px;
     }
@@ -10,64 +15,75 @@
       font-size: 14px;
     }
   }
-  .ap {
-    font-size: 12px;
+  .sticky-1{
+    position: sticky;
+    top: 0px;
   }
-  .cap {
-    text-align: center;
+  .sticky-2{
+    position: sticky;
+    bottom: 41px;
+    top: 21px;
   }
-  .header {
-    font-weight: bold;
-    .field{
-      display: flex;
-      justify-content: center;
-      align-items: center;
+  .sticky-3{
+    position: sticky;
+    top: 41px;
+    bottom: 21px
+  }
+  .sticky-4{
+    position: sticky;
+    bottom: 0px;
+  }
+  .inventory-section{
+    .ap {
+      text-align: center;
+      font-size: 12px;
     }
-  }
-  ul {
-    min-height: 20%;
-  }
-  .inventory-item {
-    background-color: #b5b3a487;
-    border-radius: 3px;
-    margin-bottom: 3px;
-    padding: 1px;
-    .name{
-      text-overflow: ellipsis;
-    }
-    .field{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .expandable {
-      position: relative;
-      .itemDelete{
-        position: absolute;
-        font-size: 12px;
-        right: 3px;
-        top: 2px;
-      }
-      .description{
-        font-size: 12px;
-        border-top: 1px solid black;
+    .header {
+      font-weight: bold;
+      .field{
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
-  }
-  .inventory-item:nth-child(2n){
-    background-color: #a19f93d1;
-  }
-  ul {
-    list-style: none;
-    padding: 0px;
-  }
-}
-
-.inventory-list{
-  overflow-x: clip;
-  overflow-y: auto;
-  max-height: 30%;
-  scrollbar-width: thin;
+    ul {
+      min-height: 20%;
+    }
+    .inventory-item {
+      background-color: #b5b3a487;
+      border-radius: 3px;
+      margin-bottom: 3px;
+      padding: 1px;
+      .name{
+        text-overflow: ellipsis;
+      }
+      .field{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .expandable {
+        position: relative;
+        .itemDelete{
+          position: absolute;
+          font-size: 12px;
+          right: 3px;
+          top: 2px;
+        }
+        .description{
+          font-size: 12px;
+          border-top: 1px solid black;
+        }
+      }
+    }
+    .inventory-item:nth-child(2n){
+      background-color: #a19f93d1;
+    }
+    ul {
+      list-style: none;
+      padding: 0px;
+    }
+  }  
 }
 
 .inventory-header{

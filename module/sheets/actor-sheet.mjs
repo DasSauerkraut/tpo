@@ -15,7 +15,7 @@ export class tpoActorSheet extends ActorSheet {
       width: 650,
       height: 710,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }],
-      scrollY: [".window-content", ".skill-container", ".combat-container", "inventory-list"]
+      scrollY: [".window-content", ".skill-container", ".combat-container", ".inventory-col"]
     });
   }
 
