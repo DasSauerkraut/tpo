@@ -22,7 +22,11 @@
           <span class="money-label">Value</span>
         <div class="resource">
           <label class="resource-label">Stackable</label>
-          TODO
+          {{#if data.stack.stackable}}
+          <input class="advanced" id="stackable" type="checkbox" checked data-dtype="Boolean"/>
+          {{else}}
+          <input class="advanced" id="stackable" type="checkbox" data-dtype="Boolean"/>
+          {{/if}}
         </div>
         <div class="resource">
           <label class="resource-label">Current Stack</label>

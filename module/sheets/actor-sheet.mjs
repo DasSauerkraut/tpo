@@ -209,9 +209,10 @@ export class tpoActorSheet extends ActorSheet {
     })
     html.on("drop", ".inventory-section", ev => {
       ev.target.classList.remove("dragover")
-      this._onItemDrop(ev, JSON.parse(ev.originalEvent.dataTransfer.getData("text/plain")).data)
     })
-    html.find('.inventory-item').mousedown(this._onPowerOrArmamentEdit.bind(this))
+    html.find('.item-name').mousedown(this._onPowerOrArmamentEdit.bind(this))
+    html.find('.stack').mousedown(this._onStackClick.bind(this))
+
     html.find('.containerDelete').click(this._onContainerDelete.bind(this))
 
     // Drag events for macros.
@@ -228,7 +229,6 @@ export class tpoActorSheet extends ActorSheet {
     })
     html.on("drop", ".armament-container", ev => {
       ev.target.classList.remove("dragover")
-      this._onArmamentDrop(ev, JSON.parse(ev.originalEvent.dataTransfer.getData("text/plain")).data)
     })
 
     html.on("dragenter", ".unequipped-powers", ev => {
@@ -239,7 +239,6 @@ export class tpoActorSheet extends ActorSheet {
     })
     html.on("drop", ".unequipped-powers", ev => {
       $(".unequipped-powers").removeClass("dragover");
-      this._onPowerUnequip(ev, JSON.parse(ev.originalEvent.dataTransfer.getData("text/plain")).data)
     })
   }
 
@@ -349,6 +348,28 @@ export class tpoActorSheet extends ActorSheet {
     }
   }
 
+  async _onStackClick(event) {
+    event.preventDefault();
+    const item = this.actor.items.get(event.currentTarget.getAttribute("data-item-id"));
+    if(event.button !== 0){
+      if(item.data.data.stack.current > 1){
+        let itemToEdit = duplicate(item)
+        itemToEdit.data.stack.current -= 1;
+        await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
+      } else {
+        ui.notifications.error(game.i18n.format("ERROR.StackLessThanZero"));
+      }
+    } else {
+      if(item.data.data.stack.current < item.data.data.stack.max){
+        let itemToEdit = duplicate(item)
+        itemToEdit.data.stack.current += 1;
+        await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
+      } else {
+        ui.notifications.error(game.i18n.format("ERROR.StackCap"));
+      }
+    }
+  }
+
   _onPowerOrArmamentEdit(event) {
     if(event.button !== 0){
       this.actor.items.get(event.currentTarget.getAttribute("data-item-id")).sheet.render(true);
@@ -359,14 +380,13 @@ export class tpoActorSheet extends ActorSheet {
     let itemId = ev.currentTarget.getAttribute("data-item-id");
     if (!itemId)
       return
-    const item = this.actor.items.get(itemId).toObject()
-    ev.dataTransfer.setData("text/plain", JSON.stringify({
+    let item = this.actor.items.get(itemId)
+    const dragData = {
       type: "Item",
-      sheetTab: this.actor.data.flags["_sheetTab"],
-      actorId: this.actor.id,
-      data: item,
-      root: ev.currentTarget.getAttribute("root")
-    }));
+      data: item.data,
+    };
+    ev.dataTransfer.setData("text/plain", JSON.stringify(dragData));
+    item.delete()
   }
 
   _onRest(event){
@@ -664,12 +684,37 @@ export class tpoActorSheet extends ActorSheet {
     await UtilsTPO.updateStoredPower(armament, item, this.actor);
   }
 
+  /** @override */
+  async _onDrop(event) {
+    let item = await super._onDrop(event);
+    if(Array.isArray(item)){
+      return item.map(async (i) => {
+        if(i.data.type === "item" || i.data.type === "armament")
+          await this._onItemDrop(event, duplicate(i.data))
+        else if (i.data.type === "power"){
+          if($(event.target).parents(".armament-container").length)
+            await this._onArmamentDrop(event, duplicate(i.data))
+          else
+            await this._onPowerUnequip(event, duplicate(i.data))
+        }
+      })
+    } else {
+      if(item.data.type === "item" || item.data.type === "armament")
+        return await this._onItemDrop(event, duplicate(item.data))
+      else if (item.data.type === "power"){
+        if($(event.target).parents(".armament-container").length)
+          return await this._onArmamentDrop(event, duplicate(item.data))
+        else
+          return await this._onPowerUnequip(event, duplicate(item.data))
+      }
+    }
+  }
+
   async _onItemDrop(event, item){
     event.preventDefault();
 
     //Trying to get location from header data rn
     let location;
-
     if($(event.target).hasClass("inventory-section")){
       location = $(event.target).data("location");
     } else {
@@ -677,15 +722,49 @@ export class tpoActorSheet extends ActorSheet {
       location = itemHeader.data("location");
     }
 
-    if (this.actor.data.data.inventory[location].some(itm => itm._id === item._id)) {
-      console.log('Contains dupe, bailing out');
-      return;
+    if(location === undefined)
+      location = 'chest'
+
+    UtilsTPO.playContextSound({type: "item"}, "itemEquip")
+
+    let deletedItem = false;
+    let toUpdate = []
+    if (item.data?.stack?.stackable && this.actor.data.data.inventory[location].some(itm => itm.name === item.name && itm._id !== item._id)){
+      let remainingStack = item.data.stack.current;
+      const currentStackables = this.actor.data.data.inventory[location].filter(itm => itm.name === item.name && itm._id !== item._id)
+      await currentStackables.every(async stackable => {
+        if(stackable.data.stack.current + remainingStack <= stackable.data.stack.max){
+          let newStackable = duplicate(stackable)
+          newStackable.data.stack.current += remainingStack;
+          toUpdate.push(newStackable);
+          remainingStack = 0;
+          return false;
+        } 
+        else if (stackable.data.stack.current !== stackable.data.stack.max){
+          let newStackable = duplicate(stackable)
+          remainingStack -= newStackable.data.stack.max - newStackable.data.stack.current;
+          newStackable.data.stack.current = newStackable.data.stack.max;
+          toUpdate.push(newStackable);
+          return true;
+        }
+        return true;
+      });
+
+      if(remainingStack === 0 && !deletedItem){
+        const itemToDelete = this.actor.items.get(item._id);
+        await itemToDelete.delete();
+        deletedItem = true;
+      } else {
+        item.data.stack.current = remainingStack;
+      }
     }
 
-    item.data.location = location;
+    if(!deletedItem){
+      item.data.location = location;
+      toUpdate.push(item);
+    }
 
-    await this.actor.updateEmbeddedDocuments("Item", [item]);
-    UtilsTPO.playContextSound({type: "item"}, "itemEquip")
+    await this.actor.updateEmbeddedDocuments("Item", toUpdate);
   }
 
   async _onArmamentDrop(event, item){

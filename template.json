@@ -323,7 +323,12 @@
     "item": {
       "templates": ["base", "physical"],
       "type": "item",
-      "splendor": 0
+      "splendor": 0,
+      "stack": {
+        "stackable": false,
+        "max": 1,
+        "current": 1
+      }
     },
     "skill": {
       "templates": ["base"],

@@ -70,6 +70,8 @@ export class tpoItemSheet extends ItemSheet {
 
     html.find('#weak-toggle').click(event => {this._onWeakToggle(event)});
 
+    html.find('#stackable').click(event => {this._onStackableToggle(event)});
+
     $("input[type=text]").focusin(function() {
       $(this).select();
     });
@@ -85,6 +87,10 @@ export class tpoItemSheet extends ItemSheet {
 
   _onWeakToggle(event){
     this.object.update({[`data.isWeak`]: !this.object.data.data.isWeak })
+  }
+
+  _onStackableToggle(event){
+    this.object.update({[`data.stack.stackable`]: !this.object.data.data.stack.stackable })
   }
 
   async _onElementToggle(event, element){

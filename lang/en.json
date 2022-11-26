@@ -210,6 +210,10 @@
   "ERROR.SkillNoXp": "TPO | Cannot Improve Skill, not enough XP!",
   "ERROR.SkillLessThanZero": "TPO | Cannot degrade Skill below 0 Improvements!",
 
+  "ERROR.StackLessThanZero": "TPO | Cannot reduce an item's stack to 0!",
+  "ERROR.StackCap": "TPO | Cannot increase an item's stack past its max stack size!",
+
+
   "ERROR.AbilityNoXp": "TPO | Cannot Improve Ability, not enough XP!",
   "ERROR.AbilityLessThanZero": "TPO | Cannot degrade Ability below 0 Improvements!"
 
