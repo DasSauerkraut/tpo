@@ -483,7 +483,7 @@ export class tpoActorSheet extends ActorSheet {
     });
   }
 
-  async _onCombatAction(event) {
+  async  _onCombatAction(event) {
     event.preventDefault();
     const action = $(event.currentTarget).data("action")
     let skill;
@@ -583,6 +583,14 @@ export class tpoActorSheet extends ActorSheet {
           testData.disadvantage += 1;
         }
 
+        //Check if Hardened ability
+        if(this.actor.items.getName("Hardened")){
+          if(this.actor.items.getName("Hardened").data.data.level > 1)
+            testData.advantage += 1
+          if(this.actor.items.getName("Hardened").data.data.level > 0)
+            testData.modifier += 10
+        }
+
         if(skill === undefined){
           skill = {
             name: "Willpower",
@@ -628,6 +636,12 @@ export class tpoActorSheet extends ActorSheet {
         if(this.actor.items.getName("Animal Handling"))
           skillOptions.push("Animal Handling")
         skillOptions.push("Willpower")
+
+        //Check if Cavalryman ability
+        if(this.actor.items.getName("Cavalryman")){
+          if(this.actor.items.getName("Cavalryman").data.data.level > 0)
+            testData.advantage += 1
+        }
 
         renderTemplate('systems/tpo/templates/dialog/combatActionPicker.html', skillOptions).then(dlg => {
           new Dialog({
@@ -1229,17 +1243,17 @@ export class tpoActorSheet extends ActorSheet {
       //Narvid Racial Bonus
       if((this.actor.data.data.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
       (skill.data.data.stat === 'ws' || skill.data.data.stat === 'agi' || skill.data.data.stat === 'will') &&
-      (this.actor.data.data.derived.hp.value > this.actor.data.data.derived.bloodied.value) &&
-      this.actor.token?.combatant){
-        testData.modifier += 10;
+      this.actor.data.data.derived.hp.value > this.actor.data.data.derived.bloodied.value){
+        if(UtilsTPO.isInCombat(this.actor.data._id))
+          testData.modifier += 10;
       }
   
       //Raivo Racial Bonus
       if((this.actor.data.data.details.species.value === game.i18n.format("SPECIES.Raivoaa")) && 
       (skill.data.data.stat === 'ws' || skill.data.data.stat === 'agi' || skill.data.data.stat === 'will') &&
-      (this.actor.data.data.derived.hp.value <= this.actor.data.data.derived.bloodied.value) &&
-      this.actor.token.combatant){
-        testData.advantage += 1;
+      this.actor.data.data.derived.hp.value <= this.actor.data.data.derived.bloodied.value){
+        if(UtilsTPO.isInCombat(this.actor.data._id))
+          testData.advantage += 1;
       }
   
       testData.actorName = this.actor.name;

@@ -321,6 +321,12 @@ export class tpoActor extends Actor {
           total: 0
         }
       }
+    else if (!actorData.flags.tpo['overencumbered'])
+      actorData.flags['tpo'] = {
+        overencumbered: {
+          total: 0
+        }
+      }
     else
       actorData.flags.tpo['overencumbered']['total'] = 0;
     

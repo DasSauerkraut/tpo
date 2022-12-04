@@ -903,6 +903,7 @@ export class UtilsTPO {
     let combatant = canvas.scene.tokens.get(combat.current.tokenId);
     
     combatant.actor.update({"data.derived.ap.value": combatant.actor.data.data.derived.ap.max})
+    let apMessage = `AP refreshed to ${combatant.actor.data.data.derived.ap.max}.`
 
     let statuses = ``;
     if(combatant.actor.data.effects.size !== 0){
@@ -985,9 +986,44 @@ export class UtilsTPO {
       `
     }
 
+    let abilities = ``
+    if(combatant.actor.data.data.details.species.value === game.i18n.format("SPECIES.Raivoaa") &&
+    combatant.actor.data.data.derived.hp.value <= combatant.actor.data.data.derived.bloodied.value)
+      abilities += `
+      <br><b>${game.i18n.format("SPECIES.Raivoaa")} - Berserk</b><br>
+      <div>${game.i18n.format("ABILITY.Berserk")}</div>
+      `
+
+    if(combatant.actor.data.data.details.species.value === game.i18n.format("SPECIES.Narvid") &&
+    combatant.actor.data.data.derived.hp.value > combatant.actor.data.data.derived.bloodied.value)
+      abilities += `
+      <br><b>${game.i18n.format("SPECIES.Narvid")} - Wavering</b><br>
+      <div>${game.i18n.format("ABILITY.Wavering")}</div>
+      `
+
+    if(combatant.actor.items.getName("Momentous")){
+      const momentous = combatant.actor.items.getName("Momentous")
+      if(momentous.data.data.level > 1 && combat.current.round > 2){
+        abilities += `
+        <br><b>Momentous - Level 2</b><br>
+        <div>${game.i18n.format("ABILITY.Momentous2")}</div>
+        `
+        combatant.actor.update({"data.derived.ap.value": combatant.actor.data.data.derived.ap.max + 1})
+        apMessage = `AP refreshed to ${combatant.actor.data.data.derived.ap.max + 1}.`
+      }else if (momentous.data.data.level > 0 && combat.current.round > 3){
+        abilities += `
+        <br><b>Momentous  - Level 1</b><br>
+        <div>${game.i18n.format("ABILITY.Momentous1")}</div>
+        `
+        combatant.actor.update({"data.derived.ap.value": combatant.actor.data.data.derived.ap.max + 1})
+        apMessage = `AP refreshed to ${combatant.actor.data.data.derived.ap.max + 1}.`
+      }
+    }
+
     let chatContent = `
         <h3>${combatant.actor.data.name}'s turn!</h3>
-        AP refreshed to ${combatant.actor.data.data.derived.ap.max}.
+        ${apMessage}
+        ${abilities}
         ${statuses}`
       let chatData = {
         content: chatContent,
@@ -995,5 +1031,15 @@ export class UtilsTPO {
       };
       ChatMessage.create(chatData, {});
       UtilsTPO.playContextSound({type: "roundChange"})
+  }
+
+  static isInCombat(id) {
+    if(game.combat?.combatants){
+      const inCombat = [...game.combat.combatants.entries()].find(([key, val]) => {
+        return val.data.actorId === id
+      })
+      if(inCombat)
+        return true
+    }
   }
 }

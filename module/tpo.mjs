@@ -121,7 +121,7 @@ Hooks.on("getChatLogEntryContext", (html, options) => {
 });
 
 Hooks.on("preUpdateActor", (actor, data, diff) => {
-  if(actor.token?.combatant && data.data.derived.hp?.value < actor.data.data.derived.hp?.value && diff.diff){
+  if(UtilsTPO.isInCombat(actor.data._id) && data.data.derived.hp?.value < actor.data.data.derived.hp?.value && diff.diff){
     const damageTaken = actor.data.data.derived.hp.value - data.data.derived.hp.value;
     if(damageTaken >= 10)
       UtilsTPO.playContextSound({type: "damage"}, "major")
