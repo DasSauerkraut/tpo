@@ -129,6 +129,46 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
       UtilsTPO.playContextSound({type: "damage"}, "normal")
     else
       UtilsTPO.playContextSound({type: "damage"}, "minor")
+    
+    const tempHp = actor.data.data.derived.tempHp.value
+    if(tempHp > 0){
+      let chatContent = ''
+
+      if(tempHp - damageTaken >= 0){
+        data.data.derived = {
+          hp: {
+            value: actor.data.data.derived.hp.value
+          },
+          tempHp: {
+            value: tempHp - damageTaken
+          }
+        }
+        chatContent = `
+        <b>${actor.data.name}</b><br>
+        <div>Temp. HP absorbs the blow!<br>Temp. HP: ${tempHp} → ${tempHp - damageTaken}</div>
+        `
+      } else {
+        data.data.derived = {
+          hp: {
+            value: actor.data.data.derived.hp.value - (damageTaken - tempHp)
+          },
+          tempHp: {
+            value: 0
+          }
+        }
+        chatContent = `
+        <b>${actor.data.name}</b><br>
+        <div>Temp. HP softens the blow!
+        <br>Temp. HP: ${tempHp} → ${0}
+        <br>HP: ${actor.data.data.derived.hp.value} → ${actor.data.data.derived.hp.value - (damageTaken - tempHp)}</div>
+        `
+      }
+      let chatData = {
+        content: chatContent,
+        user: game.user._id,
+      };
+      ChatMessage.create(chatData, {});
+    }
   }
 })
 
