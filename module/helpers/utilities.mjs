@@ -560,7 +560,6 @@ export class UtilsTPO {
                 label: title,
                 callback: async html => {
                   callback(html);
-                  console.log(response)
                   if(hasMagazine){
                     if(loaded.isEjected){
                       await armament.setFlag('tpo', 'loadedAmmo.slotOne', response.slotOne)
@@ -987,6 +986,18 @@ export class UtilsTPO {
     }
 
     let abilities = ``
+    if((combatant.actor.data.data.details.species.value === game.i18n.format("SPECIES.Thulanjos") || 
+    combatant.actor.data.data.details.species.value === game.i18n.format("SPECIES.Ildere")) &&
+    combatant.actor.data.data.derived.hp.value < combatant.actor.data.data.derived.hp.max){
+      abilities += `
+      <br><b>${game.i18n.format("SPECIES.Thuskos")} - Adrenaline</b><br>
+      <div>${game.i18n.format("ABILITY.Adrenaline")}</div>
+      `
+      const currentTempHp = combatant.actor.data.data.derived.tempHp.value
+      const maxTempHp = combatant.actor.data.data.derived.tempHp.max
+      combatant.actor.update({"data.derived.tempHp.value": currentTempHp + 3 > maxTempHp ? maxTempHp : currentTempHp + 3})
+    }
+
     if(combatant.actor.data.data.details.species.value === game.i18n.format("SPECIES.Raivoaa") &&
     combatant.actor.data.data.derived.hp.value <= combatant.actor.data.data.derived.bloodied.value)
       abilities += `
@@ -1031,6 +1042,18 @@ export class UtilsTPO {
       };
       ChatMessage.create(chatData, {});
       UtilsTPO.playContextSound({type: "roundChange"})
+  }
+
+  static payForItem(item, actorId){
+    if(Number(item.value.total) > 0){
+      console.log('has value')
+      const chatContent = ``
+      const chatData = {
+        content: chatContent,
+        user: game.user._id,
+      };
+      ChatMessage.create(chatData, {})
+    }
   }
 
   static isInCombat(id) {

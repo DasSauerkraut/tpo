@@ -56,7 +56,7 @@
 }
 
 .small-gap {
-  gap: 2px;
+  gap: 1px;
 }
 
 .grid-6col {
@@ -963,7 +963,6 @@
   -o-transition: max-height 0.3s cubic-bezier(0.4, 0, 1, 1);
   transition: max-height 0.3s cubic-bezier(0.4, 0, 1, 1);
   overflow: auto;
-  scrollbar-width: none;
 }
 
 .tpo .expand-controller-nested:hover {
@@ -1010,11 +1009,11 @@
   -webkit-filter: grayscale(0%);
 }
 
-.tpo .power .header .type .Encounter-check {
+.tpo .power .header .type .Daily-check {
   accent-color: #423151;
 }
 
-.tpo .power .header .type .Weekly-check {
+.tpo .power .header .type .Adventure-check {
   accent-color: #642422;
 }
 
@@ -1110,11 +1109,11 @@
   background-color: #51632C;
 }
 
-.tpo .Encounter {
+.tpo .Daily {
   background-color: #423151;
 }
 
-.tpo .Weekly {
+.tpo .Adventure {
   background-color: #642422;
 }
 

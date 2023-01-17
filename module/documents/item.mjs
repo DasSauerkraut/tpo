@@ -20,7 +20,7 @@ export class tpoItem extends Item {
       this.data.data.elementDamage.value = this.data.data.elementDamage.base + this.data.data.elementDamage.upgrades;
 
       if(this.data.data.powers.length !== 0){
-        var sort = {"At-Will": 1, "Encounter": 2, "Weekly": 3}
+        var sort = {"At-Will": 1, "Daily": 2, "Adventure": 3}
         this.data.data.powers.sort((a, b) => {
           return sort[a.data.type] - sort[b.data.type];
         })
@@ -33,6 +33,10 @@ export class tpoItem extends Item {
     if(this.data.type === "power"){
       if(this.data.data.attacks === undefined)
         this.data.data.attacks = 1;
+      if(this.data.data.type === "Encounter")
+        this.data.data.type = 'Daily'
+        if(this.data.data.type === "Weekly")
+        this.data.data.type = 'Adventure'
     }
     if(this.data.type === "skill" && actor?.data?.data){
       const stat = actor.data.data.stats[this.data.data.stat].initial + actor.data.data.stats[this.data.data.stat].improvements + actor.data.data.stats[this.data.data.stat].modifier

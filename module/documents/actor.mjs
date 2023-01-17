@@ -185,7 +185,7 @@ export class tpoActor extends Actor {
         })
 
         if(i.data.data.powers.length !== 0){
-          var sort = {"At-Will": 1, "Encounter": 2, "Weekly": 3}
+          var sort = {"At-Will": 1, "Daily": 2, "Adventure": 3}
           i.data.data.powers.sort((a, b) => {
             return sort[a.data.type] - sort[b.data.type];
           })

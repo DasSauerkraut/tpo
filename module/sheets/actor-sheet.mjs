@@ -474,6 +474,13 @@ export class tpoActorSheet extends ActorSheet {
               }
               const currentHp = this.actor.data.data.derived.hp.value;
               const maxHp = this.actor.data.data.derived.hp.max;
+              this.actor.data.data.armaments.forEach((armament) => {
+                armament.data.powers.forEach(pwr => {
+                  if(pwr.data.type === game.i18n.format("PWR.Encounter") && pwr.data.used){
+                    this._usePower(pwr._id, armament._id);
+                  }
+                })
+              })
               this.actor.update({[`data.derived.hp.value`]: currentHp + heal > maxHp ? maxHp : currentHp + heal })
             }
           },
@@ -664,7 +671,7 @@ export class tpoActorSheet extends ActorSheet {
                       }
                     }
                   }
-                  this._performTest(skill, testData, 0, 0, `Defending w/ ${selectedSkill}`);;
+                  this._performTest(skill, testData, 0, 0, `Defending w/ ${selectedSkill}`);
                 }
               },
             },
@@ -703,6 +710,11 @@ export class tpoActorSheet extends ActorSheet {
     let item = await super._onDrop(event);
     if(Array.isArray(item)){
       return item.map(async (i) => {
+        // if((i.data.type === "item" || i.data.type === "armament" || i.data.type === "power") && !i.getFlag('tpo', 'isOwned')){
+        //   i.setFlag('tpo', 'isOwned', true)
+        //   UtilsTPO.payForItem(i.data.data, this.actor.data._id)
+        // }
+
         if(i.data.type === "item" || i.data.type === "armament")
           await this._onItemDrop(event, duplicate(i.data))
         else if (i.data.type === "power"){
@@ -916,7 +928,7 @@ export class tpoActorSheet extends ActorSheet {
       power = this.actor.items.get(container.data("power-id")).data;
     const armament = this.actor.items.get(power.data.parent.id).data;
 
-    if(power.data.type === "Encounter" || power.data.type === "Weekly"){
+    if(power.data.type === "Daily" || power.data.type === "Adventure"){
       if(power.data.used)
         ui.notifications.info(game.i18n.format('SYS.PowerUsed'));
       else 
