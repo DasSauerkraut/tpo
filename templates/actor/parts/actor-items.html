@@ -67,7 +67,7 @@
       </ul>
     </div>
     {{#if data.derived.encumbrance.locations.lScabbard.owned}}
-    <h2 class="sticky-2">Scabbard&nbsp;<i title="Delete Item" class="fas fa-trash containerDelete rollable"></i></h2>
+    <h2 class="sticky-2">Scabbard&nbsp;<i title="Delete Item" class="fas fa-trash containerDelete rollable" data-location="lScabbard" data-type="Scabbard"></i></h2>
     <div class="inventory-section" data-location="lScabbard" data-type="Scabbard">
         <div class="ap">0 AP to Retrieve/Stow</div>
         <ul class="inventory-list">
@@ -137,7 +137,7 @@
       {{/if}}
       &nbsp;Pouch&nbsp;
       ({{data.derived.encumbrance.locations.lPouch.value}}/{{data.derived.encumbrance.locations.lPouch.max}})&nbsp;
-      <i title="Delete Item" class="fas fa-trash containerDelete rollable"></i>
+      <i title="Delete Item" class="fas fa-trash containerDelete rollable" data-location="lPouch" data-type="Pouch"></i>
     </h2>
     <div class="inventory-section" data-location="lPouch" data-type="Pouch">
         <div class="ap">2 AP to Retrieve/Stow</div>
@@ -210,7 +210,7 @@
       {{/if}}
       &nbsp;Backpack&nbsp;
       ({{data.derived.encumbrance.locations.backpack.value}}/{{data.derived.encumbrance.locations.backpack.max}})&nbsp;
-      <i title="Delete Item" class="fas fa-trash containerDelete rollable"></i>
+      <i title="Delete Item" class="fas fa-trash containerDelete rollable" data-location="backpack" data-type="Backpack"></i>
     </h2>
       <div class="inventory-section" data-location="backpack" data-type="Backpack">
         <div class="ap">3 AP to Retrieve/Stow</div>
@@ -277,7 +277,7 @@
       </ul>
     </div>
     {{#if data.derived.encumbrance.locations.rScabbard.owned}}
-    <h2 class="sticky-2">Scabbard&nbsp;<i title="Delete Item" class="fas fa-trash containerDelete rollable"></i></h2>
+    <h2 class="sticky-2">Scabbard&nbsp;<i title="Delete Item" class="fas fa-trash containerDelete rollable" data-location="rScabbard" data-type="Scabbard"></i></h2>
     <div class="inventory-section" data-location="rScabbard" data-type="Scabbard">
         <div class="ap">0 AP to Retrieve/Stow</div>
         <ul class="inventory-list">
@@ -347,7 +347,7 @@
       {{/if}}
       &nbsp;Pouch&nbsp;
       ({{data.derived.encumbrance.locations.rPouch.value}}/{{data.derived.encumbrance.locations.rPouch.max}})&nbsp;
-      <i title="Delete Item" class="fas fa-trash containerDelete rollable"></i>
+      <i title="Delete Item" class="fas fa-trash containerDelete rollable" data-location="rPouch" data-type="Pouch"></i>
     </h2>
       <div class="inventory-section" data-location="rPouch" data-type="Pouch">
         <div class="ap">2 AP to Retrieve/Stow</div>

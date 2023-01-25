@@ -876,19 +876,15 @@ export class tpoActorSheet extends ActorSheet {
 
   async _onContainerDelete(event){
     event.preventDefault();
-    const container = $(event.target).parents(".inventory-section:first");
-    const location = container.data("location")
-    const chestLoc = duplicate(this.actor.data.data.inventory.chest);
+    const location = $(event.target).data("location");
+    if(this.actor.data.data.inventory[location].length > 0){
+      ui.notifications.error(game.i18n.format('SYS.LocationItems'));
+      return;
+    }
 
-    console.log(chestLoc)
-    await this.actor.update({[`data.inventory.chest`]: chestLoc })
     await this.actor.update({[`data.inventory.${location}`]: [] })
 
-    console.log(this.actor.data.data.inventory.chest)
-    console.log(this.actor.data.data.inventory[location])
-
     const item = this.actor.items.getName(location);
-    console.log(item);
     item.delete();
   }
 

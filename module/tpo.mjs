@@ -130,9 +130,9 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
     else
       UtilsTPO.playContextSound({type: "damage"}, "minor")
     
+    let chatContent = ''
     const tempHp = actor.data.data.derived.tempHp.value
     if(tempHp > 0){
-      let chatContent = ''
 
       if(tempHp - damageTaken >= 0){
         data.data.derived = {
@@ -156,19 +156,29 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
             value: 0
           }
         }
-        chatContent = `
+        chatContent += `
         <b>${actor.data.name}</b><br>
         <div>Temp. HP softens the blow!
         <br>Temp. HP: ${tempHp} → ${0}
         <br>HP: ${actor.data.data.derived.hp.value} → ${actor.data.data.derived.hp.value - (damageTaken - tempHp)}</div>
         `
       }
-      let chatData = {
-        content: chatContent,
-        user: game.user._id,
-      };
-      ChatMessage.create(chatData, {});
     }
+
+    if(actor.data.data.derived.hp?.value > actor.data.data.derived.bloodied?.value && data.data.derived.hp?.value <= actor.data.data.derived.bloodied?.value){
+      chatContent += `
+        ${chatContent !== '' ? '<hr>': ''}<b>${actor.data.name} is Bloodied!</b><br>
+        <div>They suffer a Minor Injury and must perform a Morale Test.
+        </div>
+        `
+    }
+
+    let chatData = {
+      content: chatContent,
+      user: game.user._id,
+    };
+    if(chatContent !== '')
+      ChatMessage.create(chatData, {});
   }
 })
 
