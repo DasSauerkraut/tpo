@@ -90,6 +90,7 @@
   "SYS.TrainedMin": "Minor",
   "SYS.TrainedNot": "Untrained",
   "SYS.FreeStat": "TPO | Reached a cost breakpoint with a Major Skill! Gain 1 free Stat Improvement.",
+  "SYS.FreeStatGoverned": "TPO | Reached a cost breakpoint with a Major Skill! #stat has been Improved by 1.",
   "SYS.RollOrEdit": "Click to perform a test with this skill. Right click to edit the skill.",
   "SYS.ToggleAutocalc": "Toggle Autocalculation",
   "SYS.PerformTest": "Perform Test",

@@ -1045,9 +1045,10 @@ export class tpoActorSheet extends ActorSheet {
 
     const improvements = this.actor.data.data.stats[dataset.improve].improvements;
     const xpSpent = this.actor.data.data.info.xp.spent;
+    const newXpCalc = game.settings.get("tpo", "Xp2");
 
     if(event.button === 0){
-      const cost = 4 + Math.floor(improvements / 5) * 2;
+      const cost = newXpCalc ? 4 + Math.floor(improvements / 5) * 5 : 4 + Math.floor(improvements / 5) * 2;
 
       if(improvements >= IMPROVEMENT_CAP){
         ui.notifications.error(game.i18n.format("ERROR.StatImpCap"));
@@ -1058,19 +1059,24 @@ export class tpoActorSheet extends ActorSheet {
         return;
       }
       
-      this.actor.update({[`data.stats.${dataset.improve}.improvements`]: improvements + 1 })
-      this.actor.update({[`data.info.xp.spent`]: cost + xpSpent })
+      this.actor.update({
+        [`data.stats.${dataset.improve}.improvements`]: improvements + 1,
+        [`data.info.xp.spent`]: cost + xpSpent
+       })
 
     } else {
-      const cost = 4 + Math.floor((improvements - 1) / 5) * 2;
+      const cost = newXpCalc ? 4 + Math.floor((improvements - 1) / 5) * 5 : 4 + Math.floor((improvements - 1) / 5) * 2;
 
       if(improvements <= 0){
         ui.notifications.error(game.i18n.format("ERROR.StatLessThanZero"));
         return;
       }
 
-      this.actor.update({[`data.stats.${dataset.improve}.improvements`]: improvements - 1 })
-      this.actor.update({[`data.info.xp.spent`]: xpSpent - cost })
+      this.actor.update({
+        [`data.stats.${dataset.improve}.improvements`]: improvements - 1,
+        [`data.info.xp.spent`]: xpSpent - cost  
+      })
+      this.actor.update()
     }
     UtilsTPO.playContextSound({type: "skill"}, "improve")
   }
@@ -1157,21 +1163,20 @@ export class tpoActorSheet extends ActorSheet {
     const element = event.currentTarget;
     const dataset = element.dataset;
     const xpSpent = this.actor.data.data.info.xp.spent;
+    const newXpCalc = game.settings.get("tpo", "Xp2")
 
     let itemToEdit = duplicate(this.actor.items.get(dataset.improve));
     const improvements = itemToEdit.data.improvements;
 
     if(event.button === 0){
-      // const cost = 4 + Math.floor(improvements / 5) * 2;
       let cost = 0;
       if(itemToEdit.data.trained === "Major")
-        cost = 1 + Math.floor(improvements / 5);
+        cost = newXpCalc ? 1 + Math.floor(improvements / 5) * 2 : 1 + Math.floor(improvements / 5);
       else if(itemToEdit.data.trained === "Minor")
-        cost = 2 + Math.floor(improvements / 5) * 2;
+        cost = newXpCalc ? 2 + Math.floor(improvements / 5) * 3 : 2 + Math.floor(improvements / 5) * 2;
       else
         cost = 4 + Math.floor(improvements / 5) * 4;
 
-      // itemToEdit.data.cost = cost;
 
       if(improvements >= IMPROVEMENT_CAP){
         ui.notifications.error(game.i18n.format("ERROR.SkillImpCap"));
@@ -1182,18 +1187,32 @@ export class tpoActorSheet extends ActorSheet {
         return;
       }
 
-      if(itemToEdit.data.trained === "Major" && (improvements + 1) % 5 === 0)
-        ui.notifications.info(game.i18n.format('SYS.FreeStat'));
+      let statImp = false;
+      if(itemToEdit.data.trained === "Major" && (improvements + 1) % 5 === 0){
+        if(newXpCalc){
+          if(this.actor.data.data.stats[itemToEdit.data.stat].improvements + 1 > 20){
+            ui.notifications.error(game.i18n.format("ERROR.StatImpCap"));
+          } else {
+            ui.notifications.info(game.i18n.format('SYS.FreeStatGoverned').replace('#stat', itemToEdit.data.stat.toUpperCase()));
+            statImp = true;
+          }
+        }
+        else
+          ui.notifications.info(game.i18n.format('SYS.FreeStat'));
+      }
 
       itemToEdit.data.improvements += 1;
       await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
-      this.actor.update({[`data.info.xp.spent`]: cost + xpSpent })
+      this.actor.update({
+        [`data.info.xp.spent`]: cost + xpSpent,
+        [`data.stats.${itemToEdit.data.stat}.improvements`]: statImp ? this.actor.data.data.stats[itemToEdit.data.stat].improvements + 1 : this.actor.data.data.stats[itemToEdit.data.stat].improvements,
+      })
     } else {
       let cost = 0;
       if(itemToEdit.data.trained === "Major")
-        cost = 1 + Math.floor((improvements - 1) / 5);
+        cost = newXpCalc ? 1 + Math.floor((improvements - 1) / 5) * 2 : 1 + Math.floor((improvements - 1) / 5);
       else if(itemToEdit.data.trained === "Minor")
-        cost = 2 + Math.floor((improvements - 1) / 5) * 2;
+        cost = newXpCalc ? 2 + Math.floor((improvements - 1) / 5) * 3 : 2 + Math.floor((improvements - 1) / 5) * 2;
       else
         cost = 4 + Math.floor((improvements - 1) / 5) * 4;
 

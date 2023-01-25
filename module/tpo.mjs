@@ -48,6 +48,18 @@ Hooks.once('init', async function() {
 
   CONFIG.statusEffects = TPO.statuses;
 
+  game.settings.register("tpo", "Xp2", {
+    name: 'Use updated XP formulas.',
+    hint: 'Use the new formualas for XP costs, lock free stat improvements to the stat that governs the skill.',
+    scope: 'world',     // "world" = sync to db, "client" = local storage
+    config: true,       // false if you dont want it to show in module config
+    type: Boolean,       // Number, Boolean, String, Object
+    default: false,
+    onChange: value => { // value is the new value of the setting
+      console.log(value)
+    },
+  }) 
+
   // Preload Handlebars templates.
   return preloadHandlebarsTemplates();
 });
@@ -121,7 +133,7 @@ Hooks.on("getChatLogEntryContext", (html, options) => {
 });
 
 Hooks.on("preUpdateActor", (actor, data, diff) => {
-  if(UtilsTPO.isInCombat(actor.data._id) && data.data.derived.hp?.value < actor.data.data.derived.hp?.value && diff.diff){
+  if(UtilsTPO.isInCombat(actor.data._id) && data.data.derived?.hp?.value < actor.data.data.derived.hp?.value && diff.diff){
     const damageTaken = actor.data.data.derived.hp.value - data.data.derived.hp.value;
     if(damageTaken >= 10)
       UtilsTPO.playContextSound({type: "damage"}, "major")

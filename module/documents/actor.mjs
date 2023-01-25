@@ -35,11 +35,12 @@ export class tpoActor extends Actor {
     const actorData = this.data;
     const data = actorData.data;
     const flags = actorData.flags.tpo || {};
+    const newXpCalc = game.settings.get("tpo", "Xp2");
 
     Object.values(data.stats).forEach(stat => {
       stat.value = stat.initial + stat.modifier + stat.improvements;
       stat.bonus = Math.floor((stat.value) / 10)
-      stat.cost = 4 + Math.floor(stat.improvements / 5) * 2
+      stat.cost = newXpCalc ? 4 + Math.floor(stat.improvements / 5) * 5 : 4 + Math.floor(stat.improvements / 5) * 2
     });
 
     //data["effects"] = prepareActiveEffectCategories(actorData.effects);
@@ -360,10 +361,12 @@ export class tpoActor extends Actor {
     skill.data.statAbrev = game.i18n.format(data.stats[skill.data.stat].abrev)
 
     let cost = 0;
+    const newXpCalc = game.settings.get("tpo", "Xp2")
+
     if(skill.data.trained === "Major")
-      cost = 1 + Math.floor(skill.data.improvements / 5);
+      cost = newXpCalc ? 1 + Math.floor(skill.data.improvements / 5) * 2 : 1 + Math.floor(skill.data.improvements / 5);
     else if(skill.data.trained === "Minor")
-      cost = 2 + Math.floor(skill.data.improvements / 5) * 2;
+      cost = newXpCalc ? 2 + Math.floor(skill.data.improvements / 5) * 3 : 2 + Math.floor(skill.data.improvements / 5) * 2;
     else
       cost = 4 + Math.floor(skill.data.improvements / 5) * 4;
 
