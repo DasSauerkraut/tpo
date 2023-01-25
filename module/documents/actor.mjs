@@ -9,6 +9,7 @@ export class tpoActor extends Actor {
 
   /** @override */
   prepareData() {
+    console.log("Preparing Data for " + this.name)
     // Prepare data for the actor. Calling the super version of this executes
     // the following, in order: data reset (to clear active effects),
     // prepareBaseData(), prepareEmbeddedDocuments() (including active effects),
@@ -32,9 +33,9 @@ export class tpoActor extends Actor {
    * is queried and has a roll executed directly from it).
    */
   prepareDerivedData() {
-    const actorData = this.data;
-    const data = actorData.data;
-    const flags = actorData.flags.tpo || {};
+    const actorData = this.system;
+    const data = actorData;
+    const flags = this.flags.tpo || {};
 
     Object.values(data.stats).forEach(stat => {
       stat.value = stat.initial + stat.modifier + stat.improvements;
@@ -158,15 +159,15 @@ export class tpoActor extends Actor {
       nonEnc: []
     }
 
-    actorData.data.derived.encumbrance.locations.backpack.owned = false;
-    actorData.data.derived.encumbrance.locations.lPouch.owned = false;
-    actorData.data.derived.encumbrance.locations.lScabbard.owned = false;
-    actorData.data.derived.encumbrance.locations.rScabbard.owned = false;
-    actorData.data.derived.encumbrance.locations.rPouch.owned = false;
+    actorData.derived.encumbrance.locations.backpack.owned = false;
+    actorData.derived.encumbrance.locations.lPouch.owned = false;
+    actorData.derived.encumbrance.locations.lScabbard.owned = false;
+    actorData.derived.encumbrance.locations.rScabbard.owned = false;
+    actorData.derived.encumbrance.locations.rPouch.owned = false;
 
-    actorData.items.forEach( async i => {
+    this.items.forEach( async i => {
       if(i.data.data.splendor){
-        actorData.data.info.splendor.items += i.data.data.splendor;
+        actorData.info.splendor.items += i.data.data.splendor;
       }
 
       if(i.type == "skill"){
@@ -177,11 +178,12 @@ export class tpoActor extends Actor {
           basicSkills.push(skill);
       } else if(i.type == "armament"){
         //------------------ACTIVE POWERS--------------------------//
-        i.data.data.powers = i.data.data.powers.filter(pwr => {
-          return actorData.items.get(pwr._id);
+        i.data.data.powers = i.data.data.powers.filter(async pwr => {
+          return await this.items.get(pwr._id) //?.data;
         });
+        // console.log(i.data.data.powers)
         i.data.data.powers.forEach((pwr, idx) => {
-          i.data.data.powers[idx] = actorData.items.get(pwr._id).data;
+          i.data.data.powers[idx] = this.items.get(pwr._id).data;
         })
 
         if(i.data.data.powers.length !== 0){
@@ -194,11 +196,13 @@ export class tpoActor extends Actor {
 
         //------------------MISC POWERS--------------------------//
         i.data.data.miscPowers = i.data.data.miscPowers.filter(pwr => {
-          return actorData.items.get(pwr._id);
+          return this.items.get(pwr._id);
         });
         i.data.data.miscPowers.forEach((pwr, idx) => {
-          i.data.data.miscPowers[idx] = actorData.items.get(pwr._id).data;
+          i.data.data.miscPowers[idx] = this.items.get(pwr._id).data;
         })
+
+        console.log(i.data.data.miscPowers)
 
         i.data.data.miscPowers = UtilsTPO.sortAlphabetically(i.data.data.miscPowers);
 
@@ -207,17 +211,17 @@ export class tpoActor extends Actor {
 
         //------------------UPGRADES--------------------------//
         i.data.data.upgrades = i.data.data.upgrades.filter(pwr => {
-          return actorData.items.get(pwr._id);
+          return this.items.get(pwr._id);
         });
         i.data.data.upgrades.forEach((pwr, idx) => {
-          i.data.data.upgrades[idx] = actorData.items.get(pwr._id).data;
+          i.data.data.upgrades[idx] = this.items.get(pwr._id).data;
         })
         i.data.data.upgrades = UtilsTPO.sortAlphabetically(i.data.data.upgrades);
 
         armaments.push(i.data);
 
         inventory[i.data.data.location].push(i.data)
-        actorData.data.derived.encumbrance.locations[i.data.data.location].value += i.data.data.enc;
+        actorData.derived.encumbrance.locations[i.data.data.location].value += i.data.data.enc;
 
         //----------------------Arquebus Specific Stuff--------------------//
         if(i.data.data.armamentType === "Arquebus"){
@@ -278,32 +282,32 @@ export class tpoActor extends Actor {
           inactiveAbilities.push(i.data);
       } else if(i.type === "item"){
         if(i.data.name === "Pouch"){
-          if(actorData.data.derived.encumbrance.locations.lPouch.owned){
-            actorData.data.derived.encumbrance.locations.rPouch.owned = true;
+          if(actorData.derived.encumbrance.locations.lPouch.owned){
+            actorData.derived.encumbrance.locations.rPouch.owned = true;
             i.update({[`name`]: "rPouch"})
           }else{
-            actorData.data.derived.encumbrance.locations.lPouch.owned = true;
+            actorData.derived.encumbrance.locations.lPouch.owned = true;
             i.update({[`name`]: "lPouch"})
           }
         } else if(i.data.name === "rPouch" || i.data.name === "lPouch"){
-          actorData.data.derived.encumbrance.locations[i.data.name].owned = true;
+          actorData.derived.encumbrance.locations[i.data.name].owned = true;
         } else if(i.data.name === "Scabbard"){
-          if(actorData.data.derived.encumbrance.locations.lScabbard.owned){
-            actorData.data.derived.encumbrance.locations.rScabbard.owned = true;
+          if(actorData.derived.encumbrance.locations.lScabbard.owned){
+            actorData.derived.encumbrance.locations.rScabbard.owned = true;
             i.update({[`name`]: "rScabbard"})
 
           }else{
-            actorData.data.derived.encumbrance.locations.lScabbard.owned = true;
+            actorData.derived.encumbrance.locations.lScabbard.owned = true;
             i.update({[`name`]: "lScabbard"})
           }
         } else if(i.data.name === "rScabbard" || i.data.name === "lScabbard"){
-          actorData.data.derived.encumbrance.locations[i.data.name].owned = true;
+          actorData.derived.encumbrance.locations[i.data.name].owned = true;
         } else if(i.data.name === "Backpack" || i.data.name === "backpack"){
-          actorData.data.derived.encumbrance.locations.backpack.owned = true;
+          actorData.derived.encumbrance.locations.backpack.owned = true;
           i.update({[`name`]: "backpack"})
         } else {
           inventory[i.data.data.location].push(i.data)
-          actorData.data.derived.encumbrance.locations[i.data.data.location].value += i.data.data.enc;
+          actorData.derived.encumbrance.locations[i.data.data.location].value += i.data.data.enc;
         }
       }
     })
@@ -315,46 +319,46 @@ export class tpoActor extends Actor {
 
     const locations = ['lScabbard','lThigh', 'lHip', 'lPouch', 'chest', 'backpack', 'rScabbard', 'rThigh', 'rHip', 'rPouch']
 
-    if(!actorData.flags.tpo)
-      actorData.flags['tpo'] = {
+    if(!this.flags.tpo)
+      this.flags['tpo'] = {
         overencumbered: {
           total: 0
         }
       }
-    else if (!actorData.flags.tpo['overencumbered'])
-      actorData.flags['tpo'] = {
+    else if (!this.flags.tpo['overencumbered'])
+      this.flags['tpo'] = {
         overencumbered: {
           total: 0
         }
       }
     else
-      actorData.flags.tpo['overencumbered']['total'] = 0;
+      this.flags.tpo['overencumbered']['total'] = 0;
     
       locations.forEach(location => {
       inventory[location] = UtilsTPO.sortAlphabetically(inventory[location]);
-      let overenc = actorData.data.derived.encumbrance.locations[location].value - actorData.data.derived.encumbrance.locations[location].max
+      let overenc = actorData.derived.encumbrance.locations[location].value - actorData.derived.encumbrance.locations[location].max
       if(location === 'chest')
-        overenc = actorData.data.derived.encumbrance.locations[location].value - (actorData.data.stats.str.bonus + 1)
+        overenc = actorData.derived.encumbrance.locations[location].value - (actorData.stats.str.bonus + 1)
 
       if(overenc > 0 && !location.includes('Scabbard')){
-        actorData.flags.tpo['overencumbered'][location] = true;
-        actorData.flags.tpo['overencumbered']['total'] += overenc;
+        this.flags.tpo['overencumbered'][location] = true;
+        this.flags.tpo['overencumbered']['total'] += overenc;
       } else {
-        actorData.flags.tpo['overencumbered'][location] = false;
+        this.flags.tpo['overencumbered'][location] = false;
       }
     })
 
-    actorData.data.basicSkills = basicSkills;
-    actorData.data.advancedOrGroupedSkills = advancedOrGroupedSkills;
-    actorData.data.armaments = armaments;
-    actorData.data.unsortedPowers = unsortedPowers;
-    actorData.data.activeAbilities = activeAbilities;
-    actorData.data.inactiveAbilities = inactiveAbilities;
-    actorData.data.inventory = inventory;
+    actorData.basicSkills = basicSkills;
+    actorData.advancedOrGroupedSkills = advancedOrGroupedSkills;
+    actorData.armaments = armaments;
+    actorData.unsortedPowers = unsortedPowers;
+    actorData.activeAbilities = activeAbilities;
+    actorData.inactiveAbilities = inactiveAbilities;
+    actorData.inventory = inventory;
   }
 
   prepareSkill(skill, actorData) {
-    const data = actorData.data
+    const data = actorData
     skill.data.total = data.stats[skill.data.stat].value + skill.data.improvements;
     skill.data.initial = data.stats[skill.data.stat].value;
     skill.data.statAbrev = game.i18n.format(data.stats[skill.data.stat].abrev)

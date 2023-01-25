@@ -121,8 +121,8 @@ Hooks.on("getChatLogEntryContext", (html, options) => {
 });
 
 Hooks.on("preUpdateActor", (actor, data, diff) => {
-  if(UtilsTPO.isInCombat(actor.data._id) && data.data.derived.hp?.value < actor.data.data.derived.hp?.value && diff.diff){
-    const damageTaken = actor.data.data.derived.hp.value - data.data.derived.hp.value;
+  if(UtilsTPO.isInCombat(actor.data._id) && data.system?.derived?.hp?.value < actor.data.data.derived.hp?.value && diff.diff){
+    const damageTaken = actor.data.data.derived.hp.value - data.system.derived.hp.value;
     if(damageTaken >= 10)
       UtilsTPO.playContextSound({type: "damage"}, "major")
     else if (damageTaken >= 3)
@@ -135,7 +135,7 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
       let chatContent = ''
 
       if(tempHp - damageTaken >= 0){
-        data.data.derived = {
+        data.system.derived = {
           hp: {
             value: actor.data.data.derived.hp.value
           },
@@ -148,7 +148,7 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
         <div>Temp. HP absorbs the blow!<br>Temp. HP: ${tempHp} → ${tempHp - damageTaken}</div>
         `
       } else {
-        data.data.derived = {
+        data.system.derived = {
           hp: {
             value: actor.data.data.derived.hp.value - (damageTaken - tempHp)
           },

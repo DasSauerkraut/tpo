@@ -799,22 +799,22 @@ export class tpoActorSheet extends ActorSheet {
       const armamentDiv = $(event.target).parents(".armament-container");
       const armament = duplicate(this.actor.items.get(armamentDiv.data("itemId")));
 
-      if (armament.data.powers.some(power => power._id === item._id)) {
+      if (armament.system.powers.some(power => power._id === item._id)) {
         console.log('Contains dupe, bailing out');
         return;
       }
 
-      item.data.parent.hasParent = true;
-      item.data.parent.id = armament._id;
+      item.system.parent.hasParent = true;
+      item.system.parent.id = armament._id;
       
-      if(item.data.type === "Misc"){
-        armament.data.miscPowers.push(item);
-        armament.data.capacity.currentMisc = armament.data.powers.length;
-      } else if(item.data.type === "Upgrade"){
-        armament.data.upgrades.push(item);
+      if(item.system.type === "Misc"){
+        armament.system.miscPowers.push(item);
+        armament.system.capacity.currentMisc = armament.system.powers.length;
+      } else if(item.system.type === "Upgrade"){
+        armament.system.upgrades.push(item);
       } else {
-        armament.data.powers.push(item);
-        armament.data.capacity.currentPowers = armament.data.powers.length;
+        armament.system.powers.push(item);
+        armament.system.capacity.currentPowers = armament.system.powers.length;
       }
       
       await this.actor.updateEmbeddedDocuments("Item", [item]);
@@ -831,28 +831,28 @@ export class tpoActorSheet extends ActorSheet {
         return;
       }
 
-      const armament = duplicate(this.actor.items.get(item.data.parent.id));
+      const armament = duplicate(this.actor.items.get(item.system.parent.id));
 
-      if(item.data.type === "Misc"){
-        armament.data.miscPowers = armament.data.miscPowers.filter(( pwr ) => {
+      if(item.system.type === "Misc"){
+        armament.system.miscPowers = armament.system.miscPowers.filter(( pwr ) => {
           return pwr._id !== item._id;
         });
       } else if(item.data.type === "Upgrade"){
-        armament.data.upgrades = armament.data.upgrades.filter(( pwr ) => {
+        armament.system.upgrades = armament.system.upgrades.filter(( pwr ) => {
           return pwr._id !== item._id;
         });
       } else {
-        armament.data.powers = armament.data.powers.filter(( pwr ) => {
+        armament.system.powers = armament.system.powers.filter(( pwr ) => {
           return pwr._id !== item._id;
         });
       }
 
-      item.data.parent.hasParent = false;
-      item.data.parent.id = null;
+      item.system.parent.hasParent = false;
+      item.system.parent.id = null;
 
-      armament.data.capacity.currentPowers = armament.data.powers.length;
-      armament.data.capacity.misc === 0 && armament.data.miscPowers.length === 0 ? armament.data.capacity.hasMisc = false : armament.data.capacity.hasMisc = true;
-      armament.data.capacity.currentMisc = armament.data.miscPowers.length;
+      armament.system.capacity.currentPowers = armament.system.powers.length;
+      armament.system.capacity.misc === 0 && armament.system.miscPowers.length === 0 ? armament.system.capacity.hasMisc = false : armament.system.capacity.hasMisc = true;
+      armament.system.capacity.currentMisc = armament.system.miscPowers.length;
 
       await this.actor.updateEmbeddedDocuments("Item", [item]);
       await this.actor.updateEmbeddedDocuments("Item", [armament]);
@@ -956,19 +956,19 @@ export class tpoActorSheet extends ActorSheet {
     let usesAmmo = false;
     let ammo;
     if(options.ammo){
-      ammo = this.actor.items.getName(options.ammo).data
+      ammo = this.actor.items.getName(options.ammo).system
       usesAmmo = true;
     }
 
-    let damage = usesAmmo ? ammo.data.damageMod : power.data.damageMod;
+    let damage = usesAmmo ? ammo.damageMod : power.system.damageMod;
     if(options.damageBns){
-      damage = usesAmmo ? Number(ammo.data.damageMod) + Number(options.damageBns) : Number(power.data.damageMod) + Number(options.damageBns);
+      damage = usesAmmo ? Number(ammo.damageMod) + Number(options.damageBns) : Number(power.system.damageMod) + Number(options.damageBns);
     }
 
     if(!power.name.includes("Reload"))
       UtilsTPO.playContextSound(power, "use")
 
-    let skill = this.actor.items.getName(`Weapon (${armament.data.skill})`);
+    let skill = this.actor.items.getName(`Weapon (${armament.system.skill})`);
 
     let testData = {
       advantage: 0,
@@ -977,10 +977,10 @@ export class tpoActorSheet extends ActorSheet {
       risk: false,
       difficulty: 0,
       hasDamage: true,
-      weakDamage: usesAmmo ? ammo.data.isWeak : power.data.isWeak,
+      weakDamage: usesAmmo ? ammo.isWeak : power.system.isWeak,
       damage: damage,
       element: armament.data.selectedElement.display,
-      elementDamage: usesAmmo ? ammo.data.elementDamageMod : power.data.elementDamageMod,
+      elementDamage: usesAmmo ? ammo.elementDamageMod : power.data.elementDamageMod,
       attacks: power.data.attacks
     }
 
@@ -1119,7 +1119,7 @@ export class tpoActorSheet extends ActorSheet {
     const xpSpent = this.actor.data.data.info.xp.spent;
 
     let itemToEdit = duplicate(this.actor.items.get(dataset.improve));
-    const improvements = itemToEdit.data.improvements;
+    const improvements = itemToEdit.system.improvements;
     
     let cost = 1;
     if($(event.target).hasClass("level"))
@@ -1131,7 +1131,7 @@ export class tpoActorSheet extends ActorSheet {
         return;
       }
 
-      itemToEdit.data.improvements += cost;
+      itemToEdit.system.improvements += cost;
       await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
       this.actor.update({[`data.info.xp.spent`]: cost + xpSpent })
     } else {
@@ -1163,14 +1163,14 @@ export class tpoActorSheet extends ActorSheet {
     const xpSpent = this.actor.data.data.info.xp.spent;
 
     let itemToEdit = duplicate(this.actor.items.get(dataset.improve));
-    const improvements = itemToEdit.data.improvements;
+    const improvements = itemToEdit.system.improvements;
 
     if(event.button === 0){
       // const cost = 4 + Math.floor(improvements / 5) * 2;
       let cost = 0;
-      if(itemToEdit.data.trained === "Major")
+      if(itemToEdit.system.trained === "Major")
         cost = 1 + Math.floor(improvements / 5);
-      else if(itemToEdit.data.trained === "Minor")
+      else if(itemToEdit.system.trained === "Minor")
         cost = 2 + Math.floor(improvements / 5) * 2;
       else
         cost = 4 + Math.floor(improvements / 5) * 4;
@@ -1186,17 +1186,17 @@ export class tpoActorSheet extends ActorSheet {
         return;
       }
 
-      if(itemToEdit.data.trained === "Major" && (improvements + 1) % 5 === 0)
+      if(itemToEdit.system.trained === "Major" && (improvements + 1) % 5 === 0)
         ui.notifications.info(game.i18n.format('SYS.FreeStat'));
 
-      itemToEdit.data.improvements += 1;
+      itemToEdit.system.improvements += 1;
       await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
       this.actor.update({[`data.info.xp.spent`]: cost + xpSpent })
     } else {
       let cost = 0;
-      if(itemToEdit.data.trained === "Major")
+      if(itemToEdit.system.trained === "Major")
         cost = 1 + Math.floor((improvements - 1) / 5);
-      else if(itemToEdit.data.trained === "Minor")
+      else if(itemToEdit.system.trained === "Minor")
         cost = 2 + Math.floor((improvements - 1) / 5) * 2;
       else
         cost = 4 + Math.floor((improvements - 1) / 5) * 4;
@@ -1206,7 +1206,7 @@ export class tpoActorSheet extends ActorSheet {
         return;
       }
 
-      itemToEdit.data.improvements -= 1;
+      itemToEdit.system.improvements -= 1;
       await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
       this.actor.update({[`data.info.xp.spent`]: xpSpent - cost })
     }

@@ -12,8 +12,8 @@ export class tpoItem extends Item {
     super.prepareData();
     const actor = this.actor
     this.data.data.descriptionDisplay = this.formatDescription(this.data.data.description)
-    if(this.data.data.value)
-      this.data.data.value.total = (this.data.data.value.l + this.data.data.value.s/20 + this.data.data.value.c/200).toFixed(2)
+    if(this.data.data.value && (this.data.type === "item" || this.data.type === "armament"))
+        this.data.data.value.total = (this.data.data.value.l + this.data.data.value.s/20 + this.data.data.value.c/200).toFixed(2)
     
     if(this.data.type === "armament"){
       this.data.data.damage.value = this.data.data.damage.base + this.data.data.damage.upgrades;
@@ -22,7 +22,7 @@ export class tpoItem extends Item {
       if(this.data.data.powers.length !== 0){
         var sort = {"At-Will": 1, "Daily": 2, "Adventure": 3}
         this.data.data.powers.sort((a, b) => {
-          return sort[a.data.type] - sort[b.data.type];
+          return sort[a.type] - sort[b.type];
         })
       }
     }
