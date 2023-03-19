@@ -25,6 +25,7 @@ export class DiceTPO {
       let dice = [];
       let selectedRoll = 0;
       let didCrit = false;
+      let critEyeBonusActive = false;
       let autoSuccess = false;
       let SLs = 0;
       let result = "";
@@ -70,7 +71,7 @@ export class DiceTPO {
           if(level > 1)
             hasCritEyeTwo = true;
           if(level > 0)
-          hasCritEyeOne = true;
+            hasCritEyeOne = true;
         }
         dice.forEach(roll => {
           if(roll % 11 === 0) {
@@ -78,9 +79,8 @@ export class DiceTPO {
           } 
           if(hasCritEyeOne && roll % 5 === 0 && roll % 10 !== 0) {
             crits.push(roll);
-          } 
-          else if(hasCritEyeTwo && roll % 5 === 0) {
-            crits.push(roll);
+            if(hasCritEyeTwo)
+              critEyeBonusActive = true;
           }
         })
 
@@ -128,8 +128,11 @@ export class DiceTPO {
       }
 
       //get SLs
-      if(didCrit && didTestSucceed && !autoSuccess)
-        SLs = Math.floor((target - 1) / 10);
+      if(didCrit && didTestSucceed && !autoSuccess){
+        SLs = Math.floor((target - 0) / 10);
+        if(critEyeBonusActive)
+          SLs += 2;
+      }
       else if (didCrit && !didTestSucceed && !autoSuccess)
         SLs = Math.floor((target - 100) / 10);
       else if (!autoSuccess)
