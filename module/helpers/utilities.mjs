@@ -422,7 +422,7 @@ export class UtilsTPO {
         localSound = false;
         if(item.data.armamentType === "Greatsword" || 
         item.data.armamentType === "Lance" ||
-        item.data.armamentType === "Battle Standard" ||
+        item.data.armamentType === "Warbanner" ||
         item.data.armamentType === "Chromatic Sword"
         )
           group = "weapon-swing"
@@ -610,7 +610,7 @@ export class UtilsTPO {
     })
   }
 
-  static async battleStandardHelper(actor, power){
+  static async warbannerHelper(actor, power){
     return new Promise(async (resolve) => {
       const armament = actor.items.get(power.data.parent.id);
       let orderArray = await armament.getFlag('tpo', `orders`)

@@ -248,8 +248,8 @@ export class tpoActor extends Actor {
             await i.setFlag('tpo', 'stamina', {pointSix: true, maxCap: 6})
         }
 
-        //--------------------Battle Standard----------------------------------//
-        if(i.data.data.armamentType === "Battle Standard"){
+        //--------------------Warbanner----------------------------------//
+        if(i.data.data.armamentType === "Warbanner"){
           if(i.getFlag('tpo', 'orders') === undefined){
             await i.setFlag('tpo', 'orders', [])
           }

@@ -937,8 +937,8 @@ export class tpoActorSheet extends ActorSheet {
     
     if(armament.data.armamentType === 'Arquebus'){
       await UtilsTPO.arquebusPowerHelper(this.actor, power).then((ammo) => this._preformPower(power, armament, {ammo: ammo}))
-    } else if(armament.data.armamentType === 'Battle Standard'){
-      await UtilsTPO.battleStandardHelper(this.actor, power).then(() => this._preformPower(power, armament))
+    } else if(armament.data.armamentType === 'Warbanner'){
+      await UtilsTPO.warbannerHelper(this.actor, power).then(() => this._preformPower(power, armament))
     } else if(armament.data.armamentType === 'Vapor Launcher'){
       await UtilsTPO.vaporLauncherHelper(this.actor, power).then((ammo) => this._preformPower(power, armament, {ammo: ammo}))
     } else if(armament.data.armamentType === 'Leech Blade'){
