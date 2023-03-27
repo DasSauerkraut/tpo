@@ -919,6 +919,7 @@ export class UtilsTPO {
     let exhausteds = [];
     let ongoings = [];
     let paralyzeds = [];
+    let hampereds = [];
     combatant.actor.data.effects.forEach(effect => {
       if(effect.data.label.includes("Bleeding")){
         bleedings.push(effect);
@@ -934,6 +935,10 @@ export class UtilsTPO {
       }
       if(effect.data.label.includes("Paralyzed")){
         paralyzeds.push(effect);
+        return;
+      }
+      if(effect.data.label.includes("Hampered")){
+        hampereds.push(effect);
         return;
       }
       let lookup = TPO.statuses.filter(s => {
@@ -968,6 +973,7 @@ export class UtilsTPO {
     if(exhausteds.length > 0) statuses += UtilsTPO.formatRatingStatus(exhausteds);
     if(ongoings.length > 0) statuses += UtilsTPO.formatRatingStatus(ongoings);
     if(paralyzeds.length > 0) statuses += UtilsTPO.formatRatingStatus(paralyzeds);
+    if(hampereds.length > 0) statuses += UtilsTPO.formatRatingStatus(hampereds);
 
     const overencumbered = combatant.actor.getFlag('tpo', 'overencumbered')
     if(overencumbered.total > 0){
