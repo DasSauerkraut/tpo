@@ -2,7 +2,7 @@
   "name": "tpo",
   "title": "The Pillars of Old",
   "description": "The Pillars of Old system for FoundryVTT!",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "minimumCoreVersion": "0.8.6",
   "compatibleCoreVersion": "9",
   "author": "Michael Sebelski",
