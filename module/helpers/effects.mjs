@@ -22,7 +22,7 @@
     case "delete":
       return effect.delete();
     case "toggle":
-      return effect.update({disabled: !effect.data.disabled});
+      return effect.update({disabled: !effect.system.disabled});
   }
 }
 
@@ -60,7 +60,8 @@ export function prepareActiveEffectCategories(effects) {
     // Iterate over active effects, classifying them into categories
     for ( let e of effects ) {
       e._getSourceName(); // Trigger a lookup for the source name
-      if ( e.data.disabled ) categories.inactive.effects.push(e);
+      console.log(e)
+      if ( e.disabled ) categories.inactive.effects.push(e);
       else if ( e.isTemporary ) categories.temporary.effects.push(e);
       else categories.passive.effects.push(e);
     }

@@ -121,8 +121,8 @@ Hooks.on("getChatLogEntryContext", (html, options) => {
 });
 
 Hooks.on("preUpdateActor", (actor, data, diff) => {
-  if(UtilsTPO.isInCombat(actor.data._id) && data.system?.derived?.hp?.value < actor.data.data.derived.hp?.value && diff.diff){
-    const damageTaken = actor.data.data.derived.hp.value - data.system.derived.hp.value;
+  if(UtilsTPO.isInCombat(actor._id) && data.system?.derived?.hp?.value < actor.system.derived.hp?.value && diff.diff){
+    const damageTaken = actor.system.derived.hp.value - data.system.derived.hp.value;
     if(damageTaken >= 10)
       UtilsTPO.playContextSound({type: "damage"}, "major")
     else if (damageTaken >= 3)
@@ -130,14 +130,14 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
     else
       UtilsTPO.playContextSound({type: "damage"}, "minor")
     
-    const tempHp = actor.data.data.derived.tempHp.value
+    const tempHp = actor.system.derived.tempHp.value
     if(tempHp > 0){
       let chatContent = ''
 
       if(tempHp - damageTaken >= 0){
         data.system.derived = {
           hp: {
-            value: actor.data.data.derived.hp.value
+            value: actor.system.derived.hp.value
           },
           tempHp: {
             value: tempHp - damageTaken
@@ -150,7 +150,7 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
       } else {
         data.system.derived = {
           hp: {
-            value: actor.data.data.derived.hp.value - (damageTaken - tempHp)
+            value: actor.system.derived.hp.value - (damageTaken - tempHp)
           },
           tempHp: {
             value: 0
@@ -160,7 +160,7 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
         <b>${actor.data.name}</b><br>
         <div>Temp. HP softens the blow!
         <br>Temp. HP: ${tempHp} → ${0}
-        <br>HP: ${actor.data.data.derived.hp.value} → ${actor.data.data.derived.hp.value - (damageTaken - tempHp)}</div>
+        <br>HP: ${actor.system.derived.hp.value} → ${actor.system.derived.hp.value - (damageTaken - tempHp)}</div>
         `
       }
       let chatData = {

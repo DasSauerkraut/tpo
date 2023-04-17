@@ -57,10 +57,8 @@ export class tpoActor extends Actor {
    * Prepare Character type specific data
    */
   _prepareCharacterData(actorData) {
-    if (actorData.type !== 'character') return;
-
     // Make modifications to data here. For example:
-    const data = actorData.data;
+    const data = actorData;
 
     //Max HP
     if(data.autocalc.hp){
@@ -166,75 +164,73 @@ export class tpoActor extends Actor {
     actorData.derived.encumbrance.locations.rPouch.owned = false;
 
     this.items.forEach( async i => {
-      if(i.data.data.splendor){
-        actorData.info.splendor.items += i.data.data.splendor;
+      if(i.system.splendor){
+        actorData.info.splendor.items += i.system.splendor;
       }
 
       if(i.type == "skill"){
-        let skill = this.prepareSkill(i.data, actorData);
-        if (skill.data.grouped || skill.data.advanced)
+        let skill = this.prepareSkill(i, actorData);
+        if (skill.system.grouped || skill.system.advanced)
           advancedOrGroupedSkills.push(skill)
         else
           basicSkills.push(skill);
       } else if(i.type == "armament"){
         //------------------ACTIVE POWERS--------------------------//
-        i.data.data.powers = i.data.data.powers.filter(async pwr => {
+        i.system.powers = i.system.powers.filter(async pwr => {
           return await this.items.get(pwr._id) //?.data;
         });
-        // console.log(i.data.data.powers)
-        i.data.data.powers.forEach((pwr, idx) => {
-          i.data.data.powers[idx] = this.items.get(pwr._id).data;
+        // console.log(i.system.powers)
+        i.system.powers.forEach((pwr, idx) => {
+          i.system.powers[idx] = this.items.get(pwr._id);
         })
 
-        if(i.data.data.powers.length !== 0){
+        if(i.system.powers.length !== 0){
           var sort = {"At-Will": 1, "Daily": 2, "Adventure": 3}
-          i.data.data.powers.sort((a, b) => {
-            return sort[a.data.type] - sort[b.data.type];
+          i.system.powers.sort((a, b) => {
+            return sort[a.type] - sort[b.type];
           })
         }
-        i.data.data.capacity.currentPowers = i.data.data.powers.length;
+        i.system.capacity.currentPowers = i.system.powers.length;
 
         //------------------MISC POWERS--------------------------//
-        i.data.data.miscPowers = i.data.data.miscPowers.filter(pwr => {
+        i.system.miscPowers = i.system.miscPowers.filter(pwr => {
           return this.items.get(pwr._id);
         });
-        i.data.data.miscPowers.forEach((pwr, idx) => {
-          i.data.data.miscPowers[idx] = this.items.get(pwr._id).data;
+        i.system.miscPowers.forEach((pwr, idx) => {
+          i.system.miscPowers[idx] = this.items.get(pwr._id);
         })
 
-        console.log(i.data.data.miscPowers)
+        i.system.miscPowers = UtilsTPO.sortAlphabetically(i.system.miscPowers);
 
-        i.data.data.miscPowers = UtilsTPO.sortAlphabetically(i.data.data.miscPowers);
-
-        i.data.data.capacity.misc === 0 && i.data.data.miscPowers.length === 0 ? i.data.data.capacity.hasMisc = false : i.data.data.capacity.hasMisc = true;
-        i.data.data.capacity.currentMisc = i.data.data.miscPowers.length;
+        i.system.capacity.misc === 0 && i.system.miscPowers.length === 0 ? i.system.capacity.hasMisc = false : i.system.capacity.hasMisc = true;
+        i.system.capacity.currentMisc = i.system.miscPowers.length;
 
         //------------------UPGRADES--------------------------//
-        i.data.data.upgrades = i.data.data.upgrades.filter(pwr => {
+        i.system.upgrades = i.system.upgrades.filter(pwr => {
           return this.items.get(pwr._id);
         });
-        i.data.data.upgrades.forEach((pwr, idx) => {
-          i.data.data.upgrades[idx] = this.items.get(pwr._id).data;
+        i.system.upgrades.forEach((pwr, idx) => {
+          i.system.upgrades[idx] = this.items.get(pwr._id);
         })
-        i.data.data.upgrades = UtilsTPO.sortAlphabetically(i.data.data.upgrades);
+        i.system.upgrades = UtilsTPO.sortAlphabetically(i.system.upgrades);
 
-        armaments.push(i.data);
+        armaments.push(i);
 
-        inventory[i.data.data.location].push(i.data)
-        actorData.derived.encumbrance.locations[i.data.data.location].value += i.data.data.enc;
+        inventory[i.system.location].push(i)
+        actorData.derived.encumbrance.locations[i.system.location].value += i.system.enc;
 
         //----------------------Arquebus Specific Stuff--------------------//
-        if(i.data.data.armamentType === "Arquebus"){
-          if(i.data.data.upgrades.some(upg => {return upg.name === 'Double Barreled'}))
+        if(i.system.armamentType === "Arquebus"){
+          if(i.system.upgrades.some(upg => {return upg.name === 'Double Barreled'}))
             await i.setFlag('tpo', 'loadedAmmo.max', 2)
-          else if(i.data.data.upgrades.some(upg => {return upg.name === 'Magazine'}))
+          else if(i.system.upgrades.some(upg => {return upg.name === 'Magazine'}))
             await i.setFlag('tpo', 'loadedAmmo.max', 3)
           else
             await i.setFlag('tpo', 'loadedAmmo.max', 1)
         }
 
         //---------------------Gun/Lance Stuff----------------------------------//
-        if(i.data.data.armamentType === "Lance" || i.data.data.armamentType === "Gunlance"){
+        if(i.system.armamentType === "Lance" || i.system.armamentType === "Gunlance"){
           if(i.getFlag('tpo', 'stamina') === undefined){
             await i.setFlag('tpo', 'stamina', {
               pointOne: true,
@@ -243,23 +239,23 @@ export class tpoActor extends Actor {
               maxCap: 3
             })
           }
-          if(i.data.data.upgrades.some(upg => {return upg.name === 'Phial Capacity I'}) && i.getFlag('tpo', 'stamina.pointFour') === undefined)
+          if(i.system.upgrades.some(upg => {return upg.name === 'Phial Capacity I'}) && i.getFlag('tpo', 'stamina.pointFour') === undefined)
             await i.setFlag('tpo', 'stamina', {pointFour: true, maxCap: 4})
-          if(i.data.data.upgrades.some(upg => {return upg.name === 'Phial Capacity II'})&& i.getFlag('tpo', 'stamina.pointFive') === undefined)
+          if(i.system.upgrades.some(upg => {return upg.name === 'Phial Capacity II'})&& i.getFlag('tpo', 'stamina.pointFive') === undefined)
             await i.setFlag('tpo', 'stamina', {pointFive: true, maxCap: 5})
-          if(i.data.data.upgrades.some(upg => {return upg.name === 'Phial Capacity III'}) && i.getFlag('tpo', 'stamina.pointSix') === undefined)
+          if(i.system.upgrades.some(upg => {return upg.name === 'Phial Capacity III'}) && i.getFlag('tpo', 'stamina.pointSix') === undefined)
             await i.setFlag('tpo', 'stamina', {pointSix: true, maxCap: 6})
         }
 
         //--------------------Battle Standard----------------------------------//
-        if(i.data.data.armamentType === "Battle Standard"){
+        if(i.system.armamentType === "Battle Standard"){
           if(i.getFlag('tpo', 'orders') === undefined){
             await i.setFlag('tpo', 'orders', [])
           }
         }
 
         //------------------Vapor Launcher--------------------------------//
-        if(i.data.data.armamentType === "Vapor Launcher"){
+        if(i.system.armamentType === "Vapor Launcher"){
           if(i.getFlag('tpo', 'magazine') === undefined){
             await i.setFlag('tpo', 'magazine', {
               slotOne: 'Unloaded',
@@ -269,19 +265,19 @@ export class tpoActor extends Actor {
           }
         }
 
-      } else if(i.type == "power" && !i.data.data.parent.hasParent){
-        unsortedPowers.push(i.data);
-        inventory.nonEnc.push(i.data)
+      } else if(i.type == "power" && !i.system.parent.hasParent){
+        unsortedPowers.push(i);
+        inventory.nonEnc.push(i)
 
       } else if(i.type === "ability"){
-        i.data.data.value = i.data.data.improvements + i.data.data.mod - Math.abs(i.data.data.malus);
-        i.data.data.level = Math.sign(i.data.data.value) * Math.floor(Math.abs(i.data.data.value) / 20);
-        if(i.data.data.level !== 0)
-          activeAbilities.push(i.data);
+        i.system.value = i.system.improvements + i.system.mod - Math.abs(i.system.malus);
+        i.system.level = Math.sign(i.system.value) * Math.floor(Math.abs(i.system.value) / 20);
+        if(i.system.level !== 0)
+          activeAbilities.push(i);
         else
-          inactiveAbilities.push(i.data);
+          inactiveAbilities.push(i);
       } else if(i.type === "item"){
-        if(i.data.name === "Pouch"){
+        if(i.name === "Pouch"){
           if(actorData.derived.encumbrance.locations.lPouch.owned){
             actorData.derived.encumbrance.locations.rPouch.owned = true;
             i.update({[`name`]: "rPouch"})
@@ -289,9 +285,9 @@ export class tpoActor extends Actor {
             actorData.derived.encumbrance.locations.lPouch.owned = true;
             i.update({[`name`]: "lPouch"})
           }
-        } else if(i.data.name === "rPouch" || i.data.name === "lPouch"){
-          actorData.derived.encumbrance.locations[i.data.name].owned = true;
-        } else if(i.data.name === "Scabbard"){
+        } else if(i.name === "rPouch" || i.name === "lPouch"){
+          actorData.derived.encumbrance.locations[i.name].owned = true;
+        } else if(i.name === "Scabbard"){
           if(actorData.derived.encumbrance.locations.lScabbard.owned){
             actorData.derived.encumbrance.locations.rScabbard.owned = true;
             i.update({[`name`]: "rScabbard"})
@@ -300,18 +296,19 @@ export class tpoActor extends Actor {
             actorData.derived.encumbrance.locations.lScabbard.owned = true;
             i.update({[`name`]: "lScabbard"})
           }
-        } else if(i.data.name === "rScabbard" || i.data.name === "lScabbard"){
-          actorData.derived.encumbrance.locations[i.data.name].owned = true;
-        } else if(i.data.name === "Backpack" || i.data.name === "backpack"){
+        } else if(i.name === "rScabbard" || i.name === "lScabbard"){
+          actorData.derived.encumbrance.locations[i.name].owned = true;
+        } else if(i.name === "Backpack" || i.name === "backpack"){
           actorData.derived.encumbrance.locations.backpack.owned = true;
           i.update({[`name`]: "backpack"})
         } else {
-          inventory[i.data.data.location].push(i.data)
-          actorData.derived.encumbrance.locations[i.data.data.location].value += i.data.data.enc;
+          inventory[i.system.location].push(i)
+          actorData.derived.encumbrance.locations[i.system.location].value += i.system.enc;
         }
       }
     })
 
+    console.log(basicSkills)
     basicSkills = UtilsTPO.sortAlphabetically(basicSkills);
     advancedOrGroupedSkills = UtilsTPO.sortAlphabetically(advancedOrGroupedSkills);
     activeAbilities = UtilsTPO.sortAlphabetically(activeAbilities);
@@ -359,19 +356,19 @@ export class tpoActor extends Actor {
 
   prepareSkill(skill, actorData) {
     const data = actorData
-    skill.data.total = data.stats[skill.data.stat].value + skill.data.improvements;
-    skill.data.initial = data.stats[skill.data.stat].value;
-    skill.data.statAbrev = game.i18n.format(data.stats[skill.data.stat].abrev)
+    skill.system.total = data.stats[skill.system.stat].value + skill.system.improvements;
+    skill.system.initial = data.stats[skill.system.stat].value;
+    skill.system.statAbrev = game.i18n.format(data.stats[skill.system.stat].abrev)
 
     let cost = 0;
-    if(skill.data.trained === "Major")
-      cost = 1 + Math.floor(skill.data.improvements / 5);
-    else if(skill.data.trained === "Minor")
-      cost = 2 + Math.floor(skill.data.improvements / 5) * 2;
+    if(skill.system.trained === "Major")
+      cost = 1 + Math.floor(skill.system.improvements / 5);
+    else if(skill.system.trained === "Minor")
+      cost = 2 + Math.floor(skill.system.improvements / 5) * 2;
     else
-      cost = 4 + Math.floor(skill.data.improvements / 5) * 4;
+      cost = 4 + Math.floor(skill.system.improvements / 5) * 4;
 
-    skill.data.cost = cost;
+    skill.system.cost = cost;
     return skill
   }
 
@@ -392,7 +389,7 @@ export class tpoActor extends Actor {
    * Prepare character roll data.
    */
   _getCharacterRollData(data) {
-    if (this.data.type !== 'character') return;
+    if (this.type !== 'character') return;
 
     // Add level for easier access, or fall back to 0.
     if (data.stats.ws) {
@@ -430,7 +427,7 @@ export class tpoActor extends Actor {
   }
 
   getStatData(stat, isBonus=false){
-    const data = this.data.data;
+    const data = this.system;
     if (stat === "ws") {
       let stat = data.stats.ws.initial + data.stats.ws.improvements + data.stats.ws.modifier
       return isBonus ? Math.floor((stat) / 10) : stat
@@ -469,7 +466,7 @@ export class tpoActor extends Actor {
    * Prepare NPC roll data.
    */
   _getNpcRollData(data) {
-    if (this.data.type !== 'npc') return;
+    if (this.type !== 'npc') return;
 
     // Process additional NPC data here.
   }

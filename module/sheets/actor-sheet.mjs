@@ -21,7 +21,7 @@ export class tpoActorSheet extends ActorSheet {
 
   /** @override */
   get template() {
-    return `systems/tpo/templates/actor/actor-${this.actor.data.type}-sheet.html`;
+    return `systems/tpo/templates/actor/actor-${this.actor.type}-sheet.html`;
   }
 
   /* -------------------------------------------- */
@@ -35,10 +35,10 @@ export class tpoActorSheet extends ActorSheet {
     const context = super.getData();
 
     // Use a safe clone of the actor data for further operations.
-    const actorData = this.actor.data.toObject(false);
+    const actorData = this.actor.toObject(false);
 
     // Add the actor's data to context.data for easier access, as well as flags.
-    context.data = actorData.data;
+    context.system = actorData.system;
     context.flags = actorData.flags;
 
     // Prepare character data and items.
@@ -145,34 +145,34 @@ export class tpoActorSheet extends ActorSheet {
 
     html.find('#hp-max').click(event => {
       event.preventDefault();
-      this.actor.update({[`data.autocalc.hp`]: !this.actor.data.data.autocalc.hp })
+      this.actor.update({[`data.autocalc.hp`]: !this.actor.system.autocalc.hp })
     })
 
     html.find('#hp-heal').click(this._onRest.bind(this));
 
     html.find('#ap-max').click(event => {
       event.preventDefault();
-      this.actor.update({[`data.autocalc.ap`]: !this.actor.data.data.autocalc.ap })
+      this.actor.update({[`data.autocalc.ap`]: !this.actor.system.autocalc.ap })
     })
 
     html.find('#thp-max').click(event => {
       event.preventDefault();
-      this.actor.update({[`data.autocalc.thp`]: !this.actor.data.data.autocalc.thp })
+      this.actor.update({[`data.autocalc.thp`]: !this.actor.system.autocalc.thp })
     })
 
     html.find('#bloodied').click(event => {
       event.preventDefault();
-      this.actor.update({[`data.autocalc.bloodied`]: !this.actor.data.data.autocalc.bloodied })
+      this.actor.update({[`data.autocalc.bloodied`]: !this.actor.system.autocalc.bloodied })
     })
 
     html.find('#movement').click(event => {
       event.preventDefault();
-      this.actor.update({[`data.autocalc.movement`]: !this.actor.data.data.autocalc.movement })
+      this.actor.update({[`data.autocalc.movement`]: !this.actor.system.autocalc.movement })
     })
 
     html.find('#absorption').click(event => {
       event.preventDefault();
-      this.actor.update({[`data.autocalc.absorption`]: !this.actor.data.data.autocalc.absorption })
+      this.actor.update({[`data.autocalc.absorption`]: !this.actor.system.autocalc.absorption })
     })
 
     html.find('.powerDelete').click(this._onPowerDelete.bind(this))
@@ -244,36 +244,32 @@ export class tpoActorSheet extends ActorSheet {
 
   async _onMoneyConvert(event){
     const action = $(event.currentTarget).data('action');
-    const money = this.actor.data.data.derived.encumbrance.money
+    const money = this.actor.system.derived.encumbrance.money
     switch (action) {
       case "silverToPound":
         if(money.s >= 20){
-          await this.actor.update({[`data.derived.encumbrance.money.l`]: money.l + 1 })
-          await this.actor.update({[`data.derived.encumbrance.money.s`]: money.s - 20 })
+          await this.actor.update({[`data.derived.encumbrance.money.l`]: money.l + 1, [`data.derived.encumbrance.money.s`]: money.s - 20 })
         }else{
           ui.notifications.error(game.i18n.format('ERROR.NotEnoughSilverToPound'));
         }
         break;
       case "poundToSilver":
         if(money.l >= 1){
-          await this.actor.update({[`data.derived.encumbrance.money.l`]: money.l - 1 })
-          await this.actor.update({[`data.derived.encumbrance.money.s`]: money.s + 20 })
+          await this.actor.update({[`data.derived.encumbrance.money.l`]: money.l - 1, [`data.derived.encumbrance.money.s`]: money.s + 20 })
         }else{
           ui.notifications.error(game.i18n.format('ERROR.NotEnoughPound'));
         }
         break;
       case "copperToSilver":
         if(money.c >= 10){
-          await this.actor.update({[`data.derived.encumbrance.money.c`]: money.c - 10 })
-          await this.actor.update({[`data.derived.encumbrance.money.s`]: money.s + 1 })
+          await this.actor.update({[`data.derived.encumbrance.money.c`]: money.c - 10, [`data.derived.encumbrance.money.s`]: money.s + 1 })
         }else{
           ui.notifications.error(game.i18n.format('ERROR.NotEnoughCopper'));
         }
         break;
       case "silverToCopper":
         if(money.s >= 1){
-          await this.actor.update({[`data.derived.encumbrance.money.c`]: money.c + 10 })
-          await this.actor.update({[`data.derived.encumbrance.money.s`]: money.s - 1 })
+          await this.actor.update({[`data.derived.encumbrance.money.c`]: money.c + 10, [`data.derived.encumbrance.money.s`]: money.s - 1  })
         }else{
           ui.notifications.error(game.i18n.format('ERROR.NotEnoughSilverToCopper'));
         }
@@ -352,7 +348,7 @@ export class tpoActorSheet extends ActorSheet {
     event.preventDefault();
     const item = this.actor.items.get(event.currentTarget.getAttribute("data-item-id"));
     if(event.button !== 0){
-      if(item.data.data.stack.current > 1){
+      if(item.system.stack.current > 1){
         let itemToEdit = duplicate(item)
         itemToEdit.data.stack.current -= 1;
         await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
@@ -360,7 +356,7 @@ export class tpoActorSheet extends ActorSheet {
         ui.notifications.error(game.i18n.format("ERROR.StackLessThanZero"));
       }
     } else {
-      if(item.data.data.stack.current < item.data.data.stack.max){
+      if(item.system.stack.current < item.system.stack.max){
         let itemToEdit = duplicate(item)
         itemToEdit.data.stack.current += 1;
         await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
@@ -383,7 +379,7 @@ export class tpoActorSheet extends ActorSheet {
     let item = this.actor.items.get(itemId)
     const dragData = {
       type: "Item",
-      data: item.data,
+      data: item,
     };
     ev.dataTransfer.setData("text/plain", JSON.stringify(dragData));
     item.delete()
@@ -445,7 +441,7 @@ export class tpoActorSheet extends ActorSheet {
                   name: "Constitution",
                   data: {
                     data: {
-                      total: this.actor.data.data.stats.con.value
+                      total: this.actor.system.stats.con.value
                     },
                   }
                 }
@@ -472,9 +468,9 @@ export class tpoActorSheet extends ActorSheet {
                 default:
                   break;
               }
-              const currentHp = this.actor.data.data.derived.hp.value;
-              const maxHp = this.actor.data.data.derived.hp.max;
-              this.actor.data.data.armaments.forEach((armament) => {
+              const currentHp = this.actor.system.derived.hp.value;
+              const maxHp = this.actor.system.derived.hp.max;
+              this.actor.system.armaments.forEach((armament) => {
                 armament.data.powers.forEach(pwr => {
                   if(pwr.data.type === game.i18n.format("PWR.Encounter") && pwr.data.used){
                     this._usePower(pwr._id, armament._id);
@@ -524,9 +520,9 @@ export class tpoActorSheet extends ActorSheet {
         
         skillOptions.push("Weapon Skill")
 
-        if(1 > this.actor.data.data.derived.ap.value)
+        if(1 > this.actor.system.derived.ap.value)
           ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
-        this.actor.update({[`data.derived.ap.value`]: this.actor.data.data.derived.ap.value - 1 })
+        this.actor.update({[`data.derived.ap.value`]: this.actor.system.derived.ap.value - 1 })
 
         renderTemplate('systems/tpo/templates/dialog/combatActionPicker.html', skillOptions).then(dlg => {
           new Dialog({
@@ -544,7 +540,7 @@ export class tpoActorSheet extends ActorSheet {
                       name: "Weapon Skill",
                       data: {
                         data: {
-                          total: this.actor.data.data.stats.ws.value
+                          total: this.actor.system.stats.ws.value
                         },
                       }
                     }
@@ -569,15 +565,15 @@ export class tpoActorSheet extends ActorSheet {
             name: "Agility",
             data: {
               data: {
-                total: this.actor.data.data.stats.agi.value
+                total: this.actor.system.stats.agi.value
               },
             }
           }
           testData.disadvantage = 1;
         }
-        if(1 > this.actor.data.data.derived.ap.value)
+        if(1 > this.actor.system.derived.ap.value)
           ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
-        this.actor.update({[`data.derived.ap.value`]: this.actor.data.data.derived.ap.value - 1 })
+        this.actor.update({[`data.derived.ap.value`]: this.actor.system.derived.ap.value - 1 })
 
         this._performTest(skill, testData, 0, 0, "Disengaging");
         break;
@@ -585,16 +581,16 @@ export class tpoActorSheet extends ActorSheet {
         skill = this.actor.items.getName("Cool");
         testData.difficulty = 20;
 
-        if((this.actor.data.data.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
-        (this.actor.data.data.derived.hp.value <= this.actor.data.data.derived.bloodied.value)){
+        if((this.actor.system.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
+        (this.actor.system.derived.hp.value <= this.actor.system.derived.bloodied.value)){
           testData.disadvantage += 1;
         }
 
         //Check if Hardened ability
         if(this.actor.items.getName("Hardened")){
-          if(this.actor.items.getName("Hardened").data.data.level > 1)
+          if(this.actor.items.getName("Hardened").system.level > 1)
             testData.advantage += 1
-          if(this.actor.items.getName("Hardened").data.data.level > 0)
+          if(this.actor.items.getName("Hardened").system.level > 0)
             testData.modifier += 10
         }
 
@@ -603,7 +599,7 @@ export class tpoActorSheet extends ActorSheet {
             name: "Willpower",
             data: {
               data: {
-                total: this.actor.data.data.stats.will.value
+                total: this.actor.system.stats.will.value
               },
             }
           }
@@ -614,16 +610,16 @@ export class tpoActorSheet extends ActorSheet {
       case "grapple":
         skill = this.actor.items.getName("Grapple");
 
-        if(2 > this.actor.data.data.derived.ap.value)
+        if(2 > this.actor.system.derived.ap.value)
           ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
-        this.actor.update({[`data.derived.ap.value`]: this.actor.data.data.derived.ap.value - 2 })
+        this.actor.update({[`data.derived.ap.value`]: this.actor.system.derived.ap.value - 2 })
 
         if(skill === undefined){
           skill = {
             name: "Strength",
             data: {
               data: {
-                total: this.actor.data.data.stats.str.value
+                total: this.actor.system.stats.str.value
               },
             }
           }
@@ -646,7 +642,7 @@ export class tpoActorSheet extends ActorSheet {
 
         //Check if Cavalryman ability
         if(this.actor.items.getName("Cavalryman")){
-          if(this.actor.items.getName("Cavalryman").data.data.level > 0)
+          if(this.actor.items.getName("Cavalryman").system.level > 0)
             testData.advantage += 1
         }
 
@@ -666,7 +662,7 @@ export class tpoActorSheet extends ActorSheet {
                       name: "Weapon Skill",
                       data: {
                         data: {
-                          total: this.actor.data.data.stats.ws.value
+                          total: this.actor.system.stats.ws.value
                         },
                       }
                     }
@@ -712,10 +708,10 @@ export class tpoActorSheet extends ActorSheet {
       return item.map(async (i) => {
         // if((i.data.type === "item" || i.data.type === "armament" || i.data.type === "power") && !i.getFlag('tpo', 'isOwned')){
         //   i.setFlag('tpo', 'isOwned', true)
-        //   UtilsTPO.payForItem(i.data.data, this.actor.data._id)
+        //   UtilsTPO.payForItem(i.system, this.actor.data._id)
         // }
 
-        if(i.data.type === "item" || i.data.type === "armament")
+        if(i.system.type === "item" || i.system.type === "armament")
           await this._onItemDrop(event, duplicate(i.data))
         else if (i.data.type === "power"){
           if($(event.target).parents(".armament-container").length)
@@ -725,9 +721,9 @@ export class tpoActorSheet extends ActorSheet {
         }
       })
     } else {
-      if(item.data.type === "item" || item.data.type === "armament")
+      if(item.system.type === "item" || item.system.type === "armament")
         return await this._onItemDrop(event, duplicate(item.data))
-      else if (item.data.type === "power"){
+      else if (item.system.type === "power"){
         if($(event.target).parents(".armament-container").length)
           return await this._onArmamentDrop(event, duplicate(item.data))
         else
@@ -755,21 +751,21 @@ export class tpoActorSheet extends ActorSheet {
 
     let deletedItem = false;
     let toUpdate = []
-    if (item.data?.stack?.stackable && this.actor.data.data.inventory[location].some(itm => itm.name === item.name && itm._id !== item._id)){
-      let remainingStack = item.data.stack.current;
-      const currentStackables = this.actor.data.data.inventory[location].filter(itm => itm.name === item.name && itm._id !== item._id)
+    if (item.system?.stack?.stackable && this.actor.system.inventory[location].some(itm => itm.name === item.name && itm._id !== item._id)){
+      let remainingStack = item.system.stack.current;
+      const currentStackables = this.actor.system.inventory[location].filter(itm => itm.name === item.name && itm._id !== item._id)
       await currentStackables.every(async stackable => {
-        if(stackable.data.stack.current + remainingStack <= stackable.data.stack.max){
+        if(stackable.system.stack.current + remainingStack <= stackable.system.stack.max){
           let newStackable = duplicate(stackable)
-          newStackable.data.stack.current += remainingStack;
+          newStackable.system.stack.current += remainingStack;
           toUpdate.push(newStackable);
           remainingStack = 0;
           return false;
         } 
-        else if (stackable.data.stack.current !== stackable.data.stack.max){
+        else if (stackable.system.stack.current !== stackable.system.stack.max){
           let newStackable = duplicate(stackable)
-          remainingStack -= newStackable.data.stack.max - newStackable.data.stack.current;
-          newStackable.data.stack.current = newStackable.data.stack.max;
+          remainingStack -= newStackable.system.stack.max - newStackable.system.stack.current;
+          newStackable.system.stack.current = newStackable.system.stack.max;
           toUpdate.push(newStackable);
           return true;
         }
@@ -781,12 +777,12 @@ export class tpoActorSheet extends ActorSheet {
         await itemToDelete.delete();
         deletedItem = true;
       } else {
-        item.data.stack.current = remainingStack;
+        item.system.stack.current = remainingStack;
       }
     }
 
     if(!deletedItem){
-      item.data.location = location;
+      item.system.location = location;
       toUpdate.push(item);
     }
 
@@ -826,7 +822,7 @@ export class tpoActorSheet extends ActorSheet {
   async _onPowerUnequip(event, item){
     event.preventDefault();
     if(item.type === "power"){
-      if (this.actor.data.data.unsortedPowers.some(power => power._id === item._id)) {
+      if (this.actor.system.unsortedPowers.some(power => power._id === item._id)) {
         console.log('Contains dupe, bailing out');
         return;
       }
@@ -878,17 +874,11 @@ export class tpoActorSheet extends ActorSheet {
     event.preventDefault();
     const container = $(event.target).parents(".inventory-section:first");
     const location = container.data("location")
-    const chestLoc = duplicate(this.actor.data.data.inventory.chest);
+    const chestLoc = duplicate(this.actor.system.inventory.chest);
 
-    console.log(chestLoc)
-    await this.actor.update({[`data.inventory.chest`]: chestLoc })
-    await this.actor.update({[`data.inventory.${location}`]: [] })
-
-    console.log(this.actor.data.data.inventory.chest)
-    console.log(this.actor.data.data.inventory[location])
+    await this.actor.update({[`system.inventory.chest`]: chestLoc, [`system.inventory.${location}`]: [] })
 
     const item = this.actor.items.getName(location);
-    console.log(item);
     item.delete();
   }
 
@@ -906,10 +896,10 @@ export class tpoActorSheet extends ActorSheet {
     }
     
     const statOut = {
-        name: game.i18n.localize(this.actor.data.data.stats[stat].label),
+        name: game.i18n.localize(this.actor.system.stats[stat].label),
         data: {
           data: {
-            total: this.actor.data.data.stats[stat].value
+            total: this.actor.system.stats[stat].value
           },
         }
       }
@@ -935,9 +925,9 @@ export class tpoActorSheet extends ActorSheet {
         this._usePower(power._id, armament._id);
     }
 
-    if(power.data.apCost > this.actor.data.data.derived.ap.value)
+    if(power.data.apCost > this.actor.system.derived.ap.value)
       ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
-    this.actor.update({[`data.derived.ap.value`]: this.actor.data.data.derived.ap.value - power.data.apCost })
+    this.actor.update({[`data.derived.ap.value`]: this.actor.system.derived.ap.value - power.data.apCost })
     
     if(armament.data.armamentType === 'Arquebus'){
       await UtilsTPO.arquebusPowerHelper(this.actor, power).then((ammo) => this._preformPower(power, armament, {ammo: ammo}))
@@ -989,7 +979,7 @@ export class tpoActorSheet extends ActorSheet {
         name: "Weapon Skill",
         data: {
           data: {
-            total: this.actor.data.data.stats.ws.value
+            total: this.actor.system.stats.ws.value
           },
         }
       }
@@ -1047,8 +1037,8 @@ export class tpoActorSheet extends ActorSheet {
 
     const IMPROVEMENT_CAP = 20;
 
-    const improvements = this.actor.data.data.stats[dataset.improve].improvements;
-    const xpSpent = this.actor.data.data.info.xp.spent;
+    const improvements = this.actor.system.stats[dataset.improve].improvements;
+    const xpSpent = this.actor.system.info.xp.spent;
 
     if(event.button === 0){
       const cost = 4 + Math.floor(improvements / 5) * 2;
@@ -1057,13 +1047,12 @@ export class tpoActorSheet extends ActorSheet {
         ui.notifications.error(game.i18n.format("ERROR.StatImpCap"));
         return;
       }
-      if((this.actor.data.data.info.xp.earned - (this.actor.data.data.info.xp.spent + cost)) < 0 ) {
+      if((this.actor.system.info.xp.earned - (this.actor.system.info.xp.spent + cost)) < 0 ) {
         ui.notifications.error(game.i18n.format("ERROR.StatNoXp"));
         return;
       }
       
-      this.actor.update({[`data.stats.${dataset.improve}.improvements`]: improvements + 1 })
-      this.actor.update({[`data.info.xp.spent`]: cost + xpSpent })
+      this.actor.update({[`system.stats.${dataset.improve}.improvements`]: improvements + 1, [`system.info.xp.spent`]: cost + xpSpent })
 
     } else {
       const cost = 4 + Math.floor((improvements - 1) / 5) * 2;
@@ -1073,8 +1062,7 @@ export class tpoActorSheet extends ActorSheet {
         return;
       }
 
-      this.actor.update({[`data.stats.${dataset.improve}.improvements`]: improvements - 1 })
-      this.actor.update({[`data.info.xp.spent`]: xpSpent - cost })
+      this.actor.update({[`system.stats.${dataset.improve}.improvements`]: improvements - 1, [`system.info.xp.spent`]: xpSpent - cost })
     }
     UtilsTPO.playContextSound({type: "skill"}, "improve")
   }
@@ -1116,7 +1104,7 @@ export class tpoActorSheet extends ActorSheet {
     // const itemId = event.target.attributes["data-item-id"].value;
     const element = event.currentTarget;
     const dataset = element.dataset;
-    const xpSpent = this.actor.data.data.info.xp.spent;
+    const xpSpent = this.actor.system.info.xp.spent;
 
     let itemToEdit = duplicate(this.actor.items.get(dataset.improve));
     const improvements = itemToEdit.system.improvements;
@@ -1126,7 +1114,7 @@ export class tpoActorSheet extends ActorSheet {
       cost = 20;
 
     if(event.button === 0){
-      if((this.actor.data.data.info.xp.earned - (this.actor.data.data.info.xp.spent + cost)) < 0 ) {
+      if((this.actor.system.info.xp.earned - (this.actor.system.info.xp.spent + cost)) < 0 ) {
         ui.notifications.error(game.i18n.format("ERROR.AbilityNoXp"));
         return;
       }
@@ -1160,7 +1148,7 @@ export class tpoActorSheet extends ActorSheet {
     // const itemId = event.target.attributes["data-item-id"].value;
     const element = event.currentTarget;
     const dataset = element.dataset;
-    const xpSpent = this.actor.data.data.info.xp.spent;
+    const xpSpent = this.actor.system.info.xp.spent;
 
     let itemToEdit = duplicate(this.actor.items.get(dataset.improve));
     const improvements = itemToEdit.system.improvements;
@@ -1181,7 +1169,7 @@ export class tpoActorSheet extends ActorSheet {
         ui.notifications.error(game.i18n.format("ERROR.SkillImpCap"));
         return;
       }
-      if((this.actor.data.data.info.xp.earned - (this.actor.data.data.info.xp.spent + cost)) < 0 ) {
+      if((this.actor.system.info.xp.earned - (this.actor.system.info.xp.spent + cost)) < 0 ) {
         ui.notifications.error(game.i18n.format("ERROR.SkillNoXp"));
         return;
       }
@@ -1250,20 +1238,20 @@ export class tpoActorSheet extends ActorSheet {
   
       if(name) testData.name = name;
   
-      testData.target = skill.data.data.total;
+      testData.target = skill.system.total;
   
       //Narvid Racial Bonus
-      if((this.actor.data.data.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
-      (skill.data.data.stat === 'ws' || skill.data.data.stat === 'agi' || skill.data.data.stat === 'will') &&
-      this.actor.data.data.derived.hp.value > this.actor.data.data.derived.bloodied.value){
+      if((this.actor.system.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
+      (skill.system.stat === 'ws' || skill.system.stat === 'agi' || skill.system.stat === 'will') &&
+      this.actor.system.derived.hp.value > this.actor.system.derived.bloodied.value){
         if(UtilsTPO.isInCombat(this.actor.data._id))
           testData.modifier += 10;
       }
   
       //Raivo Racial Bonus
-      if((this.actor.data.data.details.species.value === game.i18n.format("SPECIES.Raivoaa")) && 
-      (skill.data.data.stat === 'ws' || skill.data.data.stat === 'agi' || skill.data.data.stat === 'will') &&
-      this.actor.data.data.derived.hp.value <= this.actor.data.data.derived.bloodied.value){
+      if((this.actor.system.details.species.value === game.i18n.format("SPECIES.Raivoaa")) && 
+      (skill.system.stat === 'ws' || skill.system.stat === 'agi' || skill.system.stat === 'will') &&
+      this.actor.system.derived.hp.value <= this.actor.system.derived.bloodied.value){
         if(UtilsTPO.isInCombat(this.actor.data._id))
           testData.advantage += 1;
       }
@@ -1276,7 +1264,7 @@ export class tpoActorSheet extends ActorSheet {
         testData.modifier = Number(html.find('[name="modifier"]').val());
         testData.risk = html.find('[name="risk"]').is(':checked');
         testData.difficulty = Number(html.find('[name="difficulty"]').val());
-        testData.damage = Number(html.find('[name="damage"]').val()) + this.actor.data.data.stats.str.bonus + armamentDmg;
+        testData.damage = Number(html.find('[name="damage"]').val()) + this.actor.system.stats.str.bonus + armamentDmg;
         testData.weakDamage = html.find('[name="weak-damage"]').is(':checked');
         testData.elementDamage = Number(html.find('[name="elementDamage"]').val()) + armamentEleDmg;
         return testData;
@@ -1341,6 +1329,6 @@ export class tpoActorSheet extends ActorSheet {
    */
   async _onResolveToggle(event){
     const element = event.currentTarget;
-    await this.actor.update({[`data.info.resolve.${element.id}`]: !this.actor.data.data.info.resolve[element.id] })
+    await this.actor.update({[`data.info.resolve.${element.id}`]: !this.actor.system.info.resolve[element.id] })
   }
 }

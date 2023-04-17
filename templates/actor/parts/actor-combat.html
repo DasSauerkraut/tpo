@@ -29,25 +29,25 @@
           <div class="skill-item-header-controls">&nbsp;</div>
         </li>
         <div class="skill-container armament">
-        {{#each data.armaments as |armament id|}}
+        {{#each system.armaments as |armament id|}}
           <li class="armament-container item-container expand-container" data-item-id="{{armament._id}}">
             <div class="grid grid-13col skill-item-container ">
               <div class="grid-span-4 armament-name expand-controller" data-item-id="{{armament._id}}">{{armament.name}}</div>
-              <div class="skill-item grid-span-2">StrB+{{armament.data.damage.value}}</div>
-              <div class="skill-item grid-span-2">+{{armament.data.elementDamage.value}}</div>
-              <div class="skill-item grid-span-2">{{armament.data.selectedElement.display}}</div>
-              <div class="skill-item grid-span-2">{{armament.data.overloadPoints}}</div>
+              <div class="skill-item grid-span-2">StrB+{{armament.system.damage.value}}</div>
+              <div class="skill-item grid-span-2">+{{armament.system.elementDamage.value}}</div>
+              <div class="skill-item grid-span-2">{{armament.system.selectedElement.display}}</div>
+              <div class="skill-item grid-span-2">{{armament.system.overloadPoints}}</div>
               <div class="skill-item">
                 <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
               </div>
             </div>
             <div class="expandable" style="max-height: 1000px" data-item-id="{{armament._id}}">
-              {{#ifEquals armament.data.armamentType "Vapor Launcher"}}
+              {{#ifEquals armament.system.armamentType "Vapor Launcher"}}
                 Magazine: 
                 <select id="slotOne" class="shell-input" name="armament.flags.tpo.magazine.slotOne" type="text" value="{{armament.flags.tpo.magazine.slotOne}}">
                 {{#select armament.flags.tpo.magazine.slotOne}}
                   <option value="Unloaded">Unloaded</option>
-                  {{#each armament.data.miscPowers as |power id|}}
+                  {{#each armament.system.miscPowers as |power id|}}
                   <option value="{{power.name}}">{{power.name}}</option>
                   {{/each}}
                 {{/select}}
@@ -55,7 +55,7 @@
                 <select id="slotTwo" class="shell-input" name="armament.flags.tpo.magazine.slotTwo" type="text" value="{{armament.flags.tpo.magazine.slotTwo}}">
                   {{#select armament.flags.tpo.magazine.slotTwo}}
                     <option value="Unloaded">Unloaded</option>
-                    {{#each armament.data.miscPowers as |power id|}}
+                    {{#each armament.system.miscPowers as |power id|}}
                     <option value="{{power.name}}">{{power.name}}</option>
                     {{/each}}
                   {{/select}}
@@ -63,13 +63,13 @@
                 <select id="slotThree" class="shell-input" name="armament.flags.tpo.magazine.slotThree" type="text" value="{{armament.flags.tpo.magazine.slotThree}}">
                   {{#select armament.flags.tpo.magazine.slotThree}}
                     <option value="Unloaded">Unloaded</option>
-                    {{#each armament.data.miscPowers as |power id|}}
+                    {{#each armament.system.miscPowers as |power id|}}
                     <option value="{{power.name}}">{{power.name}}</option>
                     {{/each}}
                   {{/select}}
                   </select>
               {{/ifEquals}}
-              {{#ifEquals armament.data.armamentType "Battle Standard"}}
+              {{#ifEquals armament.system.armamentType "Battle Standard"}}
                 <div class="orders">
                   Command Queue: 
                   {{#each armament.flags.tpo.orders as |order id|}}
@@ -85,7 +85,7 @@
                   <i class="fas fa-plus-circle rollable add-order"></i>
                 </div>
               {{/ifEquals}}
-              {{#ifEquals armament.data.armamentType "Lance"}}
+              {{#ifEquals armament.system.armamentType "Lance"}}
                 <div class="stamina">
                   Stamina:
                   {{#if armament.flags.tpo.stamina.pointOne}}
@@ -105,7 +105,7 @@
                   {{/if}}
                 </div>
               {{/ifEquals}}
-              {{#ifEquals armament.data.armamentType "Gunlance"}}
+              {{#ifEquals armament.system.armamentType "Gunlance"}}
                 <div class="stamina">
                   Phials:
                   {{#if armament.flags.tpo.stamina.pointOne}}
@@ -146,7 +146,7 @@
                   {{/greaterThan}}
                 </div>
               {{/ifEquals}}
-              {{#ifEquals armament.data.armamentType "Arquebus"}}
+              {{#ifEquals armament.system.armamentType "Arquebus"}}
                 {{#if armament.flags.tpo.loadedAmmo.isEjected}}
                   Loaded Ammo: 
                 {{else}}
@@ -155,7 +155,7 @@
                 <select id="slotOne" class="loaded-input" name="armament.flags.tpo.loadedAmmo.slotOne" type="text" value="{{armament.flags.tpo.loadedAmmo.slotOne}}">
                 {{#select armament.flags.tpo.loadedAmmo.slotOne}}
                   <option value="Unloaded">Unloaded</option>
-                  {{#each armament.data.miscPowers as |power id|}}
+                  {{#each armament.system.miscPowers as |power id|}}
                   <option value="{{power.name}}">{{power.name}}</option>
                   {{/each}}
                 {{/select}}
@@ -164,7 +164,7 @@
                 <select id="slotTwo" class="loaded-input" name="armament.flags.tpo.loadedAmmo.slotTwo" type="text" value="{{armament.flags.tpo.loadedAmmo.slotTwo}}">
                   {{#select armament.flags.tpo.loadedAmmo.slotTwo}}
                     <option value="Unloaded">Unloaded</option>
-                    {{#each armament.data.miscPowers as |power id|}}
+                    {{#each armament.system.miscPowers as |power id|}}
                     <option value="{{power.name}}">{{power.name}}</option>
                     {{/each}}
                   {{/select}}
@@ -174,65 +174,65 @@
                 <select id="slotThree" class="loaded-input" name="armament.flags.tpo.loadedAmmo.slotThree" type="text" value="{{armament.flags.tpo.loadedAmmo.slotThree}}">
                   {{#select armament.flags.tpo.loadedAmmo.slotThree}}
                     <option value="Unloaded">Unloaded</option>
-                    {{#each armament.data.miscPowers as |power id|}}
+                    {{#each armament.system.miscPowers as |power id|}}
                     <option value="{{power.name}}">{{power.name}}</option>
                     {{/each}}
                   {{/select}}
                   </select>
                 {{/greaterThan}}
               {{/ifEquals}}
-              <div class="container-header">Powers ({{armament.data.capacity.currentPowers}}/{{armament.data.capacity.power}})</div>
-              {{#each armament.data.powers as |power id|}}
+              <div class="container-header">Powers ({{armament.system.capacity.currentPowers}}/{{armament.system.capacity.power}})</div>
+              {{#each armament.system.powers as |power id|}}
               <div class="power expand-container-nested power-draggable" data-item-id="{{power._id}}">
-                <div class="header {{power.data.type}}">
+                <div class="header {{power.system.type}}">
                   <span class="name expand-controller-nested"><i class="fas fa-angle-down"></i> {{power.name}}</span>
                   <span class="type">
-                    {{#ifNotEqual power.data.type "At-Will"}}
-                      {{#if power.data.used}}
-                        <input class="power-used {{power.data.type}}-check" type="checkbox" data-dtype="Boolean"/>
+                    {{#ifNotEqual power.system.type "At-Will"}}
+                      {{#if power.system.used}}
+                        <input class="power-used {{power.system.type}}-check" type="checkbox" data-dtype="Boolean"/>
                       {{else}}
-                        <input class="power-used {{power.data.type}}-check" type="checkbox" checked data-dtype="Boolean"/>
+                        <input class="power-used {{power.system.type}}-check" type="checkbox" checked data-dtype="Boolean"/>
                       {{/if}}
                     {{/ifNotEqual}}
-                    {{power.data.type}}
+                    {{power.system.type}}
                   </span>
                 </div>
                 <div class="expandable">
                   <div class="subheader" data-power-id="{{power._id}}">
-                    <span class="cost"><i title="Use Power" class="fas fa-dice-d20 powerRoll rollable"></i> {{power.data.apCost}} AP</span>
-                    <span class="target">Target {{power.data.target}} <i title="Delete Power" class="fas fa-trash powerDelete rollable"></i></span>
+                    <span class="cost"><i title="Use Power" class="fas fa-dice-d20 powerRoll rollable"></i> {{power.system.apCost}} AP</span>
+                    <span class="target">Target {{power.system.target}} <i title="Delete Power" class="fas fa-trash powerDelete rollable"></i></span>
                   </div>
-                  <div class="description">{{{power.data.descriptionDisplay}}}</div>
+                  <div class="description">{{{power.system.descriptionDisplay}}}</div>
                 </div>
               </div>
               {{/each}}
-              {{#greaterThan armament.data.capacity.currentMisc 0}}
-                <div class="container-header">Misc. Powers ({{armament.data.capacity.currentMisc}}/{{armament.data.capacity.misc}})</div>
-                {{#each armament.data.miscPowers as |power id|}}
+              {{#greaterThan armament.system.capacity.currentMisc 0}}
+                <div class="container-header">Misc. Powers ({{armament.system.capacity.currentMisc}}/{{armament.system.capacity.misc}})</div>
+                {{#each armament.system.miscPowers as |power id|}}
                 <div class="power expand-container-nested power-draggable" data-item-id="{{power._id}}">
                   <div class="header Misc expand-controller-nested">
                     <span class="name"><i class="fas fa-angle-down"></i> {{power.name}}</span>
-                    <span class="type">{{power.data.type}}</span>
+                    <span class="type">{{power.system.type}}</span>
                   </div>
                   <div class="expandable">
                     <div class="subheader" data-power-id="{{power._id}}">
-                      <span class="cost"><i title="Use Power" class="fas fa-dice-d20 powerRoll rollable"></i> {{power.data.apCost}} AP</span>
-                      <span class="target">Target {{power.data.target}} <i title="Delete Power" class="fas fa-trash powerDelete rollable"></i></span>
+                      <span class="cost"><i title="Use Power" class="fas fa-dice-d20 powerRoll rollable"></i> {{power.system.apCost}} AP</span>
+                      <span class="target">Target {{power.system.target}} <i title="Delete Power" class="fas fa-trash powerDelete rollable"></i></span>
                     </div>
-                    <div class="description">{{{power.data.descriptionDisplay}}}</div>
+                    <div class="description">{{{power.system.descriptionDisplay}}}</div>
                   </div>
                 </div>
                 {{/each}}
               {{/greaterThan}}
               <div class="container-header">Upgrades</div>
-                {{#each armament.data.upgrades as |power id|}}
+                {{#each armament.system.upgrades as |power id|}}
                 <div class="power expand-container-nested power-draggable" data-item-id="{{power._id}}">
                   <div class="header Upgrade expand-controller-nested">
                     <span class="name"><i class="fas fa-angle-down"></i> {{power.name}}</span>
                     <i title="Delete Upgrade" class="fas fa-trash upgradeDelete rollable"></i>
                   </div>
                   <div class="expandable">
-                    <div class="description">{{{power.data.descriptionDisplay}}}</div>
+                    <div class="description">{{{power.system.descriptionDisplay}}}</div>
                   </div>
                 </div>
                 {{/each}}
@@ -253,22 +253,22 @@
           <div class="skill-item-header-controls">&nbsp;</div>
         </li>
         <div class="skill-container">
-        {{#each data.unsortedPowers as |power id|}}
+        {{#each system.unsortedPowers as |power id|}}
           <li class="unused-power item-container expand-container power-draggable" data-item-id="{{power._id}}">
-            <div class="header expand-controller grid grid-7col skill-item-container {{power.data.type}}">
+            <div class="header expand-controller grid grid-7col skill-item-container {{power.system.type}}">
               <div class="grid-span-2 name"><i class="fas fa-angle-down"></i> {{power.name}}</div>
-              <div class="skill-item grid-span-2">{{power.data.type}}</div>
-              <div class="skill-item grid-span-2">{{power.data.armamentType}}</div>
+              <div class="skill-item grid-span-2">{{power.system.type}}</div>
+              <div class="skill-item grid-span-2">{{power.system.armamentType}}</div>
               <div class="skill-item trash">
                 <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
               </div>
             </div>
             <div class="expandable">
               <div class="subheader">
-                <span class="cost">{{power.data.apCost}} AP</span>
-                <span class="target">Target {{power.data.target}} </span>
+                <span class="cost">{{power.system.apCost}} AP</span>
+                <span class="target">Target {{power.system.target}} </span>
               </div>
-              <div class="description">{{{power.data.descriptionDisplay}}}</div>
+              <div class="description">{{{power.system.descriptionDisplay}}}</div>
             </div>
           </li>
         {{/each}}

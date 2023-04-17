@@ -3,13 +3,10 @@ export class DiceTPO {
   static async rollTest(skill, rollData) {
     //calculate target
     let target;
-    if(skill.data?.data?.total)
-      target = skill.data.data.total + rollData.modifier + rollData.difficulty;
-    else if(skill.data?.total){
-      target = skill.data.total + rollData.modifier + rollData.difficulty;
-    } else {
+    if(skill.system?.total)
+      target = skill.system.total + rollData.modifier + rollData.difficulty;
+    else 
       target = rollData.target + rollData.modifier + rollData.difficulty
-    }
     //calculate advantages
     let advantages = rollData.advantage - rollData.disadvantage;
     if(Math.abs(advantages) > 100){
@@ -66,7 +63,7 @@ export class DiceTPO {
         let hasCritEyeOne = false;
         let hasCritEyeTwo = false;
         if(rollData.actor && rollData.actor.items.getName("Critical Eye")){
-          const level = rollData.actor.items.getName("Critical Eye").data.data.level;
+          const level = rollData.actor.items.getName("Critical Eye").system.level;
           if(level > 1)
             hasCritEyeTwo = true;
           if(level > 0)
@@ -172,18 +169,19 @@ export class DiceTPO {
       })
     } 
     //roll dice
+    console.log(rollData.actor)
     return {
       actorName: rollData.actorName,
       actorId: {
         isToken: rollData.actor.parent !== null,
-        id: rollData.actor.parent !== null ? rollData.actor.parent.data._id : rollData.actor.data._id,
+        id: rollData.actor.parent !== null ? rollData.actor.parent._id : rollData.actor._id,
       },
       skill: skill,
       risk: rollData.risk,
       target: target,
       name: rollData.name ? rollData.name : skill.name,
       hasDamage: rollData.hasDamage,
-      strB: rollData.actor.data.data.stats.str.bonus,
+      strB: rollData.actor.system.stats.str.bonus,
       weakDamage: rollData.weakDamage,
       damage: rollData.damage,
       element: rollData.element,
@@ -486,8 +484,8 @@ export class UtilsTPO {
   static async arquebusPowerHelper(actor, power){
     return new Promise(async (resolve) => {
       const armament = actor.items.get(power.data.parent.id);
-      const hasMagazine = armament.data.data.upgrades.some(upg => {return upg.name === 'Magazine'})
-      const hasDoubleBarreled = armament.data.data.upgrades.some(upg => {return upg.name === 'Double Barreled'})
+      const hasMagazine = armament.system.upgrades.some(upg => {return upg.name === 'Magazine'})
+      const hasDoubleBarreled = armament.system.upgrades.some(upg => {return upg.name === 'Double Barreled'})
       const loaded = armament.getFlag('tpo', 'loadedAmmo')
 
       if(power.name === 'Fire' || power.name === 'Drakegonne' || power.name === 'Dragonstake' || power.name === 'Wyrmsnare' ||
@@ -541,7 +539,7 @@ export class UtilsTPO {
           isEjected = true;
 
         const loadData = {
-          ammo: armament.data.data.miscPowers,
+          ammo: armament.system.miscPowers,
           hasDoubleBarreled: hasDoubleBarreled,
           hasMagazine: hasMagazine,
           isEjected: isEjected,
@@ -567,9 +565,9 @@ export class UtilsTPO {
                       await armament.setFlag('tpo', 'loadedAmmo.slotThree', response.slotThree)
                       //AP Cost Increase
                       if(response.slotTwo !== 'Unloaded' || response.slotThree !== 'Unloaded'){
-                        if(2 > actor.data.data.derived.ap.value)
+                        if(2 > actor.system.derived.ap.value)
                           ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
-                        await actor.update({[`data.derived.ap.value`]: actor.data.data.derived.ap.value - 2 })
+                        await actor.update({[`data.derived.ap.value`]: actor.system.derived.ap.value - 2 })
                         await armament.setFlag('tpo', 'loadedAmmo.isEjected', false)
                       }
                       UtilsTPO.playContextSound(power, "use")
@@ -584,7 +582,7 @@ export class UtilsTPO {
                     const slotTwoDiffers = response.slotTwo !== loaded.slotTwo
                     if(slotOneDiffers && slotTwoDiffers && power.name !== 'Emergency Reload'){
                       ui.notifications.error(game.i18n.format('SYS.CannotLoadBoth'));
-                      await actor.update({[`data.derived.ap.value`]: actor.data.data.derived.ap.value + 2 })
+                      await actor.update({[`data.derived.ap.value`]: actor.system.derived.ap.value + 2 })
                     } else {
                       await armament.setFlag('tpo', 'loadedAmmo.slotOne', response.slotOne)
                       await armament.setFlag('tpo', 'loadedAmmo.slotTwo', response.slotTwo)
@@ -658,7 +656,7 @@ export class UtilsTPO {
         resolve()
       }
       // else if(power.name === "Execute Commands"){
-      //   const commands = armament.data.data.miscPowers;
+      //   const commands = armament.system.miscPowers;
       //   console.log(commands)
       //   const loadData = {
       //     orders: orderArray,
@@ -745,7 +743,7 @@ export class UtilsTPO {
         });
       } else if (power.name === 'Reload'){
         const loadData = {
-          ammo: armament.data.data.miscPowers,
+          ammo: armament.system.miscPowers,
           maxLoaded: 3,
           isEjected: true
         }
@@ -789,9 +787,9 @@ export class UtilsTPO {
   static async leechBladeHelper(actor, power){
     return new Promise(resolve => {
       const armament = actor.items.get(power.data.parent.id);
-      const hasSpite = armament.data.data.upgrades.some(upg => {return upg.name === 'Spite'})
-      const hasVitalLeech = armament.data.data.upgrades.some(upg => {return upg.name === 'Vital Leech'})
-      const hasSpiritualLeech = armament.data.data.upgrades.some(upg => {return upg.name === 'Spiritual Leech'})
+      const hasSpite = armament.system.upgrades.some(upg => {return upg.name === 'Spite'})
+      const hasVitalLeech = armament.system.upgrades.some(upg => {return upg.name === 'Vital Leech'})
+      const hasSpiritualLeech = armament.system.upgrades.some(upg => {return upg.name === 'Spiritual Leech'})
       const leechRegExp = /(Leech )(\d+)/g
       const leechMatches = [...power.data.description.matchAll(leechRegExp)]
 
@@ -800,7 +798,7 @@ export class UtilsTPO {
         let damageChange = 0;
         let hpChange = 0;
 
-        if(hasSpite && actor.data.data.derived.hp.value < actor.data.data.derived.bloodied.value){
+        if(hasSpite && actor.system.derived.hp.value < actor.system.derived.bloodied.value){
           damageChange = leechValue;
         }
         resolve(damageChange)
@@ -858,7 +856,7 @@ export class UtilsTPO {
           actor = canvas.scene.tokens.get(context.actorId.id).getActor()
         else
           actor = game.actors.get(context.actorId.id)
-        return (!context.rerolled && actor.data.data.info.splendor.rerolls > 0)
+        return (!context.rerolled && actor.system.info.splendor.rerolls > 0)
       },
       callback: li => {
         const message = game.messages.get(li.data("message-id"))
@@ -868,7 +866,7 @@ export class UtilsTPO {
           actor = canvas.scene.tokens.get(context.actorId.id).getActor()
         else
           actor = game.actors.get(context.actorId.id)
-        if(!context.rerolled && actor.data.data.info.splendor.rerolls > 0){
+        if(!context.rerolled && actor.system.info.splendor.rerolls > 0){
           context.testData.actor = actor;
           DiceTPO.rollTest(context.skill, context.testData).then(result => {
             DiceTPO.prepareChatCard(result, true).then(chatCard => {
@@ -882,15 +880,15 @@ export class UtilsTPO {
   }
 
   static hasResolve(actor){
-    return (actor.data.data.info.resolve.resolve1 || actor.data.data.info.resolve.resolve2 || actor.data.data.info.resolve.resolve3);
+    return (actor.system.info.resolve.resolve1 || actor.system.info.resolve.resolve2 || actor.system.info.resolve.resolve3);
   }
 
   static async removeResolve(actor){
-    if(actor.data.data.info.resolve.resolve3) {
+    if(actor.system.info.resolve.resolve3) {
       await actor.update({[`data.info.resolve.resolve3`]: false })
-    } else if(actor.data.data.info.resolve.resolve2) {
+    } else if(actor.system.info.resolve.resolve2) {
       await actor.update({[`data.info.resolve.resolve2`]: false })
-    } else if(actor.data.data.info.resolve.resolve1) {
+    } else if(actor.system.info.resolve.resolve1) {
       await actor.update({[`data.info.resolve.resolve1`]: false })
     }
   }
@@ -901,8 +899,8 @@ export class UtilsTPO {
       
     let combatant = canvas.scene.tokens.get(combat.current.tokenId);
     
-    combatant.actor.update({"data.derived.ap.value": combatant.actor.data.data.derived.ap.max})
-    let apMessage = `AP refreshed to ${combatant.actor.data.data.derived.ap.max}.`
+    combatant.actor.update({"data.derived.ap.value": combatant.actor.system.derived.ap.max})
+    let apMessage = `AP refreshed to ${combatant.actor.system.derived.ap.max}.`
 
     let statuses = ``;
     if(combatant.actor.data.effects.size !== 0){
@@ -986,27 +984,27 @@ export class UtilsTPO {
     }
 
     let abilities = ``
-    if((combatant.actor.data.data.details.species.value === game.i18n.format("SPECIES.Thulanjos") || 
-    combatant.actor.data.data.details.species.value === game.i18n.format("SPECIES.Ildere")) &&
-    combatant.actor.data.data.derived.hp.value < combatant.actor.data.data.derived.hp.max){
+    if((combatant.actor.system.details.species.value === game.i18n.format("SPECIES.Thulanjos") || 
+    combatant.actor.system.details.species.value === game.i18n.format("SPECIES.Ildere")) &&
+    combatant.actor.system.derived.hp.value < combatant.actor.system.derived.hp.max){
       abilities += `
       <br><b>${game.i18n.format("SPECIES.Thuskos")} - Adrenaline</b><br>
       <div>${game.i18n.format("ABILITY.Adrenaline")}</div>
       `
-      const currentTempHp = combatant.actor.data.data.derived.tempHp.value
-      const maxTempHp = combatant.actor.data.data.derived.tempHp.max
+      const currentTempHp = combatant.actor.system.derived.tempHp.value
+      const maxTempHp = combatant.actor.system.derived.tempHp.max
       combatant.actor.update({"data.derived.tempHp.value": currentTempHp + 3 > maxTempHp ? maxTempHp : currentTempHp + 3})
     }
 
-    if(combatant.actor.data.data.details.species.value === game.i18n.format("SPECIES.Raivoaa") &&
-    combatant.actor.data.data.derived.hp.value <= combatant.actor.data.data.derived.bloodied.value)
+    if(combatant.actor.system.details.species.value === game.i18n.format("SPECIES.Raivoaa") &&
+    combatant.actor.system.derived.hp.value <= combatant.actor.system.derived.bloodied.value)
       abilities += `
       <br><b>${game.i18n.format("SPECIES.Raivoaa")} - Berserk</b><br>
       <div>${game.i18n.format("ABILITY.Berserk")}</div>
       `
 
-    if(combatant.actor.data.data.details.species.value === game.i18n.format("SPECIES.Narvid") &&
-    combatant.actor.data.data.derived.hp.value > combatant.actor.data.data.derived.bloodied.value)
+    if(combatant.actor.system.details.species.value === game.i18n.format("SPECIES.Narvid") &&
+    combatant.actor.system.derived.hp.value > combatant.actor.system.derived.bloodied.value)
       abilities += `
       <br><b>${game.i18n.format("SPECIES.Narvid")} - Wavering</b><br>
       <div>${game.i18n.format("ABILITY.Wavering")}</div>
@@ -1014,20 +1012,20 @@ export class UtilsTPO {
 
     if(combatant.actor.items.getName("Momentous")){
       const momentous = combatant.actor.items.getName("Momentous")
-      if(momentous.data.data.level > 1 && combat.current.round > 2){
+      if(momentous.system.level > 1 && combat.current.round > 2){
         abilities += `
         <br><b>Momentous - Level 2</b><br>
         <div>${game.i18n.format("ABILITY.Momentous2")}</div>
         `
-        combatant.actor.update({"data.derived.ap.value": combatant.actor.data.data.derived.ap.max + 1})
-        apMessage = `AP refreshed to ${combatant.actor.data.data.derived.ap.max + 1}.`
-      }else if (momentous.data.data.level > 0 && combat.current.round > 3){
+        combatant.actor.update({"data.derived.ap.value": combatant.actor.system.derived.ap.max + 1})
+        apMessage = `AP refreshed to ${combatant.actor.system.derived.ap.max + 1}.`
+      }else if (momentous.system.level > 0 && combat.current.round > 3){
         abilities += `
         <br><b>Momentous  - Level 1</b><br>
         <div>${game.i18n.format("ABILITY.Momentous1")}</div>
         `
-        combatant.actor.update({"data.derived.ap.value": combatant.actor.data.data.derived.ap.max + 1})
-        apMessage = `AP refreshed to ${combatant.actor.data.data.derived.ap.max + 1}.`
+        combatant.actor.update({"data.derived.ap.value": combatant.actor.system.derived.ap.max + 1})
+        apMessage = `AP refreshed to ${combatant.actor.system.derived.ap.max + 1}.`
       }
     }
 

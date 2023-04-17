@@ -11,41 +11,41 @@ export class tpoItem extends Item {
     // preparation methods overridden (such as prepareBaseData()).
     super.prepareData();
     const actor = this.actor
-    this.data.data.descriptionDisplay = this.formatDescription(this.data.data.description)
-    if(this.data.data.value && (this.data.type === "item" || this.data.type === "armament"))
-        this.data.data.value.total = (this.data.data.value.l + this.data.data.value.s/20 + this.data.data.value.c/200).toFixed(2)
+    this.system.descriptionDisplay = this.formatDescription(this.system.description)
+    if(this.system.value && (this.type === "item" || this.type === "armament"))
+        this.system.value.total = (this.system.value.l + this.system.value.s/20 + this.system.value.c/200).toFixed(2)
     
-    if(this.data.type === "armament"){
-      this.data.data.damage.value = this.data.data.damage.base + this.data.data.damage.upgrades;
-      this.data.data.elementDamage.value = this.data.data.elementDamage.base + this.data.data.elementDamage.upgrades;
+    if(this.type === "armament"){
+      this.system.damage.value = this.system.damage.base + this.system.damage.upgrades;
+      this.system.elementDamage.value = this.system.elementDamage.base + this.system.elementDamage.upgrades;
 
-      if(this.data.data.powers.length !== 0){
+      if(this.system.powers.length !== 0){
         var sort = {"At-Will": 1, "Daily": 2, "Adventure": 3}
-        this.data.data.powers.sort((a, b) => {
+        this.system.powers.sort((a, b) => {
           return sort[a.type] - sort[b.type];
         })
       }
     }
-    if(this.data.type === "ability"){
-      this.data.data.value = this.data.data.improvements + this.data.data.mod - this.data.data.malus;
-      this.data.data.level = Math.floor(this.data.data.value / 20)
+    if(this.type === "ability"){
+      this.system.value = this.system.improvements + this.system.mod - this.system.malus;
+      this.system.level = Math.floor(this.system.value / 20)
     }
-    if(this.data.type === "power"){
-      if(this.data.data.attacks === undefined)
-        this.data.data.attacks = 1;
-      if(this.data.data.type === "Encounter")
-        this.data.data.type = 'Daily'
-        if(this.data.data.type === "Weekly")
-        this.data.data.type = 'Adventure'
+    if(this.type === "power"){
+      if(this.system.attacks === undefined)
+        this.system.attacks = 1;
+      if(this.system.type === "Encounter")
+        this.system.type = 'Daily'
+        if(this.system.type === "Weekly")
+        this.system.type = 'Adventure'
     }
-    if(this.data.type === "skill" && actor?.data?.data){
-      const stat = actor.data.data.stats[this.data.data.stat].initial + actor.data.data.stats[this.data.data.stat].improvements + actor.data.data.stats[this.data.data.stat].modifier
-      this.data.data.total = stat + this.data.data.improvements;
+    if(this.type === "skill" && actor?.system){
+      const stat = actor.system.stats[this.system.stat].initial + actor.system.stats[this.system.stat].improvements + actor.system.stats[this.system.stat].modifier
+      this.system.total = stat + this.system.improvements;
     }
   }
 
   formatDescription(description){
-    if(!this.actor || !this.actor.data || !description)
+    if(!this.actor || !this.actor.system || !description)
       return;
     //ws
     description = description.replaceAll("((@ws))", this.actor.getStatData("ws"))
@@ -133,7 +133,7 @@ export class tpoItem extends Item {
     // If present, return the actor's roll data.
     if ( !this.actor ) return null;
     const rollData = this.actor.getRollData();
-    rollData.item = foundry.utils.deepClone(this.data.data);
+    rollData.item = foundry.utils.deepClone(this.system);
 
     console.log(rollData)
     return rollData;

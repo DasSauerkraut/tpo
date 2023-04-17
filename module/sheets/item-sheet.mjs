@@ -78,33 +78,33 @@ export class tpoItemSheet extends ItemSheet {
   }
 
   _onAdvancedToggle(event){
-    this.object.update({[`data.advanced`]: !this.object.data.data.advanced })
+    this.object.update({[`data.advanced`]: !this.object.system.advanced })
   }
 
   _onGroupedToggle(event){
-    this.object.update({[`data.grouped`]: !this.object.data.data.grouped })
+    this.object.update({[`data.grouped`]: !this.object.system.grouped })
   }
 
   _onWeakToggle(event){
-    this.object.update({[`data.isWeak`]: !this.object.data.data.isWeak })
+    this.object.update({[`data.isWeak`]: !this.object.system.isWeak })
   }
 
   _onStackableToggle(event){
-    this.object.update({[`data.stack.stackable`]: !this.object.data.data.stack.stackable })
+    this.object.update({[`data.stack.stackable`]: !this.object.system.stack.stackable })
   }
 
   async _onElementToggle(event, element){
-    await this.object.update({[`data.selectedElement.${element}`]: !this.object.data.data.selectedElement[element] });
+    await this.object.update({[`data.selectedElement.${element}`]: !this.object.system.selectedElement[element] });
     let displayStr = ""
-    if(this.object.data.data.selectedElement.fire)
+    if(this.object.system.selectedElement.fire)
       displayStr+="Fire "
-    if(this.object.data.data.selectedElement.elec)
+    if(this.object.system.selectedElement.elec)
       displayStr+="Elec. "
-    if(this.object.data.data.selectedElement.dragon)
+    if(this.object.system.selectedElement.dragon)
       displayStr+="Dragon "
-    if(this.object.data.data.selectedElement.ice)
+    if(this.object.system.selectedElement.ice)
       displayStr+="Ice "
-    if(this.object.data.data.selectedElement.water)
+    if(this.object.system.selectedElement.water)
       displayStr+="Water "
     this.object.update({[`data.selectedElement.display`]: displayStr });
   }

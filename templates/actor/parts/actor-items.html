@@ -1,27 +1,27 @@
 <div class="inventory-header">
   <div class="money-header">
     <div class="money-grid grid grid-4col">
-      <span class="money"><input class="money-field" type="text" name="data.derived.encumbrance.money.l" value="{{data.derived.encumbrance.money.l}}" data-dtype="Number"/>ℓ</span>
+      <span class="money"><input class="money-field" type="text" name="system.derived.encumbrance.money.l" value="{{system.derived.encumbrance.money.l}}" data-dtype="Number"/>ℓ</span>
       <span>
         <i class="fas fa-caret-left rollable money-convert" title="1ℓ ← 20s" data-action="silverToPound"></i>
         <i class="fas fa-caret-right rollable money-convert" title="1ℓ → 20s" data-action="poundToSilver"></i>
       </span>
-      <span class="money"><input class="money-field" type="text" name="data.derived.encumbrance.money.s" value="{{data.derived.encumbrance.money.s}}" data-dtype="Number"/>s</span>
+      <span class="money"><input class="money-field" type="text" name="system.derived.encumbrance.money.s" value="{{system.derived.encumbrance.money.s}}" data-dtype="Number"/>s</span>
       <span>
         <i class="fas fa-caret-left rollable money-convert" title="1s ← 10c" data-action="copperToSilver"></i>
         <i class="fas fa-caret-right rollable money-convert" title="1s → 10c" data-action="silverToCopper"></i>
       </span>
-      <span class="money"><input class="money-field" type="text" name="data.derived.encumbrance.money.c" value="{{data.derived.encumbrance.money.c}}" data-dtype="Number"/>c = </span>
-      <div class="money-total">{{data.derived.encumbrance.money.total}}ℓ</div>
+      <span class="money"><input class="money-field" type="text" name="system.derived.encumbrance.money.c" value="{{system.derived.encumbrance.money.c}}" data-dtype="Number"/>c = </span>
+      <div class="money-total">{{system.derived.encumbrance.money.total}}ℓ</div>
     </div>
     <span class="money-label">Coin Purse</span>
   </div>
   <div class="splendor-header">
     <div class="splendor-grid grid grid-4col">
-      <div class="splendor">{{data.info.splendor.items}}</div>
-      <input type="text" name="data.info.splendor.mod" value="{{data.info.splendor.mod}}" data-dtype="Number"/>
-      <div class="splendor">{{data.info.splendor.total}}</div>
-      <div class="splendor rerolls">{{data.info.splendor.rerolls}}</div>
+      <div class="splendor">{{system.info.splendor.items}}</div>
+      <input type="text" name="system.info.splendor.mod" value="{{system.info.splendor.mod}}" data-dtype="Number"/>
+      <div class="splendor">{{system.info.splendor.total}}</div>
+      <div class="splendor rerolls">{{system.info.splendor.rerolls}}</div>
       <div class="label">Items</div>
       <div class="label">Mod</div>
       <div class="label">Total</div>
@@ -37,7 +37,7 @@
         <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
       {{/if}}
       &nbsp;Left Thigh&nbsp;
-      ({{data.derived.encumbrance.locations.lThigh.value}}/{{data.derived.encumbrance.locations.lThigh.max}})
+      ({{system.derived.encumbrance.locations.lThigh.value}}/{{system.derived.encumbrance.locations.lThigh.max}})
     </h2>
     <div class="inventory-section" data-location="lThigh">
       <div class="ap">1 AP to Retrieve/Stow</div>
@@ -47,26 +47,26 @@
           <div class="field" title="Splendor">Spl</div>
           <div class="field" title="Encumberance">Enc</div>
         </li>
-        {{#each data.inventory.lThigh as |item id|}}
+        {{#each system.inventory.lThigh as |item id|}}
         <li class="inventory-item expand-container" data-item-id="{{item._id}}">
           <div class="grid grid-5col small-gap">
             <div class="grid-span-3 name rollable expand-controller item-name" title="{{item.name}}" data-item-id="{{item._id}}">{{item.name}}</div>
-            <div class="field">{{item.data.splendor}}</div>
-            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.data.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.data.enc}}
-              {{#if item.data.stack.stackable}}
-                ({{item.data.stack.current}}/{{item.data.stack.max}})
+            <div class="field">{{item.system.splendor}}</div>
+            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.system.enc}}
+              {{#if item.system.stack.stackable}}
+                ({{item.system.stack.current}}/{{item.system.stack.max}})
               {{/if}}
             </div>
           </div>
           <div class="expandable" data-id="{{item._id}}">
             <i title="Delete Item" class="fas fa-trash itemDelete rollable"></i>
-            <div class="description">{{{item.data.description}}}</div>
+            <div class="description">{{{item.system.description}}}</div>
           </div>
         </li>
         {{/each}}
       </ul>
     </div>
-    {{#if data.derived.encumbrance.locations.lScabbard.owned}}
+    {{#if system.derived.encumbrance.locations.lScabbard.owned}}
     <h2 class="sticky-2">Scabbard&nbsp;<i title="Delete Item" class="fas fa-trash containerDelete rollable"></i></h2>
     <div class="inventory-section" data-location="lScabbard" data-type="Scabbard">
         <div class="ap">0 AP to Retrieve/Stow</div>
@@ -76,20 +76,20 @@
             <div class="field" title="Splendor">Spl</div>
             <div class="field" title="Encumberance">Enc</div>
           </li>
-          {{#each data.inventory.lScabbard as |item id|}}
+          {{#each system.inventory.lScabbard as |item id|}}
           <li class="inventory-item expand-container" data-item-id="{{item._id}}">
             <div class="grid grid-5col small-gap">
               <div class="grid-span-3 name rollable expand-controller item-name" title="{{item.name}}" data-item-id="{{item._id}}">{{item.name}}</div>
-              <div class="field">{{item.data.splendor}}</div>
-              <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.data.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.data.enc}}
-              {{#if item.data.stack.stackable}}
-                ({{item.data.stack.current}}/{{item.data.stack.max}})
+              <div class="field">{{item.system.splendor}}</div>
+              <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.system.enc}}
+              {{#if item.system.stack.stackable}}
+                ({{item.system.stack.current}}/{{item.system.stack.max}})
               {{/if}}
             </div>
             </div>
             <div class="expandable" data-id="{{item._id}}">
               <i title="Delete Item" class="fas fa-trash itemDelete rollable"></i>
-              <div class="description">{{{item.data.description}}}</div>
+              <div class="description">{{{item.system.description}}}</div>
             </div>
           </li>
           {{/each}}
@@ -101,7 +101,7 @@
           <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
         {{/if}}
         &nbsp;Left Hip&nbsp;
-        ({{data.derived.encumbrance.locations.lHip.value}}/{{data.derived.encumbrance.locations.lHip.max}})
+        ({{system.derived.encumbrance.locations.lHip.value}}/{{system.derived.encumbrance.locations.lHip.max}})
     </h2>
     <div class="inventory-section" data-location="lHip">
       <div class="ap">2 AP to Retrieve/Stow</div>
@@ -111,32 +111,32 @@
           <div class="field" title="Splendor">Spl</div>
           <div class="field" title="Encumberance">Enc</div>
         </li>
-        {{#each data.inventory.lHip as |item id|}}
+        {{#each system.inventory.lHip as |item id|}}
         <li class="inventory-item expand-container" data-item-id="{{item._id}}">
           <div class="grid grid-5col small-gap">
             <div class="grid-span-3 name rollable expand-controller item-name" title="{{item.name}}" data-item-id="{{item._id}}">{{item.name}}</div>
-            <div class="field">{{item.data.splendor}}</div>
-            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.data.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.data.enc}}
-              {{#if item.data.stack.stackable}}
-                ({{item.data.stack.current}}/{{item.data.stack.max}})
+            <div class="field">{{item.system.splendor}}</div>
+            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.system.enc}}
+              {{#if item.system.stack.stackable}}
+                ({{item.system.stack.current}}/{{item.system.stack.max}})
               {{/if}}
             </div>
           </div>
           <div class="expandable" data-id="{{item._id}}">
             <i title="Delete Item" class="fas fa-trash itemDelete rollable"></i>
-            <div class="description">{{{item.data.description}}}</div>
+            <div class="description">{{{item.system.description}}}</div>
           </div>
         </li>
       {{/each}}
       </ul>
     </div>
-    {{#if data.derived.encumbrance.locations.lPouch.owned}}
+    {{#if system.derived.encumbrance.locations.lPouch.owned}}
     <h2 class="sticky-4">
       {{#if flags.tpo.overencumbered.lPouch}}
         <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
       {{/if}}
       &nbsp;Pouch&nbsp;
-      ({{data.derived.encumbrance.locations.lPouch.value}}/{{data.derived.encumbrance.locations.lPouch.max}})&nbsp;
+      ({{system.derived.encumbrance.locations.lPouch.value}}/{{system.derived.encumbrance.locations.lPouch.max}})&nbsp;
       <i title="Delete Item" class="fas fa-trash containerDelete rollable"></i>
     </h2>
     <div class="inventory-section" data-location="lPouch" data-type="Pouch">
@@ -147,20 +147,20 @@
             <div class="field" title="Splendor">Spl</div>
             <div class="field" title="Encumberance">Enc</div>
           </li>
-          {{#each data.inventory.lPouch as |item id|}}
+          {{#each system.inventory.lPouch as |item id|}}
           <li class="inventory-item expand-container" data-item-id="{{item._id}}">
             <div class="grid grid-5col small-gap">
               <div class="grid-span-3 name rollable expand-controller item-name" title="{{item.name}}" data-item-id="{{item._id}}">{{item.name}}</div>
-              <div class="field">{{item.data.splendor}}</div>
-              <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.data.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.data.enc}}
-              {{#if item.data.stack.stackable}}
-                ({{item.data.stack.current}}/{{item.data.stack.max}})
+              <div class="field">{{item.system.splendor}}</div>
+              <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.system.enc}}
+              {{#if item.system.stack.stackable}}
+                ({{item.system.stack.current}}/{{item.system.stack.max}})
               {{/if}}
             </div>
             </div>
             <div class="expandable" data-id="{{item._id}}">
               <i title="Delete Item" class="fas fa-trash itemDelete rollable"></i>
-              <div class="description">{{{item.data.description}}}</div>
+              <div class="description">{{{item.system.description}}}</div>
             </div>
           </li>
           {{/each}}
@@ -174,7 +174,7 @@
         <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
       {{/if}}
       &nbsp;Chest&nbsp;
-      ({{data.derived.encumbrance.locations.chest.value}}/{{data.derived.encumbrance.locations.chest.max}})
+      ({{system.derived.encumbrance.locations.chest.value}}/{{system.derived.encumbrance.locations.chest.max}})
     </h2>
     <div class="inventory-section" data-location="chest">
       <div class="ap">3 AP to Retrieve/Stow</div>
@@ -184,32 +184,32 @@
           <div class="field" title="Splendor">Spl</div>
           <div class="field" title="Encumberance">Enc</div>
         </li>
-        {{#each data.inventory.chest as |item id|}}
+        {{#each system.inventory.chest as |item id|}}
         <li class="inventory-item expand-container" data-item-id="{{item._id}}">
           <div class="grid grid-5col small-gap">
             <div class="grid-span-3 name rollable expand-controller item-name" title="{{item.name}}" data-item-id="{{item._id}}">{{item.name}}</div>
-            <div class="field">{{item.data.splendor}}</div>
-            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.data.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.data.enc}}
-              {{#if item.data.stack.stackable}}
-                ({{item.data.stack.current}}/{{item.data.stack.max}})
+            <div class="field">{{item.system.splendor}}</div>
+            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.system.enc}}
+              {{#if item.system.stack.stackable}}
+                ({{item.system.stack.current}}/{{item.system.stack.max}})
               {{/if}}
             </div>
           </div>
           <div class="expandable" data-id="{{item._id}}">
             <i title="Delete Item" class="fas fa-trash itemDelete rollable"></i>
-            <div class="description">{{{item.data.description}}}</div>
+            <div class="description">{{{item.system.description}}}</div>
           </div>
         </li>
       {{/each}}
       </ul class="inventory-list">
     </div>
-    {{#if data.derived.encumbrance.locations.backpack.owned}}
+    {{#if system.derived.encumbrance.locations.backpack.owned}}
     <h2 class="sticky-4">
       {{#if flags.tpo.overencumbered.backpack}}
         <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
       {{/if}}
       &nbsp;Backpack&nbsp;
-      ({{data.derived.encumbrance.locations.backpack.value}}/{{data.derived.encumbrance.locations.backpack.max}})&nbsp;
+      ({{system.derived.encumbrance.locations.backpack.value}}/{{system.derived.encumbrance.locations.backpack.max}})&nbsp;
       <i title="Delete Item" class="fas fa-trash containerDelete rollable"></i>
     </h2>
       <div class="inventory-section" data-location="backpack" data-type="Backpack">
@@ -220,20 +220,20 @@
             <div class="field" title="Splendor">Spl</div>
             <div class="field" title="Encumberance">Enc</div>
           </li>
-          {{#each data.inventory.backpack as |item id|}}
+          {{#each system.inventory.backpack as |item id|}}
           <li class="inventory-item expand-container" data-item-id="{{item._id}}">
             <div class="grid grid-5col small-gap">
               <div class="grid-span-3 name rollable expand-controller item-name" title="{{item.name}}" data-item-id="{{item._id}}">{{item.name}}</div>
-              <div class="field">{{item.data.splendor}}</div>
-              <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.data.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.data.enc}}
-              {{#if item.data.stack.stackable}}
-                ({{item.data.stack.current}}/{{item.data.stack.max}})
+              <div class="field">{{item.system.splendor}}</div>
+              <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.system.enc}}
+              {{#if item.system.stack.stackable}}
+                ({{item.system.stack.current}}/{{item.system.stack.max}})
               {{/if}}
             </div>
             </div>
             <div class="expandable" data-id="{{item._id}}">
               <i title="Delete Item" class="fas fa-trash itemDelete rollable"></i>
-              <div class="description">{{{item.data.description}}}</div>
+              <div class="description">{{{item.system.description}}}</div>
             </div>
           </li>
           {{/each}}
@@ -247,7 +247,7 @@
         <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
       {{/if}}
       &nbsp;Right Thigh&nbsp;
-      ({{data.derived.encumbrance.locations.rThigh.value}}/{{data.derived.encumbrance.locations.rThigh.max}})&nbsp;
+      ({{system.derived.encumbrance.locations.rThigh.value}}/{{system.derived.encumbrance.locations.rThigh.max}})&nbsp;
     </h2>
     <div class="inventory-section" data-location="rThigh">
       <div class="ap">1 AP to Retrieve/Stow</div>
@@ -257,26 +257,26 @@
           <div class="field" title="Splendor">Spl</div>
           <div class="field" title="Encumberance">Enc</div>
         </li>
-        {{#each data.inventory.rThigh as |item id|}}
+        {{#each system.inventory.rThigh as |item id|}}
         <li class="inventory-item expand-container inventory-item" data-item-id="{{item._id}}">
           <div class="grid grid-5col small-gap">
             <div class="grid-span-3 name rollable expand-controller item-name" title="{{item.name}}" data-item-id="{{item._id}}">{{item.name}}</div>
-            <div class="field">{{item.data.splendor}}</div>
-            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.data.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.data.enc}}
-              {{#if item.data.stack.stackable}}
-                ({{item.data.stack.current}}/{{item.data.stack.max}})
+            <div class="field">{{item.system.splendor}}</div>
+            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.system.enc}}
+              {{#if item.system.stack.stackable}}
+                ({{item.system.stack.current}}/{{item.system.stack.max}})
               {{/if}}
             </div>
           </div>
           <div class="expandable" data-id="{{item._id}}">
             <i title="Delete Item" class="fas fa-trash itemDelete rollable"></i>
-            <div class="description">{{{item.data.description}}}</div>
+            <div class="description">{{{item.system.description}}}</div>
           </div>
         </li>
       {{/each}}
       </ul>
     </div>
-    {{#if data.derived.encumbrance.locations.rScabbard.owned}}
+    {{#if system.derived.encumbrance.locations.rScabbard.owned}}
     <h2 class="sticky-2">Scabbard&nbsp;<i title="Delete Item" class="fas fa-trash containerDelete rollable"></i></h2>
     <div class="inventory-section" data-location="rScabbard" data-type="Scabbard">
         <div class="ap">0 AP to Retrieve/Stow</div>
@@ -286,20 +286,20 @@
             <div class="field" title="Splendor">Spl</div>
             <div class="field" title="Encumberance">Enc</div>
           </li>
-          {{#each data.inventory.rScabbard as |item id|}}
+          {{#each system.inventory.rScabbard as |item id|}}
           <li class="inventory-item expand-container" data-item-id="{{item._id}}">
             <div class="grid grid-5col small-gap">
               <div class="grid-span-3 name rollable expand-controller item-name" title="{{item.name}}" data-item-id="{{item._id}}">{{item.name}}</div>
-              <div class="field">{{item.data.splendor}}</div>
-              <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.data.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.data.enc}}
-              {{#if item.data.stack.stackable}}
-                ({{item.data.stack.current}}/{{item.data.stack.max}})
+              <div class="field">{{item.system.splendor}}</div>
+              <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.system.enc}}
+              {{#if item.system.stack.stackable}}
+                ({{item.system.stack.current}}/{{item.system.stack.max}})
               {{/if}}
             </div>
             </div>
             <div class="expandable" data-id="{{item._id}}">
               <i title="Delete Item" class="fas fa-trash itemDelete rollable"></i>
-              <div class="description">{{{item.data.description}}}</div>
+              <div class="description">{{{item.system.description}}}</div>
             </div>
           </li>
           {{/each}}
@@ -311,7 +311,7 @@
         <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
       {{/if}}
       &nbsp;Right Hip&nbsp;
-      ({{data.derived.encumbrance.locations.rHip.value}}/{{data.derived.encumbrance.locations.rHip.max}})
+      ({{system.derived.encumbrance.locations.rHip.value}}/{{system.derived.encumbrance.locations.rHip.max}})
     </h2>
     <div class="inventory-section" data-location="rHip">
       <div class="ap">2 AP to Retrieve/Stow</div>
@@ -321,32 +321,32 @@
           <div class="field" title="Splendor">Spl</div>
           <div class="field" title="Encumberance">Enc</div>
         </li>
-        {{#each data.inventory.rHip as |item id|}}
+        {{#each system.inventory.rHip as |item id|}}
         <li class="inventory-item expand-container" data-item-id="{{item._id}}">
           <div class="grid grid-5col small-gap">
             <div class="grid-span-3 name rollable expand-controller item-name" title="{{item.name}}" data-item-id="{{item._id}}">{{item.name}}</div>
-            <div class="field">{{item.data.splendor}}</div>
-            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.data.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.data.enc}}
-              {{#if item.data.stack.stackable}}
-                ({{item.data.stack.current}}/{{item.data.stack.max}})
+            <div class="field">{{item.system.splendor}}</div>
+            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.system.enc}}
+              {{#if item.system.stack.stackable}}
+                ({{item.system.stack.current}}/{{item.system.stack.max}})
               {{/if}}
             </div>
           </div>
           <div class="expandable" data-id="{{item._id}}">
             <i title="Delete Item" class="fas fa-trash itemDelete rollable"></i>
-            <div class="description">{{{item.data.description}}}</div>
+            <div class="description">{{{item.system.description}}}</div>
           </div>
         </li>
       {{/each}}
       </ul>
     </div>
-    {{#if data.derived.encumbrance.locations.rPouch.owned}}
+    {{#if system.derived.encumbrance.locations.rPouch.owned}}
     <h2 class="sticky-4">
       {{#if flags.tpo.overencumbered.rPouch}}
         <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
       {{/if}}
       &nbsp;Pouch&nbsp;
-      ({{data.derived.encumbrance.locations.rPouch.value}}/{{data.derived.encumbrance.locations.rPouch.max}})&nbsp;
+      ({{system.derived.encumbrance.locations.rPouch.value}}/{{system.derived.encumbrance.locations.rPouch.max}})&nbsp;
       <i title="Delete Item" class="fas fa-trash containerDelete rollable"></i>
     </h2>
       <div class="inventory-section" data-location="rPouch" data-type="Pouch">
@@ -357,20 +357,20 @@
             <div class="field" title="Splendor">Spl</div>
             <div class="field" title="Encumberance">Enc</div>
           </li>
-          {{#each data.inventory.rPouch as |item id|}}
+          {{#each system.inventory.rPouch as |item id|}}
           <li class="inventory-item expand-container" data-item-id="{{item._id}}">
             <div class="grid grid-5col small-gap">
               <div class="grid-span-3 name rollable expand-controller item-name" title="{{item.name}}" data-item-id="{{item._id}}">{{item.name}}</div>
-              <div class="field">{{item.data.splendor}}</div>
-              <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.data.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.data.enc}}
-              {{#if item.data.stack.stackable}}
-                ({{item.data.stack.current}}/{{item.data.stack.max}})
+              <div class="field">{{item.system.splendor}}</div>
+              <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.system.enc}}
+              {{#if item.system.stack.stackable}}
+                ({{item.system.stack.current}}/{{item.system.stack.max}})
               {{/if}}
             </div>
             </div>
             <div class="expandable" data-id="{{item._id}}">
               <i title="Delete Item" class="fas fa-trash itemDelete rollable"></i>
-              <div class="description">{{{item.data.description}}}</div>
+              <div class="description">{{{item.system.description}}}</div>
             </div>
           </li>
           {{/each}}

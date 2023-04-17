@@ -5,8 +5,8 @@
     <div class="top-header">
       <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
       <h1 class="charspecies">
-        <select title="{{localize 'TIP.Species'}}" name="data.details.species.value" type="text" value="{{data.details.species.value}}">
-          {{#select data.details.species.value}}
+        <select title="{{localize 'TIP.Species'}}" name="system.details.species.value" type="text" value="{{system.details.species.value}}">
+          {{#select system.details.species.value}}
           <optgroup label="{{localize 'SPECIES.Human'}}">
             <option value="{{localize 'SPECIES.Ri'}}">{{localize 'SPECIES.Ri'}}</option>
             <option value="{{localize 'SPECIES.Hielan'}}">{{localize 'SPECIES.Hielan'}}</option>
@@ -28,7 +28,7 @@
           {{/select}}
         </select>
       </h1>
-      <h1 class="chargender"><input name="data.details.gender.value" type="text" value="{{data.details.gender.value}}" placeholder="{{localize data.details.gender.label}}"/></h1>
+      <h1 class="chargender"><input name="system.details.gender.value" type="text" value="{{system.details.gender.value}}" placeholder="{{localize system.details.gender.label}}"/></h1>
     </div>
     <div class="header-fields">
       <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
@@ -42,125 +42,125 @@
         center all of its child elements content and text. --}}
         <div class="resource flex-group-center" title="{{localize 'TIP.HP'}}">
           <div class="resource-content flexrow flex-center flex-between">
-            <input class="two-value" type="text" name="data.derived.hp.value" value="{{data.derived.hp.value}}" data-dtype="Number"/>
-            {{#if data.autocalc.hp}}
-            <a title="{{localize 'SYS.ToggleAutocalc'}}" id="hp-max" class="field two-value">{{data.derived.hp.max}}</a>
+            <input class="two-value" type="text" name="system.derived.hp.value" value="{{system.derived.hp.value}}" data-dtype="Number"/>
+            {{#if system.autocalc.hp}}
+            <a title="{{localize 'SYS.ToggleAutocalc'}}" id="hp-max" class="field two-value">{{system.derived.hp.max}}</a>
             {{else}}
             <div class="two-value autocalc">
-              <input type="text" name="data.derived.hp.max" value="{{data.derived.hp.max}}" data-dtype="Number"/>
+              <input type="text" name="system.derived.hp.max" value="{{system.derived.hp.max}}" data-dtype="Number"/>
               <a title="{{localize 'SYS.ToggleAutocalc'}}" id="hp-max" class="reset"><i class="fas fa-reply"></i></a>
             </div>
             {{/if}}
           </div>
-          <label for="data.derived.hp.value" class="resource-label">
-            {{data.derived.hp.abrev}}
+          <label for="system.derived.hp.value" class="resource-label">
+            {{system.derived.hp.abrev}}
           </label>
           <a title="{{localize 'SYS.Rest'}}" id="hp-heal" class="rest"><i class="fas fa-procedures"></i></a>
         </div>
 
         <div class="resource flex-group-center" title="{{localize 'TIP.AP'}}">
           <div class="resource-content flexrow flex-center flex-between">
-            <input class="two-value" type="text" name="data.derived.ap.value" value="{{data.derived.ap.value}}" data-dtype="Number"/>
-            {{#if data.autocalc.ap}}
-            <a title="{{localize 'SYS.ToggleAutocalc'}}" id="ap-max" class="field two-value">{{data.derived.ap.max}}</a>
+            <input class="two-value" type="text" name="system.derived.ap.value" value="{{system.derived.ap.value}}" data-dtype="Number"/>
+            {{#if system.autocalc.ap}}
+            <a title="{{localize 'SYS.ToggleAutocalc'}}" id="ap-max" class="field two-value">{{system.derived.ap.max}}</a>
             {{else}}
             <div class="two-value autocalc">
-              <input type="text" name="data.derived.ap.max" value="{{data.derived.ap.max}}" data-dtype="Number"/>
+              <input type="text" name="system.derived.ap.max" value="{{system.derived.ap.max}}" data-dtype="Number"/>
               <a title="{{localize 'SYS.ToggleAutocalc'}}" id="ap-max" class="reset"><i class="fas fa-reply"></i></a>
             </div>
             {{/if}}
           </div>
-          <label for="data.derived.ap.value" class="resource-label">{{data.derived.ap.abrev}}</label>
+          <label for="system.derived.ap.value" class="resource-label">{{system.derived.ap.abrev}}</label>
         </div>
 
         <div class="resource flex-group-center" title="{{localize 'TIP.Resolve'}}">
           <div class="resource-content flexrow flex-center flex-between">
-            {{#if data.info.resolve.resolve1}}
+            {{#if system.info.resolve.resolve1}}
               <input class="resolve" id="resolve1" type="checkbox" checked data-dtype="Boolean"/>
             {{else}}
               <input class="resolve" id="resolve1" type="checkbox" data-dtype="Boolean"/>
             {{/if}}
-            {{#if data.info.resolve.resolve2}}
+            {{#if system.info.resolve.resolve2}}
               <input class="resolve" id="resolve2" type="checkbox" checked data-dtype="Boolean"/>
             {{else}}
               <input class="resolve" id="resolve2" type="checkbox" data-dtype="Boolean"/>
             {{/if}}
-            {{#if data.info.resolve.resolve3}}
+            {{#if system.info.resolve.resolve3}}
               <input class="resolve" id="resolve3" type="checkbox" checked data-dtype="Boolean"/>
             {{else}}
               <input class="resolve" id="resolve3" type="checkbox" data-dtype="Boolean"/>
             {{/if}}
           </div>
-          <label for="data.info.resolve.value" class="resource-label">{{localize data.info.resolve.label}}</label>
+          <label for="system.info.resolve.value" class="resource-label">{{localize system.info.resolve.label}}</label>
         </div>
 
         <div class="resource flex-group-center" title="{{localize 'TIP.TempHP'}}">
           <div class="resource-content flexrow flex-center flex-between">
-            <input class="two-value" type="text" name="data.derived.tempHp.value" value="{{data.derived.tempHp.value}}" data-dtype="Number"/>
-            {{#if data.autocalc.thp}}
-            <a title="{{localize 'SYS.ToggleAutocalc'}}" id="thp-max" class="field two-value">{{data.derived.tempHp.max}}</a>
+            <input class="two-value" type="text" name="system.derived.tempHp.value" value="{{system.derived.tempHp.value}}" data-dtype="Number"/>
+            {{#if system.autocalc.thp}}
+            <a title="{{localize 'SYS.ToggleAutocalc'}}" id="thp-max" class="field two-value">{{system.derived.tempHp.max}}</a>
             {{else}}
             <div class="two-value autocalc">
-              <input type="text" name="data.derived.tempHp.max" value="{{data.derived.tempHp.max}}" data-dtype="Number"/>
+              <input type="text" name="system.derived.tempHp.max" value="{{system.derived.tempHp.max}}" data-dtype="Number"/>
               <a title="{{localize 'SYS.ToggleAutocalc'}}" id="thp-max" class="reset"><i class="fas fa-reply"></i></a>
             </div>
             {{/if}}
           </div>
-          <label for="data.derived.tempHp.value" class="resource-label">{{data.derived.tempHp.abrev}}</label>
+          <label for="system.derived.tempHp.value" class="resource-label">{{system.derived.tempHp.abrev}}</label>
         </div>
 
         {{!-- ABSORPTION --}}
         <div class="resource flex-group-center" title="{{localize 'TIP.Absorption'}}">
           <div class="resource-content flexrow flex-center flex-between">
             <span class="absorption-item">
-              {{#if data.autocalc.absorption}}
-              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="absorption" class="field two-value">{{data.derived.absorption.value}}</a>
+              {{#if system.autocalc.absorption}}
+              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="absorption" class="field two-value">{{system.derived.absorption.value}}</a>
               {{else}}
               <div class="two-value autocalc">
-                <input type="text" name="data.derived.absorption.value" value="{{data.derived.absorption.value}}" data-dtype="Number"/>
+                <input type="text" name="system.derived.absorption.value" value="{{system.derived.absorption.value}}" data-dtype="Number"/>
                 <a title="{{localize 'SYS.ToggleAutocalc'}}" id="absorption" class="reset"><i class="fas fa-reply"></i></a>
               </div>
               {{/if}}
               <span class="absorption-label">Base</span>
             </span>
             <span class="absorption-item">
-              <input type="text" name="data.derived.absorption.armor" value="{{data.derived.absorption.armor}}" data-dtype="Number"/>
+              <input type="text" name="system.derived.absorption.armor" value="{{system.derived.absorption.armor}}" data-dtype="Number"/>
               <span class="absorption-label">Armor</span>
             </span>
             <span class="absorption-item">
-              <span class="field">{{data.derived.absorption.total}}</span>
+              <span class="field">{{system.derived.absorption.total}}</span>
               <span class="absorption-label">Total</span>
             </span>
           </div>
-          <label for="data.derived.absorption.value" class="resource-label">{{data.derived.absorption.label}}</label>
+          <label for="system.derived.absorption.value" class="resource-label">{{system.derived.absorption.label}}</label>
         </div>
 
         <div class="resource flex-group-center two-items" title="{{localize 'TIP.Bloodied'}}">
           <div class="container">
             <div class="resource-content flexrow flex-center flex-between">
-              {{#if data.autocalc.bloodied}}
-              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="bloodied" class="field">{{data.derived.bloodied.value}}</a>
+              {{#if system.autocalc.bloodied}}
+              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="bloodied" class="field">{{system.derived.bloodied.value}}</a>
               {{else}}
               <div class="autocalc">
-                <input type="text" name="data.derived.bloodied.value" value="{{data.derived.bloodied.value}}" data-dtype="Number"/>
+                <input type="text" name="system.derived.bloodied.value" value="{{system.derived.bloodied.value}}" data-dtype="Number"/>
                 <a title="{{localize 'SYS.ToggleAutocalc'}}" id="bloodied" class="reset"><i class="fas fa-reply"></i></a>
               </div>
               {{/if}}
             </div>
-            <label for="data.derived.bloodied.value" class="resource-label">{{data.derived.bloodied.label}}</label>
+            <label for="system.derived.bloodied.value" class="resource-label">{{system.derived.bloodied.label}}</label>
           </div>
           <div class="container" title="{{localize 'TIP.Movement'}}">
             <div class="resource-content flexrow flex-center flex-between">
-              {{#if data.autocalc.movement}}
-              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="movement" class="field">{{data.derived.movement.value}}</a>
+              {{#if system.autocalc.movement}}
+              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="movement" class="field">{{system.derived.movement.value}}</a>
               {{else}}
               <div class="autocalc">
-                <input type="text" name="data.derived.movement.value" value="{{data.derived.movement.value}}" data-dtype="Number"/>
+                <input type="text" name="system.derived.movement.value" value="{{system.derived.movement.value}}" data-dtype="Number"/>
                 <a title="{{localize 'SYS.ToggleAutocalc'}}" id="movement" class="reset"><i class="fas fa-reply"></i></a>
               </div>
               {{/if}}
             </div>
-            <label for="data.derived.movement.value" class="resource-label">{{data.derived.movement.label}}</label>  
+            <label for="system.derived.movement.value" class="resource-label">{{system.derived.movement.label}}</label>  
           </div>
         </div>
       </div>
@@ -168,8 +168,8 @@
         <div class="grid grid-2col elemental">
           <div class="element-resist">
             <span class="resource-label left">Fire</span>
-            <select class="element-picker {{data.details.elementalResistances.fire}}" name="data.details.elementalResistances.fire" type="text" value="{{data.details.elementalResistances.fire}}">
-              {{#select data.details.elementalResistances.fire}}
+            <select class="element-picker {{system.details.elementalResistances.fire}}" name="system.details.elementalResistances.fire" type="text" value="{{system.details.elementalResistances.fire}}">
+              {{#select system.details.elementalResistances.fire}}
                 <option value="-">-</option>
                 <option value="W">W</option>
                 <option value="S">S</option>
@@ -177,8 +177,8 @@
             </select>
           </div>
           <div class="element-resist">
-            <select class="element-picker {{data.details.elementalResistances.water}}" name="data.details.elementalResistances.water" type="text" value="{{data.details.elementalResistances.water}}">
-              {{#select data.details.elementalResistances.water}}
+            <select class="element-picker {{system.details.elementalResistances.water}}" name="system.details.elementalResistances.water" type="text" value="{{system.details.elementalResistances.water}}">
+              {{#select system.details.elementalResistances.water}}
                 <option value="-">-</option>
                 <option value="W">W</option>
                 <option value="S">S</option>
@@ -188,8 +188,8 @@
           </div>
           <div class="element-resist">
             <span class="resource-label left">Elec.</span>
-            <select class="element-picker {{data.details.elementalResistances.elec}}" name="data.details.elementalResistances.elec" type="text" value="{{data.details.elementalResistances.elec}}">
-              {{#select data.details.elementalResistances.elec}}
+            <select class="element-picker {{system.details.elementalResistances.elec}}" name="system.details.elementalResistances.elec" type="text" value="{{system.details.elementalResistances.elec}}">
+              {{#select system.details.elementalResistances.elec}}
                 <option value="-">-</option>
                 <option value="W">W</option>
                 <option value="S">S</option>
@@ -197,8 +197,8 @@
             </select>
           </div>
           <div class="element-resist">
-            <select class="element-picker {{data.details.elementalResistances.ice}}" name="data.details.elementalResistances.ice" type="text" value="{{data.details.elementalResistances.ice}}">
-              {{#select data.details.elementalResistances.ice}}
+            <select class="element-picker {{system.details.elementalResistances.ice}}" name="system.details.elementalResistances.ice" type="text" value="{{system.details.elementalResistances.ice}}">
+              {{#select system.details.elementalResistances.ice}}
                 <option value="-">-</option>
                 <option value="W">W</option>
                 <option value="S">S</option>
@@ -209,15 +209,15 @@
         </div>
         <div class="element-resist dragon">
           <span class="resource-label left">Dragon</span>
-          <select class="element-picker {{data.details.elementalResistances.dragon}}" name="data.details.elementalResistances.dragon" type="text" value="{{data.details.elementalResistances.dragon}}">
-            {{#select data.details.elementalResistances.dragon}}
+          <select class="element-picker {{system.details.elementalResistances.dragon}}" name="system.details.elementalResistances.dragon" type="text" value="{{system.details.elementalResistances.dragon}}">
+            {{#select system.details.elementalResistances.dragon}}
               <option value="-">-</option>
               <option value="W">W</option>
               <option value="S">S</option>
             {{/select}}
           </select>
         </div>
-        <label for="data.details.elementalResistances.dragon" class="resource-label">Elemental Resistances</label>
+        <label for="system.details.elementalResistances.dragon" class="resource-label">Elemental Resistances</label>
       </div>
     </div>
   </header>

@@ -11,21 +11,21 @@
       &nbsp;
     </div>
   </li>
-  {{#each data.activeAbilities as |item id|}}
+  {{#each system.activeAbilities as |item id|}}
     <li class="abilities expand-container" data-item-id="{{item._id}}">
-      <div class="grid grid-8col level-{{item.data.level}}">
+      <div class="grid grid-8col level-{{item.system.level}}">
         <div class="grid-span-2 name ability-name expand-controller" data-item-id="{{item._id}}">{{item.name}}</div>
-        <input class="field input abilities-imp" type="text" value="{{item.data.improvements}}" data-item-id="{{item._id}}" data-dtype="Number"/>
-        <input class="field input abilities-mod" type="text" value="{{item.data.mod}}" data-item-id="{{item._id}}" data-dtype="Number"/>
-        <input class="field input abilities-malus" type="text" value="{{item.data.malus}}" data-item-id="{{item._id}}" data-dtype="Number"/>
-        <div class="field ability-imp-btn" title="Improve Ability by 1 | Cost 1XP" data-improve="{{item._id}}">{{item.data.value}}<span class="improvement">+</span></div>
-        <div class="field level ability-imp-btn" title="Improve Ability by 20 | Cost 20XP" data-improve="{{item._id}}">{{item.data.level}}<span class="level improvement">+</span></div>
+        <input class="field input abilities-imp" type="text" value="{{item.system.improvements}}" data-item-id="{{item._id}}" data-dtype="Number"/>
+        <input class="field input abilities-mod" type="text" value="{{item.system.mod}}" data-item-id="{{item._id}}" data-dtype="Number"/>
+        <input class="field input abilities-malus" type="text" value="{{item.system.malus}}" data-item-id="{{item._id}}" data-dtype="Number"/>
+        <div class="field ability-imp-btn" title="Improve Ability by 1 | Cost 1XP" data-improve="{{item._id}}">{{item.system.value}}<span class="improvement">+</span></div>
+        <div class="field level ability-imp-btn" title="Improve Ability by 20 | Cost 20XP" data-improve="{{item._id}}">{{item.system.level}}<span class="level improvement">+</span></div>
         <div class="field controls">
           <a class="item-control ability-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
         </div>
       </div>
       <div class="expandable">
-        <div class="description">{{{item.data.description}}}</div>
+        <div class="description">{{{item.system.description}}}</div>
       </div>
     </li>
   {{/each}}
@@ -43,21 +43,21 @@
       &nbsp;
     </div>
   </li>
-  {{#each data.inactiveAbilities as |item id|}}
+  {{#each system.inactiveAbilities as |item id|}}
     <li class="abilities expand-container" data-item-id="{{item._id}}">
-      <div class="grid grid-8col level-{{item.data.level}}">
+      <div class="grid grid-8col level-{{item.system.level}}">
         <div class="grid-span-2 name ability-name expand-controller" data-item-id="{{item._id}}">{{item.name}}</div>
-        <input class="field input abilities-imp" type="text" value="{{item.data.improvements}}" data-item-id="{{item._id}}" data-dtype="Number"/>
-        <input class="field input abilities-mod" type="text" value="{{item.data.mod}}" data-item-id="{{item._id}}" data-dtype="Number"/>
-        <input class="field input abilities-malus" type="text" value="{{item.data.malus}}" data-item-id="{{item._id}}" data-dtype="Number"/>
-        <div class="field ability-imp-btn" title="Improve Ability by 1 | Cost 1XP" data-improve="{{item._id}}">{{item.data.value}}<span class="improvement">+</span></div>
-        <div class="field level ability-imp-btn" title="Improve Ability by 20 | Cost 20XP" data-improve="{{item._id}}">{{item.data.level}}<span class="level improvement">+</span></div>
+        <input class="field input abilities-imp" type="text" value="{{item.system.improvements}}" data-item-id="{{item._id}}" data-dtype="Number"/>
+        <input class="field input abilities-mod" type="text" value="{{item.system.mod}}" data-item-id="{{item._id}}" data-dtype="Number"/>
+        <input class="field input abilities-malus" type="text" value="{{item.system.malus}}" data-item-id="{{item._id}}" data-dtype="Number"/>
+        <div class="field ability-imp-btn" title="Improve Ability by 1 | Cost 1XP" data-improve="{{item._id}}">{{item.system.value}}<span class="improvement">+</span></div>
+        <div class="field level ability-imp-btn" title="Improve Ability by 20 | Cost 20XP" data-improve="{{item._id}}">{{item.system.level}}<span class="level improvement">+</span></div>
         <div class="field controls">
           <a class="item-control ability-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
         </div>
       </div>
       <div class="expandable">
-        <div class="description">{{{item.data.description}}}</div>
+        <div class="description">{{{item.system.description}}}</div>
       </div>
     </li>
   {{/each}}
