@@ -22,7 +22,7 @@ export class tpoItemSheet extends ItemSheet {
 
     // Alternatively, you could use the following return statement to do a
     // unique item sheet by type, like `weapon-sheet.html`.
-    return `${path}/item-${this.item.data.type}-sheet.html`;
+    return `${path}/item-${this.item.type}-sheet.html`;
   }
 
   /* -------------------------------------------- */
@@ -33,7 +33,7 @@ export class tpoItemSheet extends ItemSheet {
     const context = super.getData();
 
     // Use a safe clone of the item data for further operations.
-    const itemData = context.item.data;
+    const itemData = context.item;
 
     // Retrieve the roll data for TinyMCE editors.
     context.rollData = {};
@@ -43,9 +43,9 @@ export class tpoItemSheet extends ItemSheet {
     }
 
     // Add the actor's data to context.data for easier access, as well as flags.
-    context.data = itemData.data;
+    context.system = itemData;
     context.flags = itemData.flags;
-
+    console.log(context)
     return context;
   }
 
@@ -78,23 +78,23 @@ export class tpoItemSheet extends ItemSheet {
   }
 
   _onAdvancedToggle(event){
-    this.object.update({[`data.advanced`]: !this.object.system.advanced })
+    this.object.update({[`system.advanced`]: !this.object.system.advanced })
   }
 
   _onGroupedToggle(event){
-    this.object.update({[`data.grouped`]: !this.object.system.grouped })
+    this.object.update({[`system.grouped`]: !this.object.system.grouped })
   }
 
   _onWeakToggle(event){
-    this.object.update({[`data.isWeak`]: !this.object.system.isWeak })
+    this.object.update({[`system.isWeak`]: !this.object.system.isWeak })
   }
 
   _onStackableToggle(event){
-    this.object.update({[`data.stack.stackable`]: !this.object.system.stack.stackable })
+    this.object.update({[`system.stack.stackable`]: !this.object.system.stack.stackable })
   }
 
   async _onElementToggle(event, element){
-    await this.object.update({[`data.selectedElement.${element}`]: !this.object.system.selectedElement[element] });
+    await this.object.update({[`system.selectedElement.${element}`]: !this.object.system.selectedElement[element] });
     let displayStr = ""
     if(this.object.system.selectedElement.fire)
       displayStr+="Fire "
@@ -106,6 +106,6 @@ export class tpoItemSheet extends ItemSheet {
       displayStr+="Ice "
     if(this.object.system.selectedElement.water)
       displayStr+="Water "
-    this.object.update({[`data.selectedElement.display`]: displayStr });
+    this.object.update({[`system.selectedElement.display`]: displayStr });
   }
 }

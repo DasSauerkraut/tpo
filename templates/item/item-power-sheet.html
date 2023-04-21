@@ -5,36 +5,36 @@
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
       <div class="grid grid-2col">
         <div class="resource">
-          <input type="text" name="data.apCost" value="{{data.apCost}}" data-dtype="Number"/>
+          <input type="text" name="system.system.apCost" value="{{system.system.apCost}}" data-dtype="Number"/>
           <label class="resource-label">AP Cost</label>
         </div>
         <div class="resource">
-          <input type="text" name="data.target" value="{{data.target}}" data-dtype="String"/>
+          <input type="text" name="system.system.target" value="{{system.system.target}}" data-dtype="String"/>
           <label class="resource-label">Target</label>
         </div>
         <div class="resource">
-          <input type="text" name="data.damageMod" value="{{data.damageMod}}" data-dtype="Number"/>
+          <input type="text" name="system.system.damageMod" value="{{system.system.damageMod}}" data-dtype="Number"/>
           <label class="resource-label">Damage</label>
         </div>
         <div class="resource">
-          <input type="text" name="data.elementDamageMod" value="{{data.elementDamageMod}}" data-dtype="Number"/>
+          <input type="text" name="system.system.elementDamageMod" value="{{system.system.elementDamageMod}}" data-dtype="Number"/>
           <label class="resource-label">Elemental Damage</label>
         </div>
         <div class="resource">
-          <input type="text" name="data.attacks" value="{{data.attacks}}" data-dtype="Number"/>
+          <input type="text" name="system.system.attacks" value="{{system.system.attacks}}" data-dtype="Number"/>
           <label class="resource-label">Number of Attacks</label>
         </div>
         <div class="resource">
           Weak Damage: 
-          {{#if data.isWeak}}
+          {{#if system.system.isWeak}}
             <input id="weak-toggle" type="checkbox" checked data-dtype="Boolean"/>
           {{else}}
             <input id="weak-toggle" type="checkbox"  data-dtype="Boolean"/>
           {{/if}}
         </div>
         <div class="resource">
-          <select name="data.armamentType" type="text" value="{{data.armamentType}}">
-            {{#select data.armamentType}}
+          <select name="system.system.armamentType" type="text" value="{{system.system.armamentType}}">
+            {{#select system.system.armamentType}}
               <option value="{{localize 'ARM.GS'}}">{{localize 'ARM.GS'}}</option>
               <option value="{{localize 'ARM.LA'}}">{{localize 'ARM.LA'}}</option>
               <option value="{{localize 'ARM.BS'}}">{{localize 'ARM.BS'}}</option>
@@ -49,8 +49,8 @@
           <label class="resource-label">Associated with</label>
         </div>
         <div class="resource">
-          <select name="data.type" type="text" value="{{data.type}}">
-            {{#select data.type}}
+          <select name="system.system.type" type="text" value="{{system.system.type}}">
+            {{#select system.system.type}}
               <option value="{{localize 'PWR.AtWill'}}">{{localize 'PWR.AtWill'}}</option>
               <option value="{{localize 'PWR.Encounter'}}">{{localize 'PWR.Encounter'}}</option>
               <option value="{{localize 'PWR.Weekly'}}">{{localize 'PWR.Weekly'}}</option>
@@ -74,7 +74,7 @@
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
       {{!-- To render inline rolls in a TinyMCE editor, you need to pass the parent actor's (if any) roll data to the rollData prop. --}}
-      {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+      {{editor system.system.description target="system.system.description" rollData=rollData button=true owner=owner editable=editable}}
     </div>
   </section>
 </form>

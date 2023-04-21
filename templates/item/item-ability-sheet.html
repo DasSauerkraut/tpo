@@ -6,23 +6,23 @@
       <div class="grid grid-2col">
         <div class="resource">
           <label class="resource-label">Improvements</label>
-          <input type="text" name="data.improvements" value="{{data.improvements}}" data-dtype="Number"/>
+          <input type="text" name="system.system.improvements" value="{{system.system.improvements}}" data-dtype="Number"/>
         </div>
         <div class="resource">
           <label class="resource-label">Mod</label>
-          <input type="text" name="data.mod" value="{{data.mod}}" data-dtype="Number"/>
+          <input type="text" name="system.system.mod" value="{{system.system.mod}}" data-dtype="Number"/>
         </div>
         <div class="resource">
           <label class="resource-label">Malus</label>
-          <input type="text" name="data.malus" value="{{data.malus}}" data-dtype="Number"/>
+          <input type="text" name="system.system.malus" value="{{system.system.malus}}" data-dtype="Number"/>
         </div>
         <div class="resource">
           <label class="resource-label">Total</label>
-          <div>{{data.value}}</div>
+          <div>{{system.system.value}}</div>
         </div>
         <div class="resource">
           <label class="resource-label">Level</label>
-          <div>{{data.level}}</div>
+          <div>{{system.system.level}}</div>
         </div>
       </div>
     </div>
@@ -39,7 +39,7 @@
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
       {{!-- To render inline rolls in a TinyMCE editor, you need to pass the parent actor's (if any) roll data to the rollData prop. --}}
-      {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+      {{editor system.system.description target="system.system.description" rollData=rollData button=true owner=owner editable=editable}}
     </div>
   </section>
 </form>

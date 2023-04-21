@@ -350,7 +350,7 @@ export class tpoActorSheet extends ActorSheet {
     if(event.button !== 0){
       if(item.system.stack.current > 1){
         let itemToEdit = duplicate(item)
-        itemToEdit.data.stack.current -= 1;
+        itemToEdit.system.stack.current -= 1;
         await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
       } else {
         ui.notifications.error(game.i18n.format("ERROR.StackLessThanZero"));
@@ -358,7 +358,7 @@ export class tpoActorSheet extends ActorSheet {
     } else {
       if(item.system.stack.current < item.system.stack.max){
         let itemToEdit = duplicate(item)
-        itemToEdit.data.stack.current += 1;
+        itemToEdit.system.stack.current += 1;
         await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
       } else {
         ui.notifications.error(game.i18n.format("ERROR.StackCap"));
@@ -472,8 +472,8 @@ export class tpoActorSheet extends ActorSheet {
               const currentHp = this.actor.system.derived.hp.value;
               const maxHp = this.actor.system.derived.hp.max;
               this.actor.system.armaments.forEach((armament) => {
-                armament.data.powers.forEach(pwr => {
-                  if(pwr.data.type === game.i18n.format("PWR.Encounter") && pwr.data.used){
+                armament.system.powers.forEach(pwr => {
+                  if(pwr.system.type === game.i18n.format("PWR.Encounter") && pwr.system.used){
                     this._usePower(pwr._id, armament._id);
                   }
                 })
@@ -912,6 +912,7 @@ export class tpoActorSheet extends ActorSheet {
     if(!power)
       power = await this.actor.items.get(container.data("power-id"));
     
+    console.log(power)
     const armament = await this.actor.items.get(power.system.parent.id);
     console.log(armament)
 
@@ -922,7 +923,7 @@ export class tpoActorSheet extends ActorSheet {
         this._usePower(power._id, armament._id);
     }
 
-    if(power.data.apCost > this.actor.system.derived.ap.value)
+    if(power.system.apCost > this.actor.system.derived.ap.value)
       ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
     this.actor.update({[`system.derived.ap.value`]: this.actor.system.derived.ap.value - power.system.apCost })
     
@@ -1079,7 +1080,7 @@ export class tpoActorSheet extends ActorSheet {
 
     let itemId = event.target.attributes["data-item-id"].value;
     let itemToEdit = duplicate(this.actor.items.get(itemId));
-    itemToEdit.data.improvements = Number(event.target.value);
+    itemToEdit.system.improvements = Number(event.target.value);
 
     await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
   }
@@ -1091,11 +1092,11 @@ export class tpoActorSheet extends ActorSheet {
     let itemToEdit = duplicate(this.actor.items.get(itemId));
     
     if($(event.target).hasClass("abilities-imp"))
-      itemToEdit.data.improvements = Number(event.target.value);
+      itemToEdit.system.improvements = Number(event.target.value);
     else if($(event.target).hasClass("abilities-mod"))
-      itemToEdit.data.mod = Number(event.target.value);
+      itemToEdit.system.mod = Number(event.target.value);
     else
-      itemToEdit.data.malus = Number(event.target.value);
+      itemToEdit.system.malus = Number(event.target.value);
 
     await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
   }
@@ -1178,7 +1179,7 @@ export class tpoActorSheet extends ActorSheet {
       let statImp = false;
       if(itemToEdit.system.trained === "Major" && (improvements + 1) % 5 === 0){
         if(newXpCalc){
-          if(this.actor.data.data.stats[itemToEdit.system.stat].improvements + 1 > 20){
+          if(this.actor.system.stats[itemToEdit.system.stat].improvements + 1 > 20){
             ui.notifications.error(game.i18n.format("ERROR.StatImpCap"));
           } else {
             ui.notifications.info(game.i18n.format('SYS.FreeStatGoverned').replace('#stat', itemToEdit.system.stat.toUpperCase()));
@@ -1259,7 +1260,7 @@ export class tpoActorSheet extends ActorSheet {
       if((this.actor.system.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
       (skill.system.stat === 'ws' || skill.system.stat === 'agi' || skill.system.stat === 'will') &&
       this.actor.system.derived.hp.value > this.actor.system.derived.bloodied.value){
-        if(UtilsTPO.isInCombat(this.actor.data._id))
+        if(UtilsTPO.isInCombat(this.actor._id))
           testData.modifier += 10;
       }
   
@@ -1267,7 +1268,7 @@ export class tpoActorSheet extends ActorSheet {
       if((this.actor.system.details.species.value === game.i18n.format("SPECIES.Raivoaa")) && 
       (skill.system.stat === 'ws' || skill.system.stat === 'agi' || skill.system.stat === 'will') &&
       this.actor.system.derived.hp.value <= this.actor.system.derived.bloodied.value){
-        if(UtilsTPO.isInCombat(this.actor.data._id))
+        if(UtilsTPO.isInCombat(this.actor._id))
           testData.advantage += 1;
       }
   

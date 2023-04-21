@@ -388,21 +388,22 @@ export class UtilsTPO {
   static formatRatingStatus(statuses){
     let count = 0;
     statuses.forEach(s => {
-      count += Number(s.data.label.match(/\d+/)[0])
+      let match = s.label.match(/\d+/);
+      count += match ? Number(match[0]) : 0
     })
     
     let description = TPO.statuses.filter(s => {
-      return game.i18n.format(s.label) === statuses[0].data.label;
+      return game.i18n.format(s.label) === statuses[0].label;
     });
     description = description[0].description.replace(/REPLACE/g, count);
 
-    let label = statuses[0].data.label.replace(/[0-9]/g, count);
+    let label = statuses[0].label.replace(/[0-9]/g, count);
 
     return `
       <br>
       <b>${label}</b>
       <div style="display:flex;">
-        <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${statuses[0].data.icon}" alt="${label}">
+        <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${statuses[0].icon}" alt="${label}">
         <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
       </div>
     `
@@ -426,17 +427,17 @@ export class UtilsTPO {
         break;
       case "power":
         localSound = false;
-        if(item.data.armamentType === "Greatsword" || 
-        item.data.armamentType === "Lance" ||
-        item.data.armamentType === "Warbanner" ||
-        item.data.armamentType === "Chromatic Sword"
+        if(item.system.armamentType === "Greatsword" || 
+        item.system.armamentType === "Lance" ||
+        item.system.armamentType === "Warbanner" ||
+        item.system.armamentType === "Chromatic Sword"
         )
           group = "weapon-swing"
-        if(item.data.armamentType === "Leech Blade")
+        if(item.system.armamentType === "Leech Blade")
           group = "hit-normal"
-        if(item.data.armamentType === "Charge Gauntlets")
+        if(item.system.armamentType === "Charge Gauntlets")
           group = "hit-blocked"
-        if(item.data.armamentType === "Arquebus" || item.data.armamentType === "Vapor Launcher"){
+        if(item.system.armamentType === "Arquebus" || item.system.armamentType === "Vapor Launcher"){
           if(item.name.toLowerCase().includes("reload") || item.name.toLowerCase().includes("shell swap"))
             group = "weapon_gun-load"
           else if(item.name.toLowerCase().includes("dragonstake") ||
@@ -445,14 +446,14 @@ export class UtilsTPO {
           else
             group = "weapon_gun-fire"
         }
-        if(item.data.armamentType === "Gunlance"){
-          if(item.data.target.toLowerCase().includes("ranged") || 
+        if(item.system.armamentType === "Gunlance"){
+          if(item.system.target.toLowerCase().includes("ranged") || 
           item.name.toLowerCase().includes("pokeshelling") ||
           item.name.toLowerCase().includes("blast dash"))
             group = "weapon_gun-fire"
           else if (item.name.toLowerCase().includes("slamburst"))
             group = "weapon_canon-fire"
-          else if(item.data.target.toLowerCase().includes("melee"))
+          else if(item.system.target.toLowerCase().includes("melee"))
             group = "weapon-swing"
         }
         break;
@@ -915,7 +916,7 @@ export class UtilsTPO {
     let apMessage = `AP refreshed to ${combatant.actor.system.derived.ap.max}.`
 
     let statuses = ``;
-    if(combatant.actor.system.effects.size !== 0){
+    if(combatant.actor.effects.size !== 0){
       statuses = `
         <hr>
         <div>${combatant.actor.system.name} is under the following effects!<div>
@@ -927,35 +928,36 @@ export class UtilsTPO {
     let ongoings = [];
     let paralyzeds = [];
     let hampereds = [];
-    combatant.actor.system.effects.forEach(effect => {
-      if(effect.system.label.includes("Bleeding")){
+    combatant.actor.effects.forEach(effect => {
+      console.log(effect)
+      if(effect.label.includes("Bleeding")){
         bleedings.push(effect);
         return;
       }
-      if(effect.system.label.includes("Exhausted")){
+      if(effect.label.includes("Exhausted")){
         exhausteds.push(effect);
         return;
       }
-      if(effect.system.label.includes("Ongoing")){
+      if(effect.label.includes("Ongoing")){
         ongoings.push(effect);
         return;
       }
-      if(effect.system.label.includes("Paralyzed")){
+      if(effect.label.includes("Paralyzed")){
         paralyzeds.push(effect);
         return;
       }
-      if(effect.system.label.includes("Hampered")){
+      if(effect.label.includes("Hampered")){
         hampereds.push(effect);
         return;
       }
       let lookup = TPO.statuses.filter(s => {
-        return game.i18n.format(s.label) === effect.system.label;
+        return game.i18n.format(s.label) === effect.label;
       });
 
       let isInjury;
       if(lookup.length === 0){
         lookup = TPO.injuries.filter(s => {
-          return game.i18n.format(s.label) === effect.system.label;
+          return game.i18n.format(s.label) === effect.label;
         });
         isInjury = lookup.length !== 0
       }
@@ -968,9 +970,9 @@ export class UtilsTPO {
       
       statuses += `
         <br>
-        <b>${effect.system.label}</b>
+        <b>${effect.label}</b>
         <div style="display:flex;">
-          <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${isInjury ? lookup[0].icon : effect.system.icon}" alt="${effect.system.label}">
+          <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${isInjury ? lookup[0].icon : effect.icon}" alt="${effect.label}">
           <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
         </div>
       `
@@ -1075,7 +1077,7 @@ export class UtilsTPO {
   static isInCombat(id) {
     if(game.combat?.combatants){
       const inCombat = [...game.combat.combatants.entries()].find(([key, val]) => {
-        return val.system.actorId === id
+        return val.actorId === id
       })
       if(inCombat)
         return true

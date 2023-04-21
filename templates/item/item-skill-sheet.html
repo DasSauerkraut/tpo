@@ -7,13 +7,13 @@
         <div class="skill">
           <div>
             <label class="resource-label">Advanced</label>
-            {{#if data.advanced}}
+            {{#if system.system.advanced}}
               <input class="advanced" id="advanced-toggle" type="checkbox" checked data-dtype="Boolean"/>
             {{else}}
               <input class="advanced" id="advanced-toggle" type="checkbox" data-dtype="Boolean"/>
             {{/if}}
             <label class="resource-label">Grouped</label>
-            {{#if data.grouped}}
+            {{#if system.system.grouped}}
               <input class="advanced" id="grouped-toggle" type="checkbox" checked data-dtype="Boolean"/>
             {{else}}
               <input class="advanced" id="grouped-toggle" type="checkbox" data-dtype="Boolean"/>
@@ -22,8 +22,8 @@
         </div>
         <div class="skill">
           <label class="resource-label">Trained</label>
-          <select name="data.trained" type="text" value="{{data.trained}}">
-            {{#select data.trained}}
+          <select name="system.system.trained" type="text" value="{{system.system.trained}}">
+            {{#select system.system.trained}}
             <option value="{{localize 'SYS.TrainedNot'}}">{{localize 'SYS.TrainedNot'}}</option>
             <option value="{{localize 'SYS.TrainedMin'}}">{{localize 'SYS.TrainedMin'}}</option>
             <option value="{{localize 'SYS.TrainedMaj'}}">{{localize 'SYS.TrainedMaj'}}</option>
@@ -32,8 +32,8 @@
         </div>
         <div class="skill">
           <label class="resource-label">Stat</label>
-          <select name="data.stat" type="text" value="{{data.stat}}">
-            {{#select data.stat}}
+          <select name="system.system.stat" type="text" value="{{system.system.stat}}">
+            {{#select system.system.stat}}
             <option value="ws">{{localize 'CHAR.WS'}}</option>
             <option value="str">{{localize 'CHAR.Str'}}</option>
             <option value="con">{{localize 'CHAR.Con'}}</option>
@@ -47,7 +47,7 @@
         </div>
         <div class="skill">
           <label class="resource-label">Improvements</label>
-          <input type="text" name="data.improvements" value="{{data.improvements}}" data-dtype="Number"/>
+          <input type="text" name="system.system.improvements" value="{{system.system.improvements}}" data-dtype="Number"/>
         </div>
       </div>
     </div>
@@ -64,7 +64,7 @@
     {{!-- Description Tab --}}
     <div class="tab" data-group="primary" data-tab="description">
       {{!-- To render inline rolls in a TinyMCE editor, you need to pass the parent actor's (if any) roll data to the rollData prop. --}}
-      {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+      {{editor system.system.description target="system.system.description" rollData=rollData button=true owner=owner editable=editable}}
     </div>
   </section>
 </form>
