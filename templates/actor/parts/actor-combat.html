@@ -29,216 +29,414 @@
           <div class="skill-item-header-controls">&nbsp;</div>
         </li>
         <div class="skill-container armament">
-        {{#each system.armaments as |armament id|}}
-          <li class="armament-container item-container expand-container" data-item-id="{{armament._id}}">
-            <div class="grid grid-13col skill-item-container ">
-              <div class="grid-span-4 armament-name expand-controller" data-item-id="{{armament._id}}">{{armament.name}}</div>
-              <div class="skill-item grid-span-2">StrB+{{armament.system.damage.value}}</div>
-              <div class="skill-item grid-span-2">+{{armament.system.elementDamage.value}}</div>
-              <div class="skill-item grid-span-2">{{armament.system.selectedElement.display}}</div>
-              <div class="skill-item grid-span-2">{{armament.system.overloadPoints}}</div>
+          {{#each system.armaments as |armament id|}}
+          <li
+            class="armament-container item-container expand-container"
+            data-item-id="{{armament._id}}"
+          >
+            <div class="grid grid-13col skill-item-container">
+              <div
+                class="grid-span-4 armament-name expand-controller"
+                data-item-id="{{armament._id}}"
+              >
+                {{armament.name}}
+              </div>
+              <div class="skill-item grid-span-2">
+                StrB+{{armament.system.damage.value}}
+              </div>
+              <div class="skill-item grid-span-2">
+                +{{armament.system.elementDamage.value}}
+              </div>
+              <div class="skill-item grid-span-2">
+                {{armament.system.selectedElement.display}}
+              </div>
+              <div class="skill-item grid-span-2">
+                {{armament.system.overloadPoints}}
+              </div>
               <div class="skill-item">
-                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                <a class="item-control item-delete" title="Delete Item"
+                  ><i class="fas fa-trash"></i
+                ></a>
               </div>
             </div>
-            <div class="expandable" style="max-height: 1000px" data-item-id="{{armament._id}}">
+            <div
+              class="expandable"
+              style="max-height: 1000px"
+              data-item-id="{{armament._id}}"
+            >
               {{#ifEquals armament.system.armamentType "Vapor Launcher"}}
-                Magazine: 
-                <select id="slotOne" class="shell-input" name="armament.flags.tpo.magazine.slotOne" type="text" value="{{armament.flags.tpo.magazine.slotOne}}">
+              Magazine:
+              <select
+                id="slotOne"
+                class="shell-input"
+                name="armament.flags.tpo.magazine.slotOne"
+                type="text"
+                value="{{armament.flags.tpo.magazine.slotOne}}"
+              >
                 {{#select armament.flags.tpo.magazine.slotOne}}
-                  <option value="Unloaded">Unloaded</option>
-                  {{#each armament.system.miscPowers as |power id|}}
-                  <option value="{{power.name}}">{{power.name}}</option>
-                  {{/each}}
-                {{/select}}
+                <option value="Unloaded">Unloaded</option>
+                {{#each armament.system.miscPowers as |power id|}}
+                <option value="{{power.name}}">{{power.name}}</option>
+                {{/each}} {{/select}}
+              </select>
+              <select
+                id="slotTwo"
+                class="shell-input"
+                name="armament.flags.tpo.magazine.slotTwo"
+                type="text"
+                value="{{armament.flags.tpo.magazine.slotTwo}}"
+              >
+                {{#select armament.flags.tpo.magazine.slotTwo}}
+                <option value="Unloaded">Unloaded</option>
+                {{#each armament.system.miscPowers as |power id|}}
+                <option value="{{power.name}}">{{power.name}}</option>
+                {{/each}} {{/select}}
+              </select>
+              <select
+                id="slotThree"
+                class="shell-input"
+                name="armament.flags.tpo.magazine.slotThree"
+                type="text"
+                value="{{armament.flags.tpo.magazine.slotThree}}"
+              >
+                {{#select armament.flags.tpo.magazine.slotThree}}
+                <option value="Unloaded">Unloaded</option>
+                {{#each armament.system.miscPowers as |power id|}}
+                <option value="{{power.name}}">{{power.name}}</option>
+                {{/each}} {{/select}}
+              </select>
+              {{/ifEquals}} {{#ifEquals armament.system.armamentType "Warbanner"}}
+              <div class="orders">
+                Command Queue: {{#each armament.flags.tpo.orders as |order id|}}
+                <select
+                  id="{{order.id}}"
+                  class="order-input"
+                  name="order.value"
+                  type="text"
+                  value="{{order.value}}"
+                  title="Right Click to Delete"
+                >
+                  {{#select order.value}}
+                  <option value="left">←</option>
+                  <option value="right">→</option>
+                  <option value="up">↑</option>
+                  <option value="down">↓</option>
+                  {{/select}}
                 </select>
-                <select id="slotTwo" class="shell-input" name="armament.flags.tpo.magazine.slotTwo" type="text" value="{{armament.flags.tpo.magazine.slotTwo}}">
-                  {{#select armament.flags.tpo.magazine.slotTwo}}
-                    <option value="Unloaded">Unloaded</option>
-                    {{#each armament.system.miscPowers as |power id|}}
-                    <option value="{{power.name}}">{{power.name}}</option>
-                    {{/each}}
-                  {{/select}}
-                  </select>
-                <select id="slotThree" class="shell-input" name="armament.flags.tpo.magazine.slotThree" type="text" value="{{armament.flags.tpo.magazine.slotThree}}">
-                  {{#select armament.flags.tpo.magazine.slotThree}}
-                    <option value="Unloaded">Unloaded</option>
-                    {{#each armament.system.miscPowers as |power id|}}
-                    <option value="{{power.name}}">{{power.name}}</option>
-                    {{/each}}
-                  {{/select}}
-                  </select>
-              {{/ifEquals}}
-              {{#ifEquals armament.system.armamentType "Battle Standard"}}
-                <div class="orders">
-                  Command Queue: 
-                  {{#each armament.flags.tpo.orders as |order id|}}
-                    <select id="{{order.id}}" class="order-input" name="order.value" type="text" value="{{order.value}}" title="Right Click to Delete">
-                    {{#select order.value}}
-                      <option value="left">←</option>
-                      <option value="right">→</option>
-                      <option value="up">↑</option>
-                      <option value="down">↓</option>
-                    {{/select}}
-                    </select>
-                  {{/each}}
-                  <i class="fas fa-plus-circle rollable add-order"></i>
-                </div>
-              {{/ifEquals}}
-              {{#ifEquals armament.system.armamentType "Lance"}}
-                <div class="stamina">
-                  Stamina:
-                  {{#if armament.flags.tpo.stamina.pointOne}}
-                    <input id="pointOne" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
-                  {{else}}
-                    <input id="pointOne" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
-                  {{/if}}
-                  {{#if armament.flags.tpo.stamina.pointTwo}}
-                    <input id="pointTwo" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
-                  {{else}}
-                    <input id="pointTwo" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
-                  {{/if}}
-                  {{#if armament.flags.tpo.stamina.pointThree}}
-                    <input id="pointThree" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
-                  {{else}}
-                    <input id="pointThree" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
-                  {{/if}}
-                </div>
-              {{/ifEquals}}
-              {{#ifEquals armament.system.armamentType "Gunlance"}}
-                <div class="stamina">
-                  Phials:
-                  {{#if armament.flags.tpo.stamina.pointOne}}
-                    <input id="pointOne" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
-                  {{else}}
-                    <input id="pointOne" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
-                  {{/if}}
-                  {{#if armament.flags.tpo.stamina.pointTwo}}
-                    <input id="pointTwo" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
-                  {{else}}
-                    <input id="pointTwo" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
-                  {{/if}}
-                  {{#if armament.flags.tpo.stamina.pointThree}}
-                    <input id="pointThree" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
-                  {{else}}
-                    <input id="pointThree" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
-                  {{/if}}
-                  {{#greaterThan armament.flags.tpo.stamina.maxCap 3}}
-                    {{#if armament.flags.tpo.stamina.pointFour}}
-                      <input id="pointFour" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
-                    {{else}}
-                      <input id="pointFour" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
-                    {{/if}}
-                  {{/greaterThan}}
-                  {{#greaterThan armament.flags.tpo.stamina.maxCap 4}}
-                    {{#if armament.flags.tpo.stamina.pointFive}}
-                      <input id="pointFive" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
-                    {{else}}
-                      <input id="pointFive" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
-                    {{/if}}
-                  {{/greaterThan}}
-                  {{#greaterThan armament.flags.tpo.stamina.maxCap 5}}
-                    {{#if armament.flags.tpo.stamina.pointSix}}
-                      <input id="pointSix" class="stamina-checkbox" type="checkbox" checked data-dtype="Boolean"/>
-                    {{else}}
-                      <input id="pointSix" class="stamina-checkbox" type="checkbox" data-dtype="Boolean"/>
-                    {{/if}}
-                  {{/greaterThan}}
-                </div>
-              {{/ifEquals}}
-              {{#ifEquals armament.system.armamentType "Arquebus"}}
-                {{#if armament.flags.tpo.loadedAmmo.isEjected}}
-                  Loaded Ammo: 
+                {{/each}}
+                <i class="fas fa-plus-circle rollable add-order"></i>
+              </div>
+              {{/ifEquals}} {{#ifEquals armament.system.armamentType "Lance"}}
+              <div class="stamina">
+                Stamina: {{#if armament.flags.tpo.stamina.pointOne}}
+                <input
+                  id="pointOne"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  checked
+                  data-dtype="Boolean"
+                />
                 {{else}}
-                  Magazine: 
+                <input
+                  id="pointOne"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  data-dtype="Boolean"
+                />
+                {{/if}} {{#if armament.flags.tpo.stamina.pointTwo}}
+                <input
+                  id="pointTwo"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  checked
+                  data-dtype="Boolean"
+                />
+                {{else}}
+                <input
+                  id="pointTwo"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  data-dtype="Boolean"
+                />
+                {{/if}} {{#if armament.flags.tpo.stamina.pointThree}}
+                <input
+                  id="pointThree"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  checked
+                  data-dtype="Boolean"
+                />
+                {{else}}
+                <input
+                  id="pointThree"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  data-dtype="Boolean"
+                />
                 {{/if}}
-                <select id="slotOne" class="loaded-input" name="armament.flags.tpo.loadedAmmo.slotOne" type="text" value="{{armament.flags.tpo.loadedAmmo.slotOne}}">
+              </div>
+              {{/ifEquals}} {{#ifEquals armament.system.armamentType "Gunlance"}}
+              <div class="stamina">
+                Phials: {{#if armament.flags.tpo.stamina.pointOne}}
+                <input
+                  id="pointOne"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  checked
+                  data-dtype="Boolean"
+                />
+                {{else}}
+                <input
+                  id="pointOne"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  data-dtype="Boolean"
+                />
+                {{/if}} {{#if armament.flags.tpo.stamina.pointTwo}}
+                <input
+                  id="pointTwo"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  checked
+                  data-dtype="Boolean"
+                />
+                {{else}}
+                <input
+                  id="pointTwo"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  data-dtype="Boolean"
+                />
+                {{/if}} {{#if armament.flags.tpo.stamina.pointThree}}
+                <input
+                  id="pointThree"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  checked
+                  data-dtype="Boolean"
+                />
+                {{else}}
+                <input
+                  id="pointThree"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  data-dtype="Boolean"
+                />
+                {{/if}} {{#greaterThan armament.flags.tpo.stamina.maxCap 3}}
+                {{#if armament.flags.tpo.stamina.pointFour}}
+                <input
+                  id="pointFour"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  checked
+                  data-dtype="Boolean"
+                />
+                {{else}}
+                <input
+                  id="pointFour"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  data-dtype="Boolean"
+                />
+                {{/if}} {{/greaterThan}} {{#greaterThan
+                armament.flags.tpo.stamina.maxCap 4}} {{#if
+                armament.flags.tpo.stamina.pointFive}}
+                <input
+                  id="pointFive"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  checked
+                  data-dtype="Boolean"
+                />
+                {{else}}
+                <input
+                  id="pointFive"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  data-dtype="Boolean"
+                />
+                {{/if}} {{/greaterThan}} {{#greaterThan
+                armament.flags.tpo.stamina.maxCap 5}} {{#if
+                armament.flags.tpo.stamina.pointSix}}
+                <input
+                  id="pointSix"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  checked
+                  data-dtype="Boolean"
+                />
+                {{else}}
+                <input
+                  id="pointSix"
+                  class="stamina-checkbox"
+                  type="checkbox"
+                  data-dtype="Boolean"
+                />
+                {{/if}} {{/greaterThan}}
+              </div>
+              {{/ifEquals}} {{#ifEquals armament.system.armamentType "Arquebus"}}
+              {{#if armament.flags.tpo.loadedAmmo.isEjected}} Loaded Ammo:
+              {{else}} Magazine: {{/if}}
+              <select
+                id="slotOne"
+                class="loaded-input"
+                name="armament.flags.tpo.loadedAmmo.slotOne"
+                type="text"
+                value="{{armament.flags.tpo.loadedAmmo.slotOne}}"
+              >
                 {{#select armament.flags.tpo.loadedAmmo.slotOne}}
-                  <option value="Unloaded">Unloaded</option>
-                  {{#each armament.system.miscPowers as |power id|}}
-                  <option value="{{power.name}}">{{power.name}}</option>
-                  {{/each}}
-                {{/select}}
-                </select>
-                {{#greaterThan armament.flags.tpo.loadedAmmo.max 1}}
-                <select id="slotTwo" class="loaded-input" name="armament.flags.tpo.loadedAmmo.slotTwo" type="text" value="{{armament.flags.tpo.loadedAmmo.slotTwo}}">
-                  {{#select armament.flags.tpo.loadedAmmo.slotTwo}}
-                    <option value="Unloaded">Unloaded</option>
-                    {{#each armament.system.miscPowers as |power id|}}
-                    <option value="{{power.name}}">{{power.name}}</option>
-                    {{/each}}
-                  {{/select}}
-                  </select>
-                {{/greaterThan}}
-                {{#greaterThan armament.flags.tpo.loadedAmmo.max 2}}
-                <select id="slotThree" class="loaded-input" name="armament.flags.tpo.loadedAmmo.slotThree" type="text" value="{{armament.flags.tpo.loadedAmmo.slotThree}}">
-                  {{#select armament.flags.tpo.loadedAmmo.slotThree}}
-                    <option value="Unloaded">Unloaded</option>
-                    {{#each armament.system.miscPowers as |power id|}}
-                    <option value="{{power.name}}">{{power.name}}</option>
-                    {{/each}}
-                  {{/select}}
-                  </select>
-                {{/greaterThan}}
-              {{/ifEquals}}
-              <div class="container-header">Powers ({{armament.system.capacity.currentPowers}}/{{armament.system.capacity.power}})</div>
+                <option value="Unloaded">Unloaded</option>
+                {{#each armament.system.miscPowers as |power id|}}
+                <option value="{{power.name}}">{{power.name}}</option>
+                {{/each}} {{/select}}
+              </select>
+              {{#greaterThan armament.flags.tpo.loadedAmmo.max 1}}
+              <select
+                id="slotTwo"
+                class="loaded-input"
+                name="armament.flags.tpo.loadedAmmo.slotTwo"
+                type="text"
+                value="{{armament.flags.tpo.loadedAmmo.slotTwo}}"
+              >
+                {{#select armament.flags.tpo.loadedAmmo.slotTwo}}
+                <option value="Unloaded">Unloaded</option>
+                {{#each armament.system.miscPowers as |power id|}}
+                <option value="{{power.name}}">{{power.name}}</option>
+                {{/each}} {{/select}}
+              </select>
+              {{/greaterThan}} {{#greaterThan armament.flags.tpo.loadedAmmo.max
+              2}}
+              <select
+                id="slotThree"
+                class="loaded-input"
+                name="armament.flags.tpo.loadedAmmo.slotThree"
+                type="text"
+                value="{{armament.flags.tpo.loadedAmmo.slotThree}}"
+              >
+                {{#select armament.flags.tpo.loadedAmmo.slotThree}}
+                <option value="Unloaded">Unloaded</option>
+                {{#each armament.system.miscPowers as |power id|}}
+                <option value="{{power.name}}">{{power.name}}</option>
+                {{/each}} {{/select}}
+              </select>
+              {{/greaterThan}} {{/ifEquals}}
+              <div class="container-header">
+                Powers
+                ({{armament.system.capacity.currentPowers}}/{{armament.system.capacity.power}})
+              </div>
               {{#each armament.system.powers as |power id|}}
-              <div class="power expand-container-nested power-draggable" data-item-id="{{power._id}}">
+              <div
+                class="power expand-container-nested power-draggable"
+                data-item-id="{{power._id}}"
+              >
                 <div class="header {{power.system.type}}">
-                  <span class="name expand-controller-nested"><i class="fas fa-angle-down"></i> {{power.name}}</span>
+                  <span class="name expand-controller-nested"
+                    ><i class="fas fa-angle-down"></i> {{power.name}}</span
+                  >
                   <span class="type">
-                    {{#ifNotEqual power.system.type "At-Will"}}
-                      {{#if power.system.used}}
-                        <input class="power-used {{power.system.type}}-check" type="checkbox" data-dtype="Boolean"/>
-                      {{else}}
-                        <input class="power-used {{power.system.type}}-check" type="checkbox" checked data-dtype="Boolean"/>
-                      {{/if}}
-                    {{/ifNotEqual}}
-                    {{power.system.type}}
+                    {{#ifNotEqual power.system.type "At-Will"}} {{#if
+                    power.system.used}}
+                    <input
+                      class="power-used {{power.system.type}}-check"
+                      type="checkbox"
+                      data-dtype="Boolean"
+                    />
+                    {{else}}
+                    <input
+                      class="power-used {{power.system.type}}-check"
+                      type="checkbox"
+                      checked
+                      data-dtype="Boolean"
+                    />
+                    {{/if}} {{/ifNotEqual}} {{power.system.type}}
                   </span>
                 </div>
                 <div class="expandable">
                   <div class="subheader" data-power-id="{{power._id}}">
-                    <span class="cost"><i title="Use Power" class="fas fa-dice-d20 powerRoll rollable"></i> {{power.system.apCost}} AP</span>
-                    <span class="target">Target {{power.system.target}} <i title="Delete Power" class="fas fa-trash powerDelete rollable"></i></span>
+                    <span class="cost"
+                      ><i
+                        title="Use Power"
+                        class="fas fa-dice-d20 powerRoll rollable"
+                      ></i>
+                      {{power.system.apCost}} AP</span
+                    >
+                    <span class="target"
+                      >Target {{power.system.target}}
+                      <i
+                        title="Delete Power"
+                        class="fas fa-trash powerDelete rollable"
+                      ></i
+                    ></span>
                   </div>
-                  <div class="description">{{{power.system.descriptionDisplay}}}</div>
+                  <div class="description">
+                    {{{power.system.descriptionDisplay}}}
+                  </div>
+                </div>
+              </div>
+              {{/each}} {{#greaterThan armament.system.capacity.currentMisc 0}}
+              <div class="container-header">
+                Misc. Powers
+                ({{armament.system.capacity.currentMisc}}/{{armament.system.capacity.misc}})
+              </div>
+              {{#each armament.system.miscPowers as |power id|}}
+              <div
+                class="power expand-container-nested power-draggable"
+                data-item-id="{{power._id}}"
+              >
+                <div class="header Misc expand-controller-nested">
+                  <span class="name"
+                    ><i class="fas fa-angle-down"></i> {{power.name}}</span
+                  >
+                  <span class="type">{{power.system.type}}</span>
+                </div>
+                <div class="expandable">
+                  <div class="subheader" data-power-id="{{power._id}}">
+                    <span class="cost"
+                      ><i
+                        title="Use Power"
+                        class="fas fa-dice-d20 powerRoll rollable"
+                      ></i>
+                      {{power.system.apCost}} AP</span
+                    >
+                    <span class="target"
+                      >Target {{power.system.target}}
+                      <i
+                        title="Delete Power"
+                        class="fas fa-trash powerDelete rollable"
+                      ></i
+                    ></span>
+                  </div>
+                  <div class="description">
+                    {{{power.system.descriptionDisplay}}}
+                  </div>
+                </div>
+              </div>
+              {{/each}} {{/greaterThan}}
+              <div class="container-header">Upgrades</div>
+              {{#each armament.system.upgrades as |power id|}}
+              <div
+                class="power expand-container-nested power-draggable"
+                data-item-id="{{power._id}}"
+              >
+                <div class="header Upgrade expand-controller-nested">
+                  <span class="name"
+                    ><i class="fas fa-angle-down"></i> {{power.name}}</span
+                  >
+                  <i
+                    title="Delete Upgrade"
+                    class="fas fa-trash upgradeDelete rollable"
+                  ></i>
+                </div>
+                <div class="expandable">
+                  <div class="description">
+                    {{{power.system.descriptionDisplay}}}
+                  </div>
                 </div>
               </div>
               {{/each}}
-              {{#greaterThan armament.system.capacity.currentMisc 0}}
-                <div class="container-header">Misc. Powers ({{armament.system.capacity.currentMisc}}/{{armament.system.capacity.misc}})</div>
-                {{#each armament.system.miscPowers as |power id|}}
-                <div class="power expand-container-nested power-draggable" data-item-id="{{power._id}}">
-                  <div class="header Misc expand-controller-nested">
-                    <span class="name"><i class="fas fa-angle-down"></i> {{power.name}}</span>
-                    <span class="type">{{power.system.type}}</span>
-                  </div>
-                  <div class="expandable">
-                    <div class="subheader" data-power-id="{{power._id}}">
-                      <span class="cost"><i title="Use Power" class="fas fa-dice-d20 powerRoll rollable"></i> {{power.system.apCost}} AP</span>
-                      <span class="target">Target {{power.system.target}} <i title="Delete Power" class="fas fa-trash powerDelete rollable"></i></span>
-                    </div>
-                    <div class="description">{{{power.system.descriptionDisplay}}}</div>
-                  </div>
-                </div>
-                {{/each}}
-              {{/greaterThan}}
-              <div class="container-header">Upgrades</div>
-                {{#each armament.system.upgrades as |power id|}}
-                <div class="power expand-container-nested power-draggable" data-item-id="{{power._id}}">
-                  <div class="header Upgrade expand-controller-nested">
-                    <span class="name"><i class="fas fa-angle-down"></i> {{power.name}}</span>
-                    <i title="Delete Upgrade" class="fas fa-trash upgradeDelete rollable"></i>
-                  </div>
-                  <div class="expandable">
-                    <div class="description">{{{power.system.descriptionDisplay}}}</div>
-                  </div>
-                </div>
-                {{/each}}
             </div>
           </li>
-        {{/each}}
+          {{/each}}
         </div>
       </ol>
     </div>
@@ -246,21 +444,32 @@
       <ol class="items-list unequipped-powers">
         <div class="unequipped-powers-dragmask"></div>
         <h3>Unequipped Powers/Upgrades</h3>
-        <li class="grid grid-7col skill-header-container ">
+        <li class="grid grid-7col skill-header-container">
           <div class="skill-item-name-header grid-span-2">Name</div>
           <div class="skill-item-header grid-span-2">Type</div>
           <div class="skill-item-header grid-span-2">Armament</div>
           <div class="skill-item-header-controls">&nbsp;</div>
         </li>
         <div class="skill-container">
-        {{#each system.unsortedPowers as |power id|}}
-          <li class="unused-power item-container expand-container power-draggable" data-item-id="{{power._id}}">
-            <div class="header expand-controller grid grid-7col skill-item-container {{power.system.type}}">
-              <div class="grid-span-2 name"><i class="fas fa-angle-down"></i> {{power.name}}</div>
+          {{#each system.unsortedPowers as |power id|}}
+          <li
+            class="unused-power item-container expand-container power-draggable"
+            data-item-id="{{power._id}}"
+          >
+            <div
+              class="header expand-controller grid grid-7col skill-item-container {{power.system.type}}"
+            >
+              <div class="grid-span-2 name">
+                <i class="fas fa-angle-down"></i> {{power.name}}
+              </div>
               <div class="skill-item grid-span-2">{{power.system.type}}</div>
-              <div class="skill-item grid-span-2">{{power.system.armamentType}}</div>
+              <div class="skill-item grid-span-2">
+                {{power.system.armamentType}}
+              </div>
               <div class="skill-item trash">
-                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                <a class="item-control item-delete" title="Delete Item"
+                  ><i class="fas fa-trash"></i
+                ></a>
               </div>
             </div>
             <div class="expandable">
@@ -271,7 +480,7 @@
               <div class="description">{{{power.system.descriptionDisplay}}}</div>
             </div>
           </li>
-        {{/each}}
+          {{/each}}
         </div>
       </ol>
     </div>

@@ -20,6 +20,9 @@ export class tpoItem extends Item {
       this.system.elementDamage.value = this.system.elementDamage.base + this.system.elementDamage.upgrades;
 
       if(this.system.powers.length !== 0){
+        this.system.powers = this.system.powers.filter((pwr) => {
+          return actor.items.get(pwr._id)
+        })
         var sort = {"At-Will": 1, "Daily": 2, "Adventure": 3}
         this.system.powers.sort((a, b) => {
           return sort[a.type] - sort[b.type];

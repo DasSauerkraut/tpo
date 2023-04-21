@@ -48,6 +48,18 @@ Hooks.once('init', async function() {
 
   CONFIG.statusEffects = TPO.statuses;
 
+  game.settings.register("tpo", "Xp2", {
+    name: 'Use updated XP formulas.',
+    hint: 'Use the new formualas for XP costs, lock free stat improvements to the stat that governs the skill.',
+    scope: 'world',     // "world" = sync to db, "client" = local storage
+    config: true,       // false if you dont want it to show in module config
+    type: Boolean,       // Number, Boolean, String, Object
+    default: false,
+    onChange: value => { // value is the new value of the setting
+      console.log(value)
+    },
+  })
+
   // Preload Handlebars templates.
   return preloadHandlebarsTemplates();
 });
@@ -131,8 +143,8 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
       UtilsTPO.playContextSound({type: "damage"}, "minor")
     
     const tempHp = actor.system.derived.tempHp.value
+    let chatContent = ''
     if(tempHp > 0){
-      let chatContent = ''
 
       if(tempHp - damageTaken >= 0){
         data.system.derived = {
@@ -143,8 +155,8 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
             value: tempHp - damageTaken
           }
         }
-        chatContent = `
-        <b>${actor.data.name}</b><br>
+        chatContent += `
+        <b>${actor.name}</b><br>
         <div>Temp. HP absorbs the blow!<br>Temp. HP: ${tempHp} → ${tempHp - damageTaken}</div>
         `
       } else {
@@ -156,18 +168,27 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
             value: 0
           }
         }
-        chatContent = `
-        <b>${actor.data.name}</b><br>
+        chatContent += `
+        <b>${actor.name}</b><br>
         <div>Temp. HP softens the blow!
         <br>Temp. HP: ${tempHp} → ${0}
         <br>HP: ${actor.system.derived.hp.value} → ${actor.system.derived.hp.value - (damageTaken - tempHp)}</div>
         `
       }
+      if(actor.system.derived.hp?.value > actor.system.derived.bloodied?.value && data.system.derived.hp?.value <= actor.system.derived.bloodied?.value){
+        chatContent += `
+          ${chatContent !== '' ? '<hr>': ''}<b>${actor.name} is Bloodied!</b><br>
+          <div>They suffer a Minor Injury and must perform a Morale Test.
+          </div>
+          `
+      }
+  
       let chatData = {
         content: chatContent,
         user: game.user._id,
       };
-      ChatMessage.create(chatData, {});
+      if(chatContent !== '')
+        ChatMessage.create(chatData, {});
     }
   }
 })

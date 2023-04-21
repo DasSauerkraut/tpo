@@ -25,6 +25,7 @@ export class DiceTPO {
       let autoSuccess = false;
       let SLs = 0;
       let result = "";
+      let critEyeBonusActive = false;
 
       if(rollData.risk){
         let riskTarget = 50 + advantages * 10;
@@ -67,7 +68,7 @@ export class DiceTPO {
           if(level > 1)
             hasCritEyeTwo = true;
           if(level > 0)
-          hasCritEyeOne = true;
+            hasCritEyeOne = true;
         }
         dice.forEach(roll => {
           if(roll % 11 === 0) {
@@ -75,10 +76,10 @@ export class DiceTPO {
           } 
           if(hasCritEyeOne && roll % 5 === 0 && roll % 10 !== 0) {
             crits.push(roll);
+            if(hasCritEyeTwo) {
+              critEyeBonusActive = true;
+            }
           } 
-          else if(hasCritEyeTwo && roll % 5 === 0) {
-            crits.push(roll);
-          }
         })
 
         if(advantages > 0) {
@@ -125,8 +126,11 @@ export class DiceTPO {
       }
 
       //get SLs
-      if(didCrit && didTestSucceed && !autoSuccess)
-        SLs = Math.floor((target - 1) / 10);
+      if(didCrit && didTestSucceed && !autoSuccess){
+        SLs = Math.floor((target - 0) / 10);
+        if(critEyeBonusActive)
+          SLs += 2;
+      }
       else if (didCrit && !didTestSucceed && !autoSuccess)
         SLs = Math.floor((target - 100) / 10);
       else if (!autoSuccess)
@@ -353,6 +357,7 @@ export class DiceTPO {
 
 export class UtilsTPO {
   static sortAlphabetically(toSort){
+    toSort = this.cleanArray(toSort);
     toSort.sort((a, b) => {
       let fa = a.name.toLowerCase(),
           fb = b.name.toLowerCase();
@@ -367,10 +372,16 @@ export class UtilsTPO {
     });
     return toSort;
   }
+  
+  static cleanArray(arr){
+    return arr.filter(a => {
+      return a !== undefined && a !== null
+    })
+  }
 
   static async updateStoredPower(armament, power, actor){
-    const idx = armament.data.powers.map(pwr => pwr._id).indexOf(power._id);
-    armament.data.powers[idx] = power;
+    const idx = armament.system.powers.map(pwr => pwr._id).indexOf(power._id);
+    armament.system.powers[idx] = power;
     await actor.updateEmbeddedDocuments("Item", [armament]);
   }
 
@@ -417,7 +428,7 @@ export class UtilsTPO {
         localSound = false;
         if(item.data.armamentType === "Greatsword" || 
         item.data.armamentType === "Lance" ||
-        item.data.armamentType === "Battle Standard" ||
+        item.data.armamentType === "Warbanner" ||
         item.data.armamentType === "Chromatic Sword"
         )
           group = "weapon-swing"
@@ -483,13 +494,14 @@ export class UtilsTPO {
 
   static async arquebusPowerHelper(actor, power){
     return new Promise(async (resolve) => {
-      const armament = actor.items.get(power.data.parent.id);
+      console.log(power)
+      const armament = actor.items.get(power.system.parent.id);
       const hasMagazine = armament.system.upgrades.some(upg => {return upg.name === 'Magazine'})
       const hasDoubleBarreled = armament.system.upgrades.some(upg => {return upg.name === 'Double Barreled'})
       const loaded = armament.getFlag('tpo', 'loadedAmmo')
 
       if(power.name === 'Fire' || power.name === 'Drakegonne' || power.name === 'Dragonstake' || power.name === 'Wyrmsnare' ||
-      power.name === 'Grand Overture' || power.name === 'Overwatch' || power.data.type === "Misc") {
+      power.name === 'Grand Overture' || power.name === 'Overwatch' || power.system.type === "Misc") {
         //Uses Ammo
         let firedAmmo;
         if(hasDoubleBarreled){
@@ -605,9 +617,9 @@ export class UtilsTPO {
     })
   }
 
-  static async battleStandardHelper(actor, power){
+  static async warbannerHelper(actor, power){
     return new Promise(async (resolve) => {
-      const armament = actor.items.get(power.data.parent.id);
+      const armament = actor.items.get(power.system.parent.id);
       let orderArray = await armament.getFlag('tpo', `orders`)
 
       if(power.name.includes("Ordered")){
@@ -705,10 +717,10 @@ export class UtilsTPO {
 
   static async vaporLauncherHelper(actor, power){
     return new Promise((resolve) => {
-      const armament = actor.items.get(power.data.parent.id);
+      const armament = actor.items.get(power.system.parent.id);
       const loaded = armament.getFlag('tpo', 'magazine')
 
-      if(power.name === 'Fire Shell' || power.data.description.includes("Discard 1 shell in the magazine, then")){
+      if(power.name === 'Fire Shell' || power.system.description.includes("Discard 1 shell in the magazine, then")){
         const loadData = {
           loaded: loaded
         }
@@ -786,12 +798,12 @@ export class UtilsTPO {
 
   static async leechBladeHelper(actor, power){
     return new Promise(resolve => {
-      const armament = actor.items.get(power.data.parent.id);
+      const armament = actor.items.get(power.system.parent.id);
       const hasSpite = armament.system.upgrades.some(upg => {return upg.name === 'Spite'})
       const hasVitalLeech = armament.system.upgrades.some(upg => {return upg.name === 'Vital Leech'})
       const hasSpiritualLeech = armament.system.upgrades.some(upg => {return upg.name === 'Spiritual Leech'})
       const leechRegExp = /(Leech )(\d+)/g
-      const leechMatches = [...power.data.description.matchAll(leechRegExp)]
+      const leechMatches = [...power.system.description.matchAll(leechRegExp)]
 
       if(leechMatches.length > 0){
         const leechValue = leechMatches[0][2];
@@ -899,14 +911,14 @@ export class UtilsTPO {
       
     let combatant = canvas.scene.tokens.get(combat.current.tokenId);
     
-    combatant.actor.update({"data.derived.ap.value": combatant.actor.system.derived.ap.max})
+    combatant.actor.update({"system.derived.ap.value": combatant.actor.system.derived.ap.max})
     let apMessage = `AP refreshed to ${combatant.actor.system.derived.ap.max}.`
 
     let statuses = ``;
-    if(combatant.actor.data.effects.size !== 0){
+    if(combatant.actor.system.effects.size !== 0){
       statuses = `
         <hr>
-        <div>${combatant.actor.data.name} is under the following effects!<div>
+        <div>${combatant.actor.system.name} is under the following effects!<div>
       `
     }
 
@@ -914,31 +926,36 @@ export class UtilsTPO {
     let exhausteds = [];
     let ongoings = [];
     let paralyzeds = [];
-    combatant.actor.data.effects.forEach(effect => {
-      if(effect.data.label.includes("Bleeding")){
+    let hampereds = [];
+    combatant.actor.system.effects.forEach(effect => {
+      if(effect.system.label.includes("Bleeding")){
         bleedings.push(effect);
         return;
       }
-      if(effect.data.label.includes("Exhausted")){
+      if(effect.system.label.includes("Exhausted")){
         exhausteds.push(effect);
         return;
       }
-      if(effect.data.label.includes("Ongoing")){
+      if(effect.system.label.includes("Ongoing")){
         ongoings.push(effect);
         return;
       }
-      if(effect.data.label.includes("Paralyzed")){
+      if(effect.system.label.includes("Paralyzed")){
         paralyzeds.push(effect);
         return;
       }
+      if(effect.system.label.includes("Hampered")){
+        hampereds.push(effect);
+        return;
+      }
       let lookup = TPO.statuses.filter(s => {
-        return game.i18n.format(s.label) === effect.data.label;
+        return game.i18n.format(s.label) === effect.system.label;
       });
 
       let isInjury;
       if(lookup.length === 0){
         lookup = TPO.injuries.filter(s => {
-          return game.i18n.format(s.label) === effect.data.label;
+          return game.i18n.format(s.label) === effect.system.label;
         });
         isInjury = lookup.length !== 0
       }
@@ -951,9 +968,9 @@ export class UtilsTPO {
       
       statuses += `
         <br>
-        <b>${effect.data.label}</b>
+        <b>${effect.system.label}</b>
         <div style="display:flex;">
-          <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${isInjury ? lookup[0].icon : effect.data.icon}" alt="${effect.data.label}">
+          <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${isInjury ? lookup[0].icon : effect.system.icon}" alt="${effect.system.label}">
           <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
         </div>
       `
@@ -963,6 +980,7 @@ export class UtilsTPO {
     if(exhausteds.length > 0) statuses += UtilsTPO.formatRatingStatus(exhausteds);
     if(ongoings.length > 0) statuses += UtilsTPO.formatRatingStatus(ongoings);
     if(paralyzeds.length > 0) statuses += UtilsTPO.formatRatingStatus(paralyzeds);
+    if(hampereds.length > 0) statuses += UtilsTPO.formatRatingStatus(hampereds);
 
     const overencumbered = combatant.actor.getFlag('tpo', 'overencumbered')
     if(overencumbered.total > 0){
@@ -1030,7 +1048,7 @@ export class UtilsTPO {
     }
 
     let chatContent = `
-        <h3>${combatant.actor.data.name}'s turn!</h3>
+        <h3>${combatant.actor.name}'s turn!</h3>
         ${apMessage}
         ${abilities}
         ${statuses}`
@@ -1057,7 +1075,7 @@ export class UtilsTPO {
   static isInCombat(id) {
     if(game.combat?.combatants){
       const inCombat = [...game.combat.combatants.entries()].find(([key, val]) => {
-        return val.data.actorId === id
+        return val.system.actorId === id
       })
       if(inCombat)
         return true

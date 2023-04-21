@@ -36,11 +36,12 @@ export class tpoActor extends Actor {
     const actorData = this.system;
     const data = actorData;
     const flags = this.flags.tpo || {};
+    const newXpCalc = game.settings.get("tpo", "Xp2");
 
     Object.values(data.stats).forEach(stat => {
       stat.value = stat.initial + stat.modifier + stat.improvements;
       stat.bonus = Math.floor((stat.value) / 10)
-      stat.cost = 4 + Math.floor(stat.improvements / 5) * 2
+      stat.cost = newXpCalc ? 4 + Math.floor(stat.improvements / 5) * 5 : 4 + Math.floor(stat.improvements / 5) * 2
     });
 
     //data["effects"] = prepareActiveEffectCategories(actorData.effects);
@@ -50,7 +51,7 @@ export class tpoActor extends Actor {
     this._prepareItems(actorData);
     this._prepareCharacterData(actorData);
     this._prepareNpcData(actorData);
-    console.log(actorData);
+    console.log(this);
   }
 
   /**
@@ -177,12 +178,14 @@ export class tpoActor extends Actor {
       } else if(i.type == "armament"){
         //------------------ACTIVE POWERS--------------------------//
         i.system.powers = i.system.powers.filter(async pwr => {
-          return await this.items.get(pwr._id) //?.data;
+          const item = await this.items.get(pwr._id)
+          return item?.name !== undefined
         });
-        // console.log(i.system.powers)
         i.system.powers.forEach((pwr, idx) => {
           i.system.powers[idx] = this.items.get(pwr._id);
         })
+
+        i.system.powers = UtilsTPO.cleanArray(i.system.powers)
 
         if(i.system.powers.length !== 0){
           var sort = {"At-Will": 1, "Daily": 2, "Adventure": 3}
@@ -247,8 +250,8 @@ export class tpoActor extends Actor {
             await i.setFlag('tpo', 'stamina', {pointSix: true, maxCap: 6})
         }
 
-        //--------------------Battle Standard----------------------------------//
-        if(i.system.armamentType === "Battle Standard"){
+        //--------------------Warbanner----------------------------------//
+        if(i.system.armamentType === "Warbanner"){
           if(i.getFlag('tpo', 'orders') === undefined){
             await i.setFlag('tpo', 'orders', [])
           }
@@ -308,7 +311,6 @@ export class tpoActor extends Actor {
       }
     })
 
-    console.log(basicSkills)
     basicSkills = UtilsTPO.sortAlphabetically(basicSkills);
     advancedOrGroupedSkills = UtilsTPO.sortAlphabetically(advancedOrGroupedSkills);
     activeAbilities = UtilsTPO.sortAlphabetically(activeAbilities);
@@ -361,10 +363,12 @@ export class tpoActor extends Actor {
     skill.system.statAbrev = game.i18n.format(data.stats[skill.system.stat].abrev)
 
     let cost = 0;
+    const newXpCalc = game.settings.get("tpo", "Xp2")
+    
     if(skill.system.trained === "Major")
-      cost = 1 + Math.floor(skill.system.improvements / 5);
+    cost = newXpCalc ? 1 + Math.floor(skill.system.improvements / 5) * 2 : 1 + Math.floor(skill.system.improvements / 5);
     else if(skill.system.trained === "Minor")
-      cost = 2 + Math.floor(skill.system.improvements / 5) * 2;
+      cost = newXpCalc ? 2 + Math.floor(skill.system.improvements / 5) * 3 : 2 + Math.floor(skill.system.improvements / 5) * 2;
     else
       cost = 4 + Math.floor(skill.system.improvements / 5) * 4;
 

@@ -200,6 +200,30 @@ TPO.statuses = [
     description: "Your limbs are getting heavier and heavier, and you are finding it increasingly hard to move. Reduce your AP by REPLACE, if the REPLACE exceeds your AP, gain a Prone Status as you fall to the floor, completely rigid."
   },
   {
+    id: "halfhampered",
+    label: "STATUS.HalfHampered",
+    icon: "systems/tpo/module/assets/halfhampered.png",
+    description: "No effect... yet."
+  },
+  {
+    id: "hampered1",
+    label: "STATUS.Hampered1",
+    icon: "systems/tpo/module/assets/hampered1.png",
+    description: "Something is preventing you from properly using your weapon. Reduce all Damage you deal by REPLACE. At the end of your turn, you may attempt a Challenging (+0) Endurance Test, reducing the Rating by SLs scored, to a minimum of 0. Once the Rating is reduced to 0, the status ends. Unless otherwise specified, the test is an Endurance Test."
+  },
+  {
+    id: "hampered2",
+    label: "STATUS.Hampered2",
+    icon: "systems/tpo/module/assets/hampered2.png",
+    description: "Something is preventing you from properly using your weapon. Reduce all Damage you deal by REPLACE. At the end of your turn, you may attempt a Challenging (+0) Endurance Test, reducing the Rating by SLs scored, to a minimum of 0. Once the Rating is reduced to 0, the status ends. Unless otherwise specified, the test is an Endurance Test."
+  },
+  {
+    id: "hampered3",
+    label: "STATUS.Hampered3",
+    icon: "systems/tpo/module/assets/hampered3.png",
+    description: "Something is preventing you from properly using your weapon. Reduce all Damage you deal by REPLACE. At the end of your turn, you may attempt a Challenging (+0) Endurance Test, reducing the Rating by SLs scored, to a minimum of 0. Once the Rating is reduced to 0, the status ends. Unless otherwise specified, the test is an Endurance Test."
+  },
+  {
     id: "marked",
     label: "STATUS.Marked",
     icon: "icons/svg/target.svg",
