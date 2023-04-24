@@ -227,9 +227,9 @@ export class DiceTPO {
         }
         damageString = `
           <b>Damage:</b>
-          <div style="display:flex;justify-content:space-between;height: 34px;">
+          <div style="display:flex;justify-content:space-between;height: 34px; text-align:center;">
             <span>
-              Raw <div style="text-align:center">${damage}</div>
+              <i class="fas fa-fist-raised" data-tooltip="Raw"></i> <div style="text-align:center">${damage}</div>
             </span>
             &nbsp+&nbsp 
             <span>
@@ -909,6 +909,38 @@ export class UtilsTPO {
   static onRoundChange(combat){
     if(!game.user.isGM)
       return;
+
+    if(canvas.scene.tokens.get(combat.previous.tokenId)){
+      const prevCombatant = canvas.scene.tokens.get(combat.previous.tokenId)
+      const flags = prevCombatant.actor.flags;
+
+      if(flags?.tpo?.rechargePowers.length > 0){
+        let potentialRechargedPowers = '';
+        let notCharged = '';
+        const roll = new Roll('1d100').roll({async: false}).total
+        flags.tpo.rechargePowers.forEach(pwr => {
+          if(Number(pwr.target) >= roll)
+            potentialRechargedPowers += `${pwr.name} - ${pwr.target}<br>`
+          else
+            notCharged += `${pwr.name} - ${pwr.target}<br>`
+        })
+        potentialRechargedPowers = potentialRechargedPowers === '' ? '' : '<b>One of the following can be charged:</b><br>' + potentialRechargedPowers;
+        notCharged = notCharged === '' ? '' : '<hr><b>Uncharged</b><br>' + notCharged;
+
+        let chatContent = `
+          <h3>Recharging ${prevCombatant.actor.name}'s Powers</h3>
+          <h4>Roll: ${roll}</h4>
+          ${potentialRechargedPowers}
+          ${notCharged}
+          `
+        let chatData = {
+          content: chatContent,
+          user: game.user._id,
+          whisper: [game.users.find(i => i.isGM).id],
+        };
+        ChatMessage.create(chatData, {});
+        }
+    }
       
     let combatant = canvas.scene.tokens.get(combat.current.tokenId);
     

@@ -127,7 +127,7 @@ export class tpoActor extends Actor {
    * Prepare NPC type specific data.
    */
   _prepareNpcData(actorData) {
-    if (actorData.type !== 'npc') return;
+    if (this.type !== 'npc') return;
 
     // Make modifications to data here. For example:
     const data = actorData.data;
@@ -144,6 +144,8 @@ export class tpoActor extends Actor {
     let activeAbilities = [];
     let inactiveAbilities = [];
     let unsortedPowers = [];
+    let zones = [];
+    let traits = [];
     let inventory = {
       lScabbard: [],
       lThigh: [],
@@ -157,14 +159,20 @@ export class tpoActor extends Actor {
       rPouch: [],
       nonEnc: []
     }
+    let rechargePowers = []
 
-    actorData.derived.encumbrance.locations.backpack.owned = false;
-    actorData.derived.encumbrance.locations.lPouch.owned = false;
-    actorData.derived.encumbrance.locations.lScabbard.owned = false;
-    actorData.derived.encumbrance.locations.rScabbard.owned = false;
-    actorData.derived.encumbrance.locations.rPouch.owned = false;
+    if(this.type === "character"){
+      actorData.derived.encumbrance.locations.backpack.owned = false;
+      actorData.derived.encumbrance.locations.lPouch.owned = false;
+      actorData.derived.encumbrance.locations.lScabbard.owned = false;
+      actorData.derived.encumbrance.locations.rScabbard.owned = false;
+      actorData.derived.encumbrance.locations.rPouch.owned = false;
+    }
 
     this.items.forEach( async i => {
+      if(i.type === "power" && i.system.type === "Upgrade"){
+        console.log(i)
+      }
       if(i.system.splendor){
         actorData.info.splendor.items += i.system.splendor;
       }
@@ -268,18 +276,19 @@ export class tpoActor extends Actor {
           }
         }
 
-      } else if(i.type == "power" && !i.system.parent.hasParent){
+      } else if ((i.type === "ability" || (i.type === "power" && i.system.type === "Upgrade")) && this.type === "largenpc"){
+        traits.push(i)
+      } else if(i.type == "power" && (!i.system.parent.hasParent || !this.items.get(i.system.parent.id))){
         unsortedPowers.push(i);
         inventory.nonEnc.push(i)
-
-      } else if(i.type === "ability"){
+      } else if(i.type === "ability" && this.type === "character"){
         i.system.value = i.system.improvements + i.system.mod - Math.abs(i.system.malus);
         i.system.level = Math.sign(i.system.value) * Math.floor(Math.abs(i.system.value) / 20);
         if(i.system.level !== 0)
           activeAbilities.push(i);
         else
           inactiveAbilities.push(i);
-      } else if(i.type === "item"){
+      } else if(i.type === "item" && this.type === "character"){
         if(i.name === "Pouch"){
           if(actorData.derived.encumbrance.locations.lPouch.owned){
             actorData.derived.encumbrance.locations.rPouch.owned = true;
@@ -308,6 +317,33 @@ export class tpoActor extends Actor {
           inventory[i.system.location].push(i)
           actorData.derived.encumbrance.locations[i.system.location].value += i.system.enc;
         }
+      } else if (i.type ==="zone" && this.type === "largenpc"){
+        i.system.powers.forEach((pwr, idx) => {
+          const item = this.items.get(pwr._id);
+          if(item){
+            i.system.powers[idx] = item;
+            if(item.system.description.includes("Recharge")){
+              const rechargeRegExp = /(Recharge )(\d+)/g
+              const rechargeMatches = [...item.system.description.matchAll(rechargeRegExp)]
+              console.log(item.name)
+              rechargeMatches.forEach(match => {
+                rechargePowers.push({name: item.name, target: Number(match[2])})
+              })
+            }
+          }
+        })
+
+        i.system.powers = i.system.powers.filter(pwr => {
+          return this.items.get(pwr?._id)
+        });
+        
+        if(i.system.powers.length !== 0){
+          var sort = {"At-Will": 1, "Daily": 2, "Adventure": 3}
+          i.system.powers.sort((a, b) => {
+            return sort[a.type] - sort[b.type];
+          })
+        }
+        zones.push(i)
       }
     })
 
@@ -332,20 +368,28 @@ export class tpoActor extends Actor {
       }
     else
       this.flags.tpo['overencumbered']['total'] = 0;
-    
-      locations.forEach(location => {
-      inventory[location] = UtilsTPO.sortAlphabetically(inventory[location]);
-      let overenc = actorData.derived.encumbrance.locations[location].value - actorData.derived.encumbrance.locations[location].max
-      if(location === 'chest')
-        overenc = actorData.derived.encumbrance.locations[location].value - (actorData.stats.str.bonus + 1)
 
-      if(overenc > 0 && !location.includes('Scabbard')){
-        this.flags.tpo['overencumbered'][location] = true;
-        this.flags.tpo['overencumbered']['total'] += overenc;
-      } else {
-        this.flags.tpo['overencumbered'][location] = false;
-      }
-    })
+    this.flags['tpo']['rechargePowers'] = rechargePowers
+
+    console.log(rechargePowers)
+    console.log(this.flags['tpo']['rechargePowers'])
+    
+    if(this.type === "character"){
+      locations.forEach(location => {
+        inventory[location] = UtilsTPO.sortAlphabetically(inventory[location]);
+        let overenc = actorData.derived.encumbrance.locations[location].value - actorData.derived.encumbrance.locations[location].max
+        if(location === 'chest')
+          overenc = actorData.derived.encumbrance.locations[location].value - (actorData.stats.str.bonus + 1)
+  
+        if(overenc > 0 && !location.includes('Scabbard')){
+          this.flags.tpo['overencumbered'][location] = true;
+          this.flags.tpo['overencumbered']['total'] += overenc;
+        } else {
+          this.flags.tpo['overencumbered'][location] = false;
+        }
+      })
+    }
+    
 
     actorData.basicSkills = basicSkills;
     actorData.advancedOrGroupedSkills = advancedOrGroupedSkills;
@@ -353,7 +397,12 @@ export class tpoActor extends Actor {
     actorData.unsortedPowers = unsortedPowers;
     actorData.activeAbilities = activeAbilities;
     actorData.inactiveAbilities = inactiveAbilities;
-    actorData.inventory = inventory;
+    if(this.type === "character")
+      actorData.inventory = inventory;
+    else if(this.type === "largenpc"){
+      actorData.zones = zones;
+      actorData.traits = traits;
+    }
   }
 
   prepareSkill(skill, actorData) {

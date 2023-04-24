@@ -1,0 +1,116 @@
+.zone-page{
+  gap: 0;
+}
+
+.zones-list{
+  display: flex;
+  overflow-y: auto;
+}
+
+.zone{
+  position: relative;
+  width: 95%;
+  border-radius: 5px;
+  display: flex;
+  margin-right: 2px;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 104px;
+  border: 3px solid var(--color-border-light-tertiary);
+  .resource-label {
+    text-align: center;
+  }
+  h3{
+    margin-bottom: 0;
+    color: var(--color-text-light-2);
+    border-bottom: 0;
+  }
+}
+
+.zone-delete{
+  position: absolute;
+  color: #ffffff4f;
+  top: 4px;
+  right: 5px;
+  font-size: 12px;
+}
+
+.zone-elemental-display {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.zone-label-container{
+  display: flex;
+  flex-direction: column;
+  .absorption{
+    border-bottom: 1px solid var(--color-border-light-tertiary);
+    font-family: $font-secondary;
+    font-size: 18px;
+    text-align: center
+  }
+}
+.zone-two-value {
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid var(--color-border-light-tertiary);
+  font-family: $font-secondary;
+  font-size: 18px;
+  text-align: center;
+}
+.zone-two-value:nth-child(2n) {
+  border-left: 1px solid var(--color-border-light-tertiary);;
+}
+
+.zone-power-header{
+  font-weight: bold;
+  font-size: 16px;
+  font-family: $font-primary;
+  border-bottom: 2px solid var(--color-border-light-tertiary);
+}
+.zone-power-container{
+  min-height: 50px;
+  margin-top: -5px;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.expand-popout{
+  position: relative;
+  .popout{
+    display: none;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    width: 400px;
+    border: 2px solid;
+    border-radius: 4px;
+    .subheader {
+      color: var(--color-text-light-2);
+    }
+  }
+}
+
+.popout.trait {
+  border: 2px solid #12233D;
+  border-radius: 5px;
+  margin-left: -2px;
+  background-color: #BFAC8C;
+  .description{
+    padding: 3px;
+    background: none;
+  }
+}
+
+.traits {
+  border-left: 1px solid var(--color-border-light-primary);
+}
+
+.trait-header {
+  align-items: center;
+  padding-right: 3px;
+}
+
+.zone-power-item-header{
+  cursor: pointer;
+}

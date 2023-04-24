@@ -13,5 +13,8 @@
     "systems/tpo/templates/actor/parts/actor-effects.html",
     "systems/tpo/templates/actor/parts/actor-combat.html",
     "systems/tpo/templates/actor/parts/actor-notes.html",
+
+    // LargeNPC Partials
+    "systems/tpo/templates/actor/parts/largenpc-features.html",
   ]);
 };

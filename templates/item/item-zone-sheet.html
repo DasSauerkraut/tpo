@@ -1,0 +1,100 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+      <div class="grid grid-2col">
+        <div>
+          <input class="two-value" type="text" name="system.hp.value" value="{{system.system.hp.value}}" data-dtype="Number"/>
+          <label class="resource-label">Current {{system.system.hp.abrev}}</label>
+          <input class="two-value" type="text" name="system.hp.max" value="{{system.system.hp.max}}" data-dtype="Number"/>
+          <label class="resource-label">Max {{system.system.hp.abrev}}</label>
+        </div>
+        <div>
+          <input class="two-value" type="text" name="system.absorption" value="{{system.system.absorption}}" data-dtype="Number"/>
+          <label class="resource-label">Absorption</label>
+        </div>
+        <div>
+          <input class="two-value" type="color" name="system.color" value="{{system.system.color}}" data-dtype="String"/>
+          <label class="resource-label">Location</label>
+        </div>
+        <div class="elemental-resistances">
+          <div class="grid grid-2col elemental">
+            <div class="element-resist">
+              <span class="resource-label left">Fire</span>
+              <select class="element-picker {{system.system.elementalResistances.fire}}" name="system.elementalResistances.fire" type="text" value="{{system.system.elementalResistances.fire}}">
+                {{#select system.system.elementalResistances.fire}}
+                  <option value="-">-</option>
+                  <option value="W">W</option>
+                  <option value="S">S</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="element-resist">
+              <select class="element-picker {{system.system.elementalResistances.water}}" name="system.elementalResistances.water" type="text" value="{{system.system.elementalResistances.water}}">
+                {{#select system.system.elementalResistances.water}}
+                  <option value="-">-</option>
+                  <option value="W">W</option>
+                  <option value="S">S</option>
+                {{/select}}
+              </select>
+              <span class="resource-label right">Water</span>
+            </div>
+            <div class="element-resist">
+              <span class="resource-label left">Elec.</span>
+              <select class="element-picker {{system.system.elementalResistances.elec}}" name="system.elementalResistances.elec" type="text" value="{{system.system.elementalResistances.elec}}">
+                {{#select system.system.elementalResistances.elec}}
+                  <option value="-">-</option>
+                  <option value="W">W</option>
+                  <option value="S">S</option>
+                {{/select}}
+              </select>
+            </div>
+            <div class="element-resist">
+              <select class="element-picker {{system.system.elementalResistances.ice}}" name="system.elementalResistances.ice" type="text" value="{{system.system.elementalResistances.ice}}">
+                {{#select system.system.elementalResistances.ice}}
+                  <option value="-">-</option>
+                  <option value="W">W</option>
+                  <option value="S">S</option>
+                {{/select}}
+              </select>
+              <span class="resource-label right">Ice</span>
+            </div>
+          </div>
+          <div class="element-resist dragon">
+            <span class="resource-label left">Dragon</span>
+            <select class="element-picker {{system.system.elementalResistances.dragon}}" name="system.elementalResistances.dragon" type="text" value="{{system.system.elementalResistances.dragon}}">
+              {{#select system.system.elementalResistances.dragon}}
+                <option value="-">-</option>
+                <option value="W">W</option>
+                <option value="S">S</option>
+              {{/select}}
+            </select>
+          </div>
+          <label for="system.system.elementalResistances.dragon" class="resource-label">Elemental Resistances</label>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="brokenEffect">Broken Effect</a>
+    <a class="item" data-tab="description">Description</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="brokenEffect">
+      {{!-- To render inline rolls in a TinyMCE editor, you need to pass the parent actor's (if any) roll data to the rollData prop. --}}
+      {{editor system.system.brokenEffect target="system.brokenEffect" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="description">
+      {{!-- To render inline rolls in a TinyMCE editor, you need to pass the parent actor's (if any) roll data to the rollData prop. --}}
+      {{editor system.system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
+  </section>
+</form>

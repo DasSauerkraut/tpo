@@ -1,0 +1,157 @@
+<div class="zone-page grid grid-3col">
+  <div class="grid-span-2">
+    {{#if system.unsortedPowers.length}}
+    <h2>Unsorted Powers</h2>
+    {{#each system.unsortedPowers as |power id|}}
+    <div class="power expand-container-nested power-draggable"
+      data-item-id="{{power._id}}"
+    >
+      <div class="header {{power.system.type}}">
+        <span class="name expand-controller-nested"
+          ><i class="fas fa-angle-down"></i> {{power.name}}</span
+        >
+        <span class="type">
+          {{#ifNotEqual power.system.type "At-Will"}} {{#if
+          power.system.used}}
+          <input
+            class="power-used {{power.system.type}}-check"
+            type="checkbox"
+            data-dtype="Boolean"
+          />
+          {{else}}
+          <input
+            class="power-used {{power.system.type}}-check"
+            type="checkbox"
+            checked
+            data-dtype="Boolean"
+          />
+          {{/if}} {{/ifNotEqual}} {{power.system.type}}
+        </span>
+      </div>
+      <div class="expandable">
+        <div class="subheader" data-power-id="{{power._id}}">
+          <span class="cost"
+            ><i
+              title="Use Power"
+              class="fas fa-dice-d20 powerRoll rollable"
+            ></i>
+            {{power.system.apCost}} AP</span
+          >
+          <span class="target"
+            >Target {{power.system.target}}
+            <i
+              title="Delete Power"
+              class="fas fa-trash powerDelete rollable"
+            ></i
+          ></span>
+        </div>
+        <div class="description">
+          {{{power.system.descriptionDisplay}}}
+        </div>
+      </div>
+    </div>
+    {{/each}}
+    {{/if}}
+    <h2>Zones</h2>
+    <div class="zones-list">
+      {{#each system.zones as |item id|}}
+        <div class="expand-container" data-item-id="{{item._id}}">
+          <div class="zone" data-item-id="{{item._id}}" style="border-color: {{item.system.color}};">
+            <h3 class="expand-controller grid-span-2 zone-name" style="background-color: {{item.system.color}};" data-item-id="{{item._id}}">{{item.name}}</h3>
+            <a class="item-control zone-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+            <div class="zone-label-container">
+              <div class="resource-content flexrow flex-center flex-between">
+                <input class="zone-two-value zone-input hp" type="text" value="{{item.system.hp.value}}" data-item-id="{{item._id}}" data-dtype="Number"/>
+                <div class="zone-two-value">{{item.system.hp.max}}</div>
+              </div>
+              <label for="system.derived.hp.value" class="resource-label">
+                {{item.system.hp.abrev}}
+              </label>
+            </div>
+            <div class="zone-label-container">
+              <div class="absorption">{{item.system.absorption}}</div>
+              <div class="resource-label">Absorption</div> 
+            </div>
+            <div class="zone-label-container">
+              <div class="zone-elemental-display">
+                {{{item.system.elementalResistances.display}}}
+              </div>
+              <div class="resource-label">Elemental Resistances</div> 
+            </div>
+            <div class="zone-power-header" style="border-color: {{item.system.color}};">Powers</div>
+            <div class="zone-power-container">
+              {{#ifEquals item.system.powers.length 0}}
+              <div>No powers</div>
+              {{/ifEquals}}
+              {{#each item.system.powers as |power id|}}
+              <div class="power expand-popout power-draggable"
+              data-item-id="{{power._id}}">
+                <div class="header {{power.system.type}} zone-power-item-header">
+                  <span class="name">{{power.name}}</span>
+                  <span class="type">
+                    {{#ifNotEqual power.system.type "At-Will"}} {{#if
+                    power.system.used}}
+                    <input
+                      class="power-used {{power.system.type}}-check"
+                      type="checkbox"
+                      data-dtype="Boolean"
+                    />
+                    {{else}}
+                    <input
+                      class="power-used {{power.system.type}}-check"
+                      type="checkbox"
+                      checked
+                      data-dtype="Boolean"
+                    />
+                    {{/if}} {{/ifNotEqual}}
+                  </span>
+                </div>
+                <div class="popout {{power.system.type}}-border">
+                  <div class="subheader {{power.system.type}}" data-power-id="{{power._id}}">
+                    <span class="cost"
+                      ><i
+                        title="Use Power"
+                        class="fas fa-dice-d20 powerRoll rollable"
+                      ></i>
+                      {{power.system.apCost}} AP</span
+                    >
+                    <span class="target"
+                      >Target {{power.system.target}}
+                      <i
+                        title="Delete Power"
+                        class="fas fa-trash powerDelete rollable"
+                      ></i
+                    ></span>
+                  </div>
+                  <div class="description">
+                    {{{power.system.descriptionDisplay}}}
+                  </div>
+                </div>
+              </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+  <div class="traits">
+    <h2>Traits</h2>
+    {{#each system.traits as |trait id|}}
+    <div class="power expand-popout power-draggable left"
+    data-item-id="{{trait._id}}">
+      <div class="header Upgrade trait-header">
+        <span class="name">{{trait.name}}</span> <i
+        title="Delete Power"
+        class="fas fa-trash powerDelete rollable"
+      ></i>
+      </div>
+        <div class="popout trait">
+          <div class="description">
+            {{{trait.system.descriptionDisplay}}}
+          </div>
+        </div>
+      </div>
+    {{/each}}
+    </div>
+</div>

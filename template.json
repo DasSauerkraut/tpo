@@ -294,12 +294,11 @@
       "cr": 0
     },
     "largenpc": {
-      "templates": ["stats"],
-      "cr": 0
+      "templates": ["stats", "derived", "details", "flags"]
     }
   },
   "Item": {
-    "types": ["item", "skill", "armament", "power", "ability"],
+    "types": ["item", "skill", "armament", "power", "ability", "zone"],
     "templates": {
       "base": {
         "description": "",
@@ -385,7 +384,15 @@
         "hasParent": false,
         "id": ""
       },
-      "armamentType": ""
+      "armamentType": "",
+      "selectedElement": {
+        "fire": false,
+        "elec": false,
+        "dragon": false,
+        "ice": false,
+        "water": false,
+        "display": ""
+      }
     },
     "ability": {
       "improvements": 0,
@@ -394,6 +401,27 @@
       "value": 0,
       "level": 0,
       "malusTo": []
+    },
+    "zone": {
+      "templates": ["base"],
+      "color": "#51632C",
+      "hp": {
+        "value": 0,
+        "max": 0,
+        "label": "Zone Hit Points",
+        "abrev": "Zone HP"
+      },
+      "absorption": 0,
+      "brokenEffect": "",
+      "elementalResistances": {
+        "fire": "",
+        "elec": "",
+        "water": "",
+        "ice": "",
+        "dragon": "",
+        "display": ""
+      },
+      "powers": []
     }
   }
 }

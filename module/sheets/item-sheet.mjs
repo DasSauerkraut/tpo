@@ -45,7 +45,6 @@ export class tpoItemSheet extends ItemSheet {
     // Add the actor's data to context.data for easier access, as well as flags.
     context.system = itemData;
     context.flags = itemData.flags;
-    console.log(context)
     return context;
   }
 
@@ -97,15 +96,15 @@ export class tpoItemSheet extends ItemSheet {
     await this.object.update({[`system.selectedElement.${element}`]: !this.object.system.selectedElement[element] });
     let displayStr = ""
     if(this.object.system.selectedElement.fire)
-      displayStr+="Fire "
+      displayStr+='<i class="fas fa-fire" data-tooltip="Fire"></i> ' 
     if(this.object.system.selectedElement.elec)
-      displayStr+="Elec. "
+      displayStr+='<i class="fas fa-bolt" data-tooltip="Electricity"></i> '
     if(this.object.system.selectedElement.dragon)
-      displayStr+="Dragon "
+      displayStr+= '<i class="fas fa-dragon" data-tooltip="Dragon"></i> '
     if(this.object.system.selectedElement.ice)
-      displayStr+="Ice "
+      displayStr+='<i class="fas fa-snowflake" data-tooltip="Ice"></i> '
     if(this.object.system.selectedElement.water)
-      displayStr+="Water "
-    this.object.update({[`system.selectedElement.display`]: displayStr });
+      displayStr+='<i class="fas fa-tint" data-tooltip="Water"></i> '
+    await this.object.update({[`system.selectedElement.display`]: displayStr });
   }
 }

@@ -15,7 +15,7 @@ export class tpoActorSheet extends ActorSheet {
       width: 650,
       height: 710,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }],
-      scrollY: [".window-content", ".skill-container", ".combat-container", ".inventory-col"]
+      scrollY: [".window-content", ".skill-container", ".combat-container", ".inventory-col", ".zone-list"],
     });
   }
 
@@ -102,6 +102,20 @@ export class tpoActorSheet extends ActorSheet {
       li.slideUp(200, () => this.render(false));
     });
 
+    html.find('.zone-delete').click(ev => {
+      const li = $(ev.currentTarget).parents(".expand-container");
+      const item = this.actor.items.get(li.data("itemId"));
+      item.delete();
+    });
+
+    html.find('.zone-name').mousedown(event => {
+      if(event.button !== 0){
+        this.actor.items.get(event.currentTarget.getAttribute("data-item-id")).sheet.render(true);
+      }
+    });
+
+    html.find('.zone-input').focusout(this._onAbilityFocusOut.bind(this));
+
     //Save skill changes
     html.find('.skill-item-input').focusout(this._onSkillFocusOut.bind(this));
     html.find('.abilities-imp').focusout(this._onAbilityFocusOut.bind(this));
@@ -142,6 +156,8 @@ export class tpoActorSheet extends ActorSheet {
 
     html.find('.expand-controller').click(this._onArmamentExpand.bind(this));
     html.find('.expand-controller-nested').click(this._onArmamentExpandNested.bind(this));
+
+    html.find('.expand-popout').hover(this._onPopoutExpand.bind(this));
 
     html.find('#hp-max').click(event => {
       event.preventDefault();
@@ -239,6 +255,16 @@ export class tpoActorSheet extends ActorSheet {
     })
     html.on("drop", ".unequipped-powers", ev => {
       $(".unequipped-powers").removeClass("dragover");
+    })
+
+    html.on("dragenter", ".zone", ev => {
+      ev.target.classList.add("dragover")
+    })
+    html.on("dragleave", ".zone", ev => {
+      ev.target.classList.remove("dragover")
+    })
+    html.on("drop", ".zone", ev => {
+      ev.target.classList.remove("dragover")
     })
   }
 
@@ -672,7 +698,10 @@ export class tpoActorSheet extends ActorSheet {
   }
 
   async _onPowerCheck(event){
-    const li = $(event.currentTarget).parents(".expand-container-nested");
+    let li = $(event.currentTarget).parents(".expand-container-nested");
+    if(!li.data("itemId"))
+      li = $(event.currentTarget).parents(".expand-popout");
+    console.log(li.data("itemId"))
     const item = duplicate(this.actor.items.get(li.data("itemId")));
     const armament = duplicate(this.actor.items.get(item.system.parent.id));
 
@@ -708,6 +737,8 @@ export class tpoActorSheet extends ActorSheet {
         else if (i.type === "power"){
           if($(event.target).parents(".armament-container").length)
             await this._onArmamentDrop(event, duplicate(i))
+          else if($(event.target).parents(".zone").length)
+            await this._onZoneDrop(event, duplicate(i))
           else
             await this._onPowerUnequip(event, duplicate(i))
         }
@@ -811,6 +842,28 @@ export class tpoActorSheet extends ActorSheet {
     }
   }
 
+  async _onZoneDrop(event, item){
+    event.preventDefault();
+    if(item.type === "power" && item.system.type !== "upgrade"){
+      const zoneDiv = $(event.target).parents(".zone");
+      const zone = duplicate(this.actor.items.get(zoneDiv.data("itemId")));
+
+      if (zone.system.powers.some(power => power._id === item._id)) {
+        console.log('Contains dupe, bailing out');
+        return;
+      }
+
+      item.system.parent.hasParent = true;
+      item.system.parent.id = zone._id;
+      
+      zone.system.powers.push(item);
+      
+      await this.actor.updateEmbeddedDocuments("Item", [item]);
+      await this.actor.updateEmbeddedDocuments("Item", [zone]);
+      UtilsTPO.playContextSound({type: "item"}, "powerEquip")
+    }
+  }
+
   async _onPowerUnequip(event, item){
     event.preventDefault();
     console.log(item)
@@ -841,9 +894,11 @@ export class tpoActorSheet extends ActorSheet {
       item.system.parent.hasParent = false;
       item.system.parent.id = null;
 
-      armament.system.capacity.currentPowers = armament.system.powers.length;
-      armament.system.capacity.misc === 0 && armament.system.miscPowers.length === 0 ? armament.system.capacity.hasMisc = false : armament.system.capacity.hasMisc = true;
-      armament.system.capacity.currentMisc = armament.system.miscPowers.length;
+      if(armament.type !== "zone") {
+        armament.system.capacity.currentPowers = armament.system.powers.length;
+        armament.system.capacity.misc === 0 && armament.system.miscPowers.length === 0 ? armament.system.capacity.hasMisc = false : armament.system.capacity.hasMisc = true;
+        armament.system.capacity.currentMisc = armament.system.miscPowers.length;
+      }
 
       await this.actor.updateEmbeddedDocuments("Item", [item]);
       await this.actor.updateEmbeddedDocuments("Item", [armament]);
@@ -957,6 +1012,13 @@ export class tpoActorSheet extends ActorSheet {
       UtilsTPO.playContextSound(power, "use")
 
     let skill = this.actor.items.getName(`Weapon (${armament.system.skill})`);
+    const isArmament = armament.type === "armament"
+
+    let element = ""
+    if(isArmament)
+      element = armament.system?.selectedElement?.display + " " + power.system?.selectedElement?.display
+    else
+      element = power.system?.selectedElement?.display
 
     let testData = {
       advantage: 0,
@@ -967,7 +1029,7 @@ export class tpoActorSheet extends ActorSheet {
       hasDamage: true,
       weakDamage: usesAmmo ? ammo.isWeak : power.system.isWeak,
       damage: damage,
-      element: armament.system.selectedElement.display,
+      element: element,
       elementDamage: usesAmmo ? ammo.elementDamageMod : power.system.elementDamageMod,
       attacks: power.system.attacks
     }
@@ -992,7 +1054,7 @@ export class tpoActorSheet extends ActorSheet {
       ChatMessage.create(chatData, {});
       return;
     }
-    this._performTest(skill, testData, armament.system.damage.value, armament.system.elementDamage.value, power.name);
+    this._performTest(skill, testData, isArmament ? armament.system.damage.value : 0, isArmament ? armament.system.elementDamage.value : 0, power.name);
   }
 
   /**
@@ -1097,6 +1159,18 @@ export class tpoActorSheet extends ActorSheet {
       itemToEdit.system.mod = Number(event.target.value);
     else
       itemToEdit.system.malus = Number(event.target.value);
+
+    await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
+  }
+
+  async _onAbilityFocusOut(event) {
+    event.preventDefault();
+
+    let itemId = event.target.attributes["data-item-id"].value;
+    let itemToEdit = duplicate(this.actor.items.get(itemId));
+    
+    if($(event.target).hasClass("hp"))
+      itemToEdit.system.hp.value = Number(event.target.value);
 
     await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
   }
@@ -1321,6 +1395,27 @@ export class tpoActorSheet extends ActorSheet {
     } else {
       expand.style.maxHeight = expand.scrollHeight + "px";
       expand.style.minHeight = "15px";
+    }
+  }
+
+  _onPopoutExpand(event) {
+    event.preventDefault();
+    let li = $(event.currentTarget);
+    let expand = $(event.currentTarget).find('.popout')[0];
+
+    if(li.className === "name")
+      li = $(li.parents(".expand-popout")[0])
+
+    if(expand.style.display !== "block"){
+      expand.style.display = "block";
+      expand.style.top = (li.offset().top + 1 )+ "px"
+      if(li.hasClass("left"))
+        expand.style.left = (li.offset().left - $(expand).width()) + "px"
+      else {
+        expand.style.left = (li.offset().left + li.width()) + "px"
+      }
+    } else {
+      expand.style.display = "none";
     }
   }
 

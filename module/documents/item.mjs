@@ -16,6 +16,19 @@ export class tpoItem extends Item {
         this.system.value.total = (this.system.value.l + this.system.value.s/20 + this.system.value.c/200).toFixed(2)
     
     if(this.type === "armament"){
+      let displayStr = ""
+      if(this.system.selectedElement.fire)
+        displayStr+='<i class="fas fa-fire" data-tooltip="Fire"></i> ' 
+      if(this.system.selectedElement.elec)
+        displayStr+='<i class="fas fa-bolt" data-tooltip="Electricity"></i> '
+      if(this.system.selectedElement.dragon)
+        displayStr+= '<i class="fas fa-dragon" data-tooltip="Dragon"></i> '
+      if(this.system.selectedElement.ice)
+        displayStr+='<i class="fas fa-snowflake" data-tooltip="Ice"></i> '
+      if(this.system.selectedElement.water)
+        displayStr+='<i class="fas fa-tint" data-tooltip="Water"></i> '
+      this.system.selectedElement.display = displayStr;
+
       this.system.damage.value = this.system.damage.base + this.system.damage.upgrades;
       this.system.elementDamage.value = this.system.elementDamage.base + this.system.elementDamage.upgrades;
 
@@ -40,10 +53,62 @@ export class tpoItem extends Item {
         this.system.type = 'Daily'
         if(this.system.type === "Weekly")
         this.system.type = 'Adventure'
+
+      let displayStr = ""
+      if(this.system.selectedElement.fire)
+        displayStr+='<i class="fas fa-fire" data-tooltip="Fire"></i> ' 
+      if(this.system.selectedElement.elec)
+        displayStr+='<i class="fas fa-bolt" data-tooltip="Electricity"></i> '
+      if(this.system.selectedElement.dragon)
+        displayStr+= '<i class="fas fa-dragon" data-tooltip="Dragon"></i> '
+      if(this.system.selectedElement.ice)
+        displayStr+='<i class="fas fa-snowflake" data-tooltip="Ice"></i> '
+      if(this.system.selectedElement.water)
+        displayStr+='<i class="fas fa-tint" data-tooltip="Water"></i> '
+      this.system.selectedElement.display = displayStr;
     }
     if(this.type === "skill" && actor?.system){
       const stat = actor.system.stats[this.system.stat].initial + actor.system.stats[this.system.stat].improvements + actor.system.stats[this.system.stat].modifier
       this.system.total = stat + this.system.improvements;
+    }
+    if(this.type === "zone"){
+      let display = "";
+      if(this.system.elementalResistances.fire === "W")
+        display += '<i class="fas fa-fire" data-tooltip="Weak to Fire" style="color: #642422; text-shadow: 0 0 4px #ff0800;"></i> '
+      else if(this.system.elementalResistances.fire === "S")
+        display += '<i class="fas fa-fire" data-tooltip="Resists Fire" style="color: var(--color-border-light-primary);"></i> '
+      else
+        display += '<i class="fas fa-fire" data-tooltip="Fire"></i> '
+
+      if(this.system.elementalResistances.elec === "W")
+        display += '<i class="fas fa-bolt" data-tooltip="Weak to Electricity" style="color: #642422; text-shadow: 0 0 4px #ff0800;"></i> '
+      else if(this.system.elementalResistances.elec === "S")
+        display += '<i class="fas fa-bolt" data-tooltip="Resists Electricity" style="color: var(--color-border-light-primary);"></i> '
+      else
+        display += '<i class="fas fa-bolt" data-tooltip="Electricity"></i> '
+
+      if(this.system.elementalResistances.dragon === "W")
+        display += '<i class="fas fa-dragon" data-tooltip="Weak to Dragon" style="color: #642422; text-shadow: 0 0 4px #ff0800;"></i> '
+      else if(this.system.elementalResistances.dragon === "S")
+        display += '<i class="fas fa-dragon" data-tooltip="Resists Dragon" style="color: var(--color-border-light-primary);"></i> '
+      else
+        display += '<i class="fas fa-dragon" data-tooltip="Dragon"></i> '
+
+      if(this.system.elementalResistances.ice === "W")
+        display += '<i class="fas fa-snowflake" data-tooltip="Weak to Ice" style="color: #642422; text-shadow: 0 0 4px #ff0800;"></i> '
+      else if(this.system.elementalResistances.ice === "S")
+        display += '<i class="fas fa-snowflake" data-tooltip="Resists Ice" style="color: var(--color-border-light-primary);"></i> '
+      else
+        display += '<i class="fas fa-snowflake" data-tooltip="Ice"></i> '
+
+      if(this.system.elementalResistances.water === "W")
+        display += '<i class="fas fa-tint" data-tooltip="Weak to Water" style="color: #642422; text-shadow: 0 0 4px #ff0800;"></i> '
+      else if(this.system.elementalResistances.water === "S")
+        display += '<i class="fas fa-tint" data-tooltip="Resists Water" style="color: var(--color-border-light-primary);"></i> '
+      else
+        display += '<i class="fas fa-tint" data-tooltip="Water"></i> '
+
+      this.system.elementalResistances.display = display
     }
   }
 
@@ -118,6 +183,12 @@ export class tpoItem extends Item {
       }"><b>Launched ${match[2]}</b></a>`)    })
     // Weak
     description = description.replaceAll("Weak", `<a class='rollable' title="${game.i18n.format("KEYWORD.Weak")}"><b>Weak</b></a>`)
+
+    const rechargeRegExp = /(Recharge )(\d+)/g
+    const rechargeMatches = [...description.matchAll(rechargeRegExp)]
+    rechargeMatches.forEach(match => {
+      description = description.replace(match[0], `<a class='rollable' title="${game.i18n.format("KEYWORD.Recharge").replaceAll("NUM", match[2])}"><b>Recharge ${match[2]}</b></a>`)
+    })
 
     const regexp = /\(\(\#(.*?)\)\)/g;
     const mathMatches = [...description.matchAll(regexp)];
