@@ -56,8 +56,10 @@
     <div class="zones-list">
       {{#each system.zones as |item id|}}
         <div class="expand-container" data-item-id="{{item._id}}">
-          <div class="zone" data-item-id="{{item._id}}" style="border-color: {{item.system.color}};">
-            <h3 class="expand-controller grid-span-2 zone-name" style="background-color: {{item.system.color}};" data-item-id="{{item._id}}">{{item.name}}</h3>
+          <div class="zone" data-item-id="{{item._id}}" style="border-color: {{#if item.flags.tpo.broken}} #444 {{else}} {{item.system.color}} {{/if}};">
+            <h3 class="expand-controller grid-span-2 zone-name" style="background-color: {{#if item.flags.tpo.broken}} #444 {{else}} {{item.system.color}} {{/if}};" data-item-id="{{item._id}}">
+              {{#if item.flags.tpo.broken}} <i class="fas fa-skull"></i> {{/if}}{{item.name}}
+            </h3>
             <a class="item-control zone-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
             <div class="zone-label-container">
               <div class="resource-content flexrow flex-center flex-between">
@@ -86,7 +88,7 @@
               {{#each item.system.powers as |power id|}}
               <div class="power expand-popout power-draggable"
               data-item-id="{{power._id}}">
-                <div class="header {{power.system.type}} zone-power-item-header">
+                <div class="header {{power.system.type}} zone-power-item-header" style="{{#ifNotEqual power.system.type 'At-Will'}} {{#if item.flags.tpo.broken}} background-color: #444; {{/if}}{{/ifNotEqual}}">
                   <span class="name">{{power.name}}</span>
                   <span class="type">
                     {{#ifNotEqual power.system.type "At-Will"}} {{#if

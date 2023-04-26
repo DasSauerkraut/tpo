@@ -939,7 +939,7 @@ export class UtilsTPO {
           whisper: [game.users.find(i => i.isGM).id],
         };
         ChatMessage.create(chatData, {});
-        }
+      }
     }
       
     let combatant = canvas.scene.tokens.get(combat.current.tokenId);
@@ -953,6 +953,25 @@ export class UtilsTPO {
         <hr>
         <div>${combatant.actor.system.name} is under the following effects!<div>
       `
+    }
+
+    if(combatant.actor.type === "largenpc"){
+      combatant.actor.system.zones.forEach(zone => {
+        let brokenEffects = ``
+        if(zone.flags?.tpo?.broken){
+          brokenEffects += `
+          <b>Broken ${zone.name}</b>
+          ${zone.system.brokenEffect}`
+        }
+        if(statuses !== ``)
+          statuses += brokenEffects
+        else
+        statuses = `
+        <hr>
+        <div>${combatant.actor.system.name} is under the following effects!<div>
+        ${brokenEffects}
+      `
+      })
     }
 
     let bleedings = [];

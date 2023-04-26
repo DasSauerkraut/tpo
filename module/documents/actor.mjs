@@ -170,9 +170,6 @@ export class tpoActor extends Actor {
     }
 
     this.items.forEach( async i => {
-      if(i.type === "power" && i.system.type === "Upgrade"){
-        console.log(i)
-      }
       if(i.system.splendor){
         actorData.info.splendor.items += i.system.splendor;
       }
@@ -325,7 +322,6 @@ export class tpoActor extends Actor {
             if(item.system.description.includes("Recharge")){
               const rechargeRegExp = /(Recharge )(\d+)/g
               const rechargeMatches = [...item.system.description.matchAll(rechargeRegExp)]
-              console.log(item.name)
               rechargeMatches.forEach(match => {
                 rechargePowers.push({name: item.name, target: Number(match[2])})
               })
@@ -371,9 +367,6 @@ export class tpoActor extends Actor {
 
     this.flags['tpo']['rechargePowers'] = rechargePowers
 
-    console.log(rechargePowers)
-    console.log(this.flags['tpo']['rechargePowers'])
-    
     if(this.type === "character"){
       locations.forEach(location => {
         inventory[location] = UtilsTPO.sortAlphabetically(inventory[location]);

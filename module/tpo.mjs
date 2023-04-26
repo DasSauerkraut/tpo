@@ -193,6 +193,47 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
   }
 })
 
+Hooks.on("preUpdateItem", (item, data, diff) => {
+  if(item.type !== "zone")
+    return;
+  
+  const actor = item.parent
+
+  if(data.system?.hp?.value !== item.system.hp?.value && diff.diff){
+    if(data.system.hp.value < 0)
+      data.system.hp.value = item.system.hp.value + data.system.hp.value;
+
+    const hpDiff = data.system.hp.value - item.system.hp.value
+    if(hpDiff < 0 && actor){
+      actor.update({[`system.derived.hp.value`]: actor.system.derived.hp.value + hpDiff })
+    }
+
+    if(item.system.hp.value + hpDiff <= 0 && !data.flags?.tpo?.broken) {
+      data['flags'] = {'tpo': {
+        'broken': true
+      }}
+      if(actor){
+        const chatContent = `
+          <b>${actor.name}'s ${item.name} has broken!</b><br>
+          <div>They must perform a Morale Test and cannot use Special powers from this zone!<br>
+          They also suffer the following effect(s):
+          ${item.system.brokenEffect}
+          </div>
+          `  
+        const chatData = {
+          content: chatContent,
+          user: game.user._id,
+        };
+        ChatMessage.create(chatData, {});
+      }
+    } else if (item.system.hp.value + hpDiff > 0 && data.flags?.tpo?.broken){
+      data['flags'] = {'tpo': {
+        'broken': false
+      }}
+    }
+  }
+})
+
 /* -------------------------------------------- */
 /*  Hotbar Macros                               */
 /* -------------------------------------------- */
