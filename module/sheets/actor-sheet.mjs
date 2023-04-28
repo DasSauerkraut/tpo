@@ -1157,20 +1157,10 @@ export class tpoActorSheet extends ActorSheet {
       itemToEdit.system.improvements = Number(event.target.value);
     else if($(event.target).hasClass("abilities-mod"))
       itemToEdit.system.mod = Number(event.target.value);
+    else if($(event.target).hasClass("hp"))
+      itemToEdit.system.hp.value = Number(event.target.value);
     else
       itemToEdit.system.malus = Number(event.target.value);
-
-    await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
-  }
-
-  async _onAbilityFocusOut(event) {
-    event.preventDefault();
-
-    let itemId = event.target.attributes["data-item-id"].value;
-    let itemToEdit = duplicate(this.actor.items.get(itemId));
-    
-    if($(event.target).hasClass("hp"))
-      itemToEdit.system.hp.value = Number(event.target.value);
 
     await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
   }
