@@ -58,6 +58,20 @@
       padding-inline: 3px;
     }
   }
+  .popout{
+    text-align: initial;
+    border-radius: 4px;
+    background-color: #BFAC8C;
+    .description {
+      padding-inline: 3px;
+    }
+  }
+}
+.ability-not-displayed {
+  opacity: 30%;
+}
+.ability-displayed {
+  opacity: 100%;
 }
 .level--3 {
   background-color: #642422;

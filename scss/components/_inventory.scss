@@ -50,7 +50,7 @@
       min-height: 20%;
     }
     .inventory-item {
-      background-color: #b5b3a487;
+      background-color: #aaa89c;
       border-radius: 3px;
       margin-bottom: 3px;
       padding: 1px;
@@ -64,12 +64,6 @@
       }
       .expandable {
         position: relative;
-        .itemDelete{
-          position: absolute;
-          font-size: 12px;
-          right: 3px;
-          top: 2px;
-        }
         .description{
           font-size: 12px;
           border-top: 1px solid black;
@@ -77,7 +71,7 @@
       }
     }
     .inventory-item:nth-child(2n){
-      background-color: #a19f93d1;
+      background-color: #c8c6b8;
     }
     ul {
       list-style: none;

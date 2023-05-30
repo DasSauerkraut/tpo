@@ -225,34 +225,41 @@ export class DiceTPO {
             testSymbol = '<i class="fas fa-fist-raised"></i>';
             break;
         }
-        damageString = `
-          <b>Damage:</b>
-          <div style="display:flex;justify-content:space-between;height: 34px; text-align:center;">
-            <span>
-              <i class="fas fa-fist-raised" data-tooltip="Raw"></i> <div style="text-align:center">${damage}</div>
-            </span>
-            &nbsp+&nbsp 
-            <span>
-              ${testData.element}<div style="text-align:center">${elementDamage}</div>
-            </span>
-            &nbsp=&nbsp
-            <b style="color:#642422">
-              Strong
-              <div style="text-align:center">${damage}</div>
+        if(elementDamage > 0)
+          damageString = `
+            <b>Damage:</b>
+            <div style="display:flex;justify-content:space-between;height: 34px; text-align:center;">
+              <span>
+                <i class="fas fa-fist-raised" data-tooltip="Raw"></i> <div style="text-align:center">${damage}</div>
+              </span>
+              &nbsp+&nbsp 
+              <span>
+                ${testData.element}<div style="text-align:center">${elementDamage}</div>
+              </span>
+              &nbsp=&nbsp
+              <b style="color:#642422">
+                Strong
+                <div style="text-align:center">${damage}</div>
+                &nbsp
+              </b>
               &nbsp
-            </b>
-            &nbsp
-            <b>
-              Neutral
-              <div style="text-align:center">${damage + elementDamage}</div>
-            </b>
-            &nbsp
-            <b style="color:#51632C">
-              Weak
-              <div style="text-align:center">${damage + elementDamage * 3}</div>
-            </b>
-          </div>
-        `
+              <b>
+                Neutral
+                <div style="text-align:center">${damage + elementDamage}</div>
+              </b>
+              &nbsp
+              <b style="color:#51632C">
+                Weak
+                <div style="text-align:center">${damage + elementDamage * 3}</div>
+              </b>
+            </div>
+          `
+        else
+        damageString = `
+            <span>
+              <b>Damage:</b> ${damage} <i class="fas fa-fist-raised" data-tooltip="Raw"></i>
+            </span>
+          `
       }else if (testData.weakDamage){
         testSymbol = '<i class="fas fa-fist-raised"></i>';
         damageString = `

@@ -48,6 +48,8 @@ Hooks.once('init', async function() {
 
   CONFIG.statusEffects = TPO.statuses;
 
+  game.system.rollDiceTpo = DiceTPO.rollTest;
+
   game.settings.register("tpo", "Xp2", {
     name: 'Use updated XP formulas.',
     hint: 'Use the new formualas for XP costs, lock free stat improvements to the stat that governs the skill.',
@@ -84,7 +86,19 @@ Handlebars.registerHelper('toLowerCase', function(str) {
 });
 
 Handlebars.registerHelper("greaterThan", function(operand_1, operand_2, options) {
+  // console.log(operand_1)
+  // console.log(operand_2)
   if(operand_1 > operand_2) return options.fn(this);
+  return options.inverse(this);
+});
+
+Handlebars.registerHelper("greaterThanEq", function(operand_1, operand_2, options) {
+  if(operand_1 >= operand_2) return options.fn(this);
+  return options.inverse(this);
+});
+
+Handlebars.registerHelper("lessThan", function(operand_1, operand_2, options) {
+  if(operand_1 < operand_2) return options.fn(this);
   return options.inverse(this);
 });
 
@@ -111,6 +125,19 @@ Handlebars.registerHelper('select', function(value, options) {
     select.children[select.selectedIndex].setAttribute('selected', 'selected');
   }
   return select.innerHTML;
+});
+
+Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
+  lvalue = parseFloat(lvalue);
+  rvalue = parseFloat(rvalue);
+      
+  return {
+      "+": lvalue + rvalue,
+      "-": lvalue - rvalue,
+      "*": lvalue * rvalue,
+      "/": lvalue / rvalue,
+      "%": lvalue % rvalue
+  }[operator];
 });
 
 

@@ -16,98 +16,130 @@
       <i class="fas fa-chess-knight"></i> Mount Action
     </div>
   </div>
-  <div class="combat-container">
-    <div>
-      <ol class="items-list">
+  <div class="combat-container grid grid-3col">
+    <div class="grid-span-2 armament-section">
+      <div class="armament-list">
         <h2>Armaments</h2>
-        <li class="grid grid-13col skill-header-container">
-          <div class="skill-item-name-header grid-span-4">Name</div>
-          <div class="skill-item-header grid-span-2">Damage</div>
-          <div class="skill-item-header grid-span-2">Elemental Damage</div>
-          <div class="skill-item-header grid-span-2">Element</div>
-          <div class="skill-item-header grid-span-2">Overload Points</div>
-          <div class="skill-item-header-controls">&nbsp;</div>
-        </li>
         <div class="skill-container armament">
           {{#each system.armaments as |armament id|}}
-          <li
-            class="armament-container item-container expand-container"
+          <div
+            class="armament-container item-container {{#greaterThan system.armaments.length 1}}half-width{{/greaterThan}}"
             data-item-id="{{armament._id}}"
+            style="border-color: {{armament.system.color}}"
           >
-            <div class="grid grid-13col skill-item-container">
+            <div class="skill-item-container">
               <div
-                class="grid-span-4 armament-name expand-controller"
+                class="armament-name"
                 data-item-id="{{armament._id}}"
+                style="background-color: {{armament.system.color}}"
               >
                 {{armament.name}}
-              </div>
-              <div class="skill-item grid-span-2">
-                StrB+{{armament.system.damage.value}}
-              </div>
-              <div class="skill-item grid-span-2">
-                +{{armament.system.elementDamage.value}}
-              </div>
-              <div class="skill-item grid-span-2">
-                {{{armament.system.selectedElement.display}}}
-              </div>
-              <div class="skill-item grid-span-2">
-                {{armament.system.overloadPoints}}
-              </div>
-              <div class="skill-item">
-                <a class="item-control item-delete" title="Delete Item"
+                <a class="item-control item-delete rollable" title="Delete Item"
                   ><i class="fas fa-trash"></i
                 ></a>
               </div>
+                <div class="damage-container grid grid-2col" >
+                  <div class="raw" data-tooltip="StrB[{{../system.stats.str.bonus}}] + {{armament.system.damage.value}} Raw Damage">
+                    <label for="armament.system.damage.value" class="resource-label">
+                      <i class="fas fa-fist-raised"></i>&nbsp;
+                    </label>
+                    <div class="damage">
+                      {{math ../system.stats.str.bonus "+" armament.system.damage.value}}
+                    </div>
+                  </div>
+                  <div class="elemental" data-tooltip="Elemental Damage">
+                    <div class="damage">
+                      {{armament.system.elementDamage.value}}
+                    </div>
+                    <label for="armament.system.damage.value" class="resource-label">
+                      &nbsp;{{{armament.system.selectedElement.display}}}
+                    </label>
+                  </div>
+                </div>
+                <label class="resource-label">
+                  Damage
+                </label>
+              <div class="{{#greaterThan 2 ../system.armaments.length}} grid grid-2col {{/greaterThan}}">
+                <div>
+                  <div class="element-selector armament-field">
+                    <div class="rollable select-fire element-select" style='{{#if armament.system.selectedElement.fire}}color: var(--color-text-dark-primary);{{/if}}'>
+                      <i class="fas fa-fire" data-tooltip="Fire"></i>
+                    </div>
+                    <div class="rollable select-electric element-select" style='{{#if armament.system.selectedElement.elec}}color: var(--color-text-dark-primary);{{/if}}'>
+                      <i class="fas fa-bolt" data-tooltip="Electricity"></i>
+                    </div>
+                    <div class="rollable select-dragon element-select" style='{{#if armament.system.selectedElement.dragon}}color: var(--color-text-dark-primary);{{/if}}'>
+                      <i class="fas fa-dragon" data-tooltip="Dragon"></i>
+                    </div>
+                    <div class="rollable select-ice element-select" style='{{#if armament.system.selectedElement.ice}}color: var(--color-text-dark-primary);{{/if}}'>
+                      <i class="fas fa-snowflake" data-tooltip="Ice"></i>
+                    </div>
+                    <div class="rollable select-water element-select" style='{{#if armament.system.selectedElement.water}}color: var(--color-text-dark-primary);{{/if}}'>
+                      <i class="fas fa-tint" data-tooltip="Water"></i>
+                    </div>
+                  </div>
+                  <label for="armament.system.selectedElement.display" class="resource-label">
+                    Current Element
+                  </label>
+                </div>
+                <div>
+                  <div class="skill-item armament-field">
+                    {{armament.system.overloadPoints}}
+                  </div>
+                  <label for="armament.system.overloadPoints" class="resource-label">
+                    Overload Points
+                  </label>
+                </div>
+              </div>
             </div>
-            <div
-              class="expandable"
-              style="max-height: 1000px"
-              data-item-id="{{armament._id}}"
-            >
-              {{#ifEquals armament.system.armamentType "Vapor Launcher"}}
+            {{#ifEquals armament.system.armamentType "Vapor Launcher"}}
+              <div class="magazine {{#greaterThan 2 ../system.armaments.length}} row {{/greaterThan}}">
               Magazine:
-              <select
-                id="slotOne"
-                class="shell-input"
-                name="armament.flags.tpo.magazine.slotOne"
-                type="text"
-                value="{{armament.flags.tpo.magazine.slotOne}}"
-              >
-                {{#select armament.flags.tpo.magazine.slotOne}}
-                <option value="Unloaded">Unloaded</option>
-                {{#each armament.system.miscPowers as |power id|}}
-                <option value="{{power.name}}">{{power.name}}</option>
-                {{/each}} {{/select}}
-              </select>
-              <select
-                id="slotTwo"
-                class="shell-input"
-                name="armament.flags.tpo.magazine.slotTwo"
-                type="text"
-                value="{{armament.flags.tpo.magazine.slotTwo}}"
-              >
-                {{#select armament.flags.tpo.magazine.slotTwo}}
-                <option value="Unloaded">Unloaded</option>
-                {{#each armament.system.miscPowers as |power id|}}
-                <option value="{{power.name}}">{{power.name}}</option>
-                {{/each}} {{/select}}
-              </select>
-              <select
-                id="slotThree"
-                class="shell-input"
-                name="armament.flags.tpo.magazine.slotThree"
-                type="text"
-                value="{{armament.flags.tpo.magazine.slotThree}}"
-              >
-                {{#select armament.flags.tpo.magazine.slotThree}}
-                <option value="Unloaded">Unloaded</option>
-                {{#each armament.system.miscPowers as |power id|}}
-                <option value="{{power.name}}">{{power.name}}</option>
-                {{/each}} {{/select}}
-              </select>
-              {{/ifEquals}} {{#ifEquals armament.system.armamentType "Warbanner"}}
+                <select
+                  id="slotOne"
+                  class="shell-input"
+                  name="armament.flags.tpo.magazine.slotOne"
+                  type="text"
+                  value="{{armament.flags.tpo.magazine.slotOne}}"
+                >
+                  {{#select armament.flags.tpo.magazine.slotOne}}
+                  <option value="Unloaded">Unloaded</option>
+                  {{#each armament.system.miscPowers as |power id|}}
+                  <option value="{{power.name}}">{{power.name}}</option>
+                  {{/each}} {{/select}}
+                </select>
+                <select
+                  id="slotTwo"
+                  class="shell-input"
+                  name="armament.flags.tpo.magazine.slotTwo"
+                  type="text"
+                  value="{{armament.flags.tpo.magazine.slotTwo}}"
+                >
+                  {{#select armament.flags.tpo.magazine.slotTwo}}
+                  <option value="Unloaded">Unloaded</option>
+                  {{#each armament.system.miscPowers as |power id|}}
+                  <option value="{{power.name}}">{{power.name}}</option>
+                  {{/each}} {{/select}}
+                </select>
+                <select
+                  id="slotThree"
+                  class="shell-input"
+                  name="armament.flags.tpo.magazine.slotThree"
+                  type="text"
+                  value="{{armament.flags.tpo.magazine.slotThree}}"
+                >
+                  {{#select armament.flags.tpo.magazine.slotThree}}
+                  <option value="Unloaded">Unloaded</option>
+                  {{#each armament.system.miscPowers as |power id|}}
+                  <option value="{{power.name}}">{{power.name}}</option>
+                  {{/each}} {{/select}}
+                </select>
+              </div>
+              {{/ifEquals}}
+              {{#ifEquals armament.system.armamentType "Warbanner"}}
+              Command Queue:
               <div class="orders">
-                Command Queue: {{#each armament.flags.tpo.orders as |order id|}}
+                {{#each armament.flags.tpo.orders as |order id|}}
                 <select
                   id="{{order.id}}"
                   class="order-input"
@@ -274,221 +306,273 @@
                 />
                 {{/if}} {{/greaterThan}}
               </div>
-              {{/ifEquals}} {{#ifEquals armament.system.armamentType "Arquebus"}}
-              {{#if armament.flags.tpo.loadedAmmo.isEjected}} Loaded Ammo:
-              {{else}} Magazine: {{/if}}
-              <select
-                id="slotOne"
-                class="loaded-input"
-                name="armament.flags.tpo.loadedAmmo.slotOne"
-                type="text"
-                value="{{armament.flags.tpo.loadedAmmo.slotOne}}"
-              >
-                {{#select armament.flags.tpo.loadedAmmo.slotOne}}
-                <option value="Unloaded">Unloaded</option>
-                {{#each armament.system.miscPowers as |power id|}}
-                <option value="{{power.name}}">{{power.name}}</option>
-                {{/each}} {{/select}}
-              </select>
-              {{#greaterThan armament.flags.tpo.loadedAmmo.max 1}}
-              <select
-                id="slotTwo"
-                class="loaded-input"
-                name="armament.flags.tpo.loadedAmmo.slotTwo"
-                type="text"
-                value="{{armament.flags.tpo.loadedAmmo.slotTwo}}"
-              >
-                {{#select armament.flags.tpo.loadedAmmo.slotTwo}}
-                <option value="Unloaded">Unloaded</option>
-                {{#each armament.system.miscPowers as |power id|}}
-                <option value="{{power.name}}">{{power.name}}</option>
-                {{/each}} {{/select}}
-              </select>
-              {{/greaterThan}} {{#greaterThan armament.flags.tpo.loadedAmmo.max
-              2}}
-              <select
-                id="slotThree"
-                class="loaded-input"
-                name="armament.flags.tpo.loadedAmmo.slotThree"
-                type="text"
-                value="{{armament.flags.tpo.loadedAmmo.slotThree}}"
-              >
-                {{#select armament.flags.tpo.loadedAmmo.slotThree}}
-                <option value="Unloaded">Unloaded</option>
-                {{#each armament.system.miscPowers as |power id|}}
-                <option value="{{power.name}}">{{power.name}}</option>
-                {{/each}} {{/select}}
-              </select>
-              {{/greaterThan}} {{/ifEquals}}
-              <div class="container-header">
-                Powers
-                ({{armament.system.capacity.currentPowers}}/{{armament.system.capacity.power}})
+              {{/ifEquals}} 
+              {{#ifEquals armament.system.armamentType "Arquebus"}}
+              <div class="magazine {{#greaterThan 2 ../system.armaments.length}} row {{/greaterThan}}">
+                {{#greaterThan armament.flags.tpo.loadedAmmo.max 1}} Magazine: 
+                {{else}} Loaded Ammo: {{/greaterThan}}
+                <select
+                  id="slotOne"
+                  class="loaded-input"
+                  name="armament.flags.tpo.loadedAmmo.slotOne"
+                  type="text"
+                  value="{{armament.flags.tpo.loadedAmmo.slotOne}}"
+                >
+                  {{#select armament.flags.tpo.loadedAmmo.slotOne}}
+                  <option value="Unloaded">Unloaded</option>
+                  {{#each armament.system.miscPowers as |power id|}}
+                  <option value="{{power.name}}">{{power.name}}</option>
+                  {{/each}} {{/select}}
+                </select>
+                {{#greaterThan armament.flags.tpo.loadedAmmo.max 1}}
+                <select
+                  id="slotTwo"
+                  class="loaded-input"
+                  name="armament.flags.tpo.loadedAmmo.slotTwo"
+                  type="text"
+                  value="{{armament.flags.tpo.loadedAmmo.slotTwo}}"
+                >
+                  {{#select armament.flags.tpo.loadedAmmo.slotTwo}}
+                  <option value="Unloaded">Unloaded</option>
+                  {{#each armament.system.miscPowers as |power id|}}
+                  <option value="{{power.name}}">{{power.name}}</option>
+                  {{/each}} {{/select}}
+                </select>
+                {{/greaterThan}} {{#greaterThan armament.flags.tpo.loadedAmmo.max
+                2}}
+                <select
+                  id="slotThree"
+                  class="loaded-input"
+                  name="armament.flags.tpo.loadedAmmo.slotThree"
+                  type="text"
+                  value="{{armament.flags.tpo.loadedAmmo.slotThree}}"
+                >
+                  {{#select armament.flags.tpo.loadedAmmo.slotThree}}
+                  <option value="Unloaded">Unloaded</option>
+                  {{#each armament.system.miscPowers as |power id|}}
+                  <option value="{{power.name}}">{{power.name}}</option>
+                  {{/each}} {{/select}}
+                </select>
+                {{/greaterThan}} 
               </div>
-              {{#each armament.system.powers as |power id|}}
-              <div
-                class="power expand-container-nested power-draggable"
-                data-item-id="{{power._id}}"
-              >
-                <div class="header {{power.system.type}}">
-                  <span class="name expand-controller-nested"
-                    ><i class="fas fa-angle-down"></i> {{power.name}}</span
-                  >
-                  <span class="type">
-                    {{#ifNotEqual power.system.type "At-Will"}} {{#if
-                    power.system.used}}
-                    <input
-                      class="power-used {{power.system.type}}-check"
-                      type="checkbox"
-                      data-dtype="Boolean"
-                    />
-                    {{else}}
-                    <input
-                      class="power-used {{power.system.type}}-check"
-                      type="checkbox"
-                      checked
-                      data-dtype="Boolean"
-                    />
-                    {{/if}} {{/ifNotEqual}} {{power.system.type}}
-                  </span>
-                </div>
-                <div class="expandable">
-                  <div class="subheader" data-power-id="{{power._id}}">
-                    <span class="cost"
-                      ><i
-                        title="Use Power"
-                        class="fas fa-dice-d20 powerRoll rollable"
-                      ></i>
-                      {{power.system.apCost}} AP</span
-                    >
-                    <span class="target"
-                      >Target {{power.system.target}}
-                      <i
-                        title="Delete Power"
-                        class="fas fa-trash powerDelete rollable"
-                      ></i
-                    ></span>
-                  </div>
-                  <div class="description">
-                    {{{power.system.descriptionDisplay}}}
-                  </div>
-                </div>
-              </div>
-              {{/each}} {{#greaterThan armament.system.capacity.currentMisc 0}}
-              <div class="container-header">
-                Misc. Powers
-                ({{armament.system.capacity.currentMisc}}/{{armament.system.capacity.misc}})
-              </div>
-              {{#each armament.system.miscPowers as |power id|}}
-              <div
-                class="power expand-container-nested power-draggable"
-                data-item-id="{{power._id}}"
-              >
-                <div class="header Misc expand-controller-nested">
-                  <span class="name"
-                    ><i class="fas fa-angle-down"></i> {{power.name}}</span
-                  >
-                  <span class="type">{{power.system.type}}</span>
-                </div>
-                <div class="expandable">
-                  <div class="subheader" data-power-id="{{power._id}}">
-                    <span class="cost"
-                      ><i
-                        title="Use Power"
-                        class="fas fa-dice-d20 powerRoll rollable"
-                      ></i>
-                      {{power.system.apCost}} AP</span
-                    >
-                    <span class="target"
-                      >Target {{power.system.target}}
-                      <i
-                        title="Delete Power"
-                        class="fas fa-trash powerDelete rollable"
-                      ></i
-                    ></span>
-                  </div>
-                  <div class="description">
-                    {{{power.system.descriptionDisplay}}}
-                  </div>
-                </div>
-              </div>
-              {{/each}} {{/greaterThan}}
-              <div class="container-header">Upgrades</div>
-              {{#each armament.system.upgrades as |power id|}}
-              <div
-                class="power expand-container-nested power-draggable"
-                data-item-id="{{power._id}}"
-              >
-                <div class="header Upgrade expand-controller-nested">
-                  <span class="name"
-                    ><i class="fas fa-angle-down"></i> {{power.name}}</span
-                  >
-                  <i
-                    title="Delete Upgrade"
-                    class="fas fa-trash upgradeDelete rollable"
-                  ></i>
-                </div>
-                <div class="expandable">
-                  <div class="description">
-                    {{{power.system.descriptionDisplay}}}
-                  </div>
-                </div>
-              </div>
-              {{/each}}
-            </div>
-          </li>
-          {{/each}}
-        </div>
-      </ol>
-    </div>
-    <div>
-      <ol class="items-list unequipped-powers">
-        <div class="unequipped-powers-dragmask"></div>
-        <h3>Unequipped Powers/Upgrades</h3>
-        <li class="grid grid-7col skill-header-container">
-          <div class="skill-item-name-header grid-span-2">Name</div>
-          <div class="skill-item-header grid-span-2">Type</div>
-          <div class="skill-item-header grid-span-2">Armament</div>
-          <div class="skill-item-header-controls">&nbsp;</div>
-        </li>
-        <div class="skill-container">
-          {{#each system.unsortedPowers as |power id|}}
-          <li
-            class="unused-power item-container expand-container power-draggable"
-            data-item-id="{{power._id}}"
-          >
+              {{/ifEquals}}
             <div
-              class="header expand-controller grid grid-7col skill-item-container {{power.system.type}}"
+              class="{{#greaterThan 2 ../system.armaments.length}} grid grid-2col {{/greaterThan}}"
+              data-item-id="{{armament._id}}"
             >
-              <div class="grid-span-2 name">
-                <i class="fas fa-angle-down"></i> {{power.name}}
+              <div>
+                <div class="container-header">
+                  Powers
+                  ({{armament.system.capacity.currentPowers}}/{{armament.system.capacity.power}})
+                </div>
+                {{#ifEquals item.system.powers.length 0}}
+                <div>No powers</div>
+                {{/ifEquals}}
+                {{#each armament.system.powers as |power id|}}
+                <div
+                  class="power expand-popout power-draggable"
+                  data-item-id="{{power._id}}"
+                  data-power-id="{{power._id}}"
+                >
+                  <div class="header {{power.system.type}} powerRoll" data-power-id="{{power._id}}" data-tooltip="Use Power">
+                    <span class="name" data-power-id="{{power._id}}">
+                      {{power.name}}&nbsp;<i
+                      title="Use Power"
+                      class="fas fa-dice-d20 dice"
+                    ></i>
+                    </span>
+                    <span class="type">
+                      {{#ifNotEqual power.system.type "At-Will"}} {{#if
+                      power.system.used}}
+                      <input
+                        class="power-used {{power.system.type}}-check"
+                        type="checkbox"
+                        data-dtype="Boolean"
+                      />
+                      {{else}}
+                      <input
+                        class="power-used {{power.system.type}}-check"
+                        type="checkbox"
+                        checked
+                        data-dtype="Boolean"
+                      />
+                      {{/if}} {{/ifNotEqual}}
+                    </span>
+                  </div>
+                  <div class="popout {{power.system.type}}-border">
+                    <div class="subheader {{power.system.type}}" data-power-id="{{power._id}}">
+                      <span class="cost"
+                        >
+                        {{power.system.apCost}} AP</span
+                      >
+                      <span class="target"
+                        >Target {{power.system.target}}
+                        <i
+                          title="Delete Power"
+                          class="fas fa-trash powerDelete rollable"
+                        ></i
+                      ></span>
+                    </div>
+                    <div class="description">
+                      {{{power.system.descriptionDisplay}}}
+                    </div>
+                  </div>
+                </div>
+                {{/each}} 
+              {{#greaterThan armament.system.capacity.currentMisc 0}}
+                <div class="container-header">
+                  Misc. Powers
+                  ({{armament.system.capacity.currentMisc}}/{{armament.system.capacity.misc}})
+                </div>
+                {{#each armament.system.miscPowers as |power id|}}
+                <div
+                  class="power power-draggable expand-popout" 
+                  data-item-id="{{power._id}}"
+                  data-power-id="{{power._id}}"
+                >
+                  <div class="header Misc powerRoll" data-tooltip="Use Power">
+                    <span class="name">{{power.name}}&nbsp;<i
+                      title="Use Power"
+                      class="fas fa-dice-d20 dice"
+                    ></i></span>
+                  </div>
+                  <div class="popout Misc-border">
+                    <div class="subheader Misc" data-power-id="{{power._id}}">
+                      <span class="cost">{{power.system.apCost}} AP</span>
+                      <span class="target"
+                        >Target {{power.system.target}}
+                        <i
+                          title="Delete Power"
+                          class="fas fa-trash powerDelete rollable"
+                        ></i
+                      ></span>
+                    </div>
+                    <div class="description">
+                      {{{power.system.descriptionDisplay}}}
+                    </div>
+                  </div>
+                </div>
+                {{/each}} {{/greaterThan}}
               </div>
-              <div class="skill-item grid-span-2">{{power.system.type}}</div>
-              <div class="skill-item grid-span-2">
-                {{power.system.armamentType}}
-              </div>
-              <div class="skill-item trash">
-                <a class="item-control item-delete" title="Delete Item"
-                  ><i class="fas fa-trash"></i
-                ></a>
+              <div>
+                <div class="container-header">Upgrades</div>
+                {{#each armament.system.upgrades as |power id|}}
+                <div
+                  class="power expand-popout power-draggable"
+                  data-item-id="{{power._id}}"
+                >
+                  <div class="header Upgrade">
+                    <span class="name"
+                      >{{power.name}}</span
+                    >
+                    <i
+                      title="Delete Upgrade"
+                      class="fas fa-trash upgradeDelete rollable"
+                    ></i>
+                  </div>
+                  <div class="popout Upgrade-border">
+                    <div class="description">
+                      {{{power.system.descriptionDisplay}}}
+                    </div>
+                  </div>
+                </div>
+                {{/each}}
               </div>
             </div>
-            <div class="expandable">
-              <div class="subheader">
-                <span class="cost">{{power.system.apCost}} AP</span>
-                <span class="target">Target {{power.system.target}} </span>
-              </div>
-              <div class="description">{{{power.system.descriptionDisplay}}}</div>
-            </div>
-          </li>
+          </div>
           {{/each}}
         </div>
-      </ol>
+      </div>
+      {{#if system.unsortedPowers.length}}
+      <h2>Unequipped Powers</h2>
+      {{#each system.unsortedPowers as |power id|}}
+      <div class="power expand-container-nested power-draggable"
+        data-item-id="{{power._id}}"
+      >
+        <div class="header {{power.system.type}}">
+          <span class="name expand-controller-nested"
+            ><i class="fas fa-angle-down"></i> {{power.name}}</span
+          >
+          <span class="type">
+            {{#ifNotEqual power.system.type "At-Will"}} {{#if
+            power.system.used}}
+            <input
+              class="power-used {{power.system.type}}-check"
+              type="checkbox"
+              data-dtype="Boolean"
+            />
+            {{else}}
+            <input
+              class="power-used {{power.system.type}}-check"
+              type="checkbox"
+              checked
+              data-dtype="Boolean"
+            />
+            {{/if}} {{/ifNotEqual}} {{power.system.type}}
+          </span>
+        </div>
+        <div class="expandable">
+          <div class="subheader" data-power-id="{{power._id}}">
+            <span class="cost"
+              ><i
+                title="Use Power"
+                class="fas fa-dice-d20 powerRoll rollable"
+              ></i>
+              {{power.system.apCost}} AP</span
+            >
+            <span class="target"
+              >Target {{power.system.target}}
+              <i
+                title="Delete Power"
+                class="fas fa-trash powerDelete rollable"
+              ></i
+            ></span>
+          </div>
+          <div class="description">
+            {{{power.system.descriptionDisplay}}}
+          </div>
+        </div>
+      </div>
+      {{/each}}
+      {{/if}}
+    </div>
+    <div class="other-section">
+      {{#if system.mundaneWeapons.length}}
+      <h2>Mundane Weapons</h2>
+      {{/if}}
+      {{#each system.mundaneWeapons as |item id|}}
+      <div class="mundane-weapon expand-popout left" data-tooltip="Use Weapon" data-item-id="{{item._id}}">
+        <div class="name">{{item.name}}&nbsp;<i
+          title="Use Power"
+          class="fas fa-dice-d20 dice"
+        ></i></div>
+        <div class="popout popout-left">
+          <div class="subheader">
+            <span class="cost">{{item.system.apCost}} AP</span>
+            <span class="Damage" data-tooltip="StrB [{{../system.stats.str.bonus}}] + {{item.system.damage}}"
+              >Damage +{{math ../system.stats.str.bonus "+" item.system.damage}}<i class="fas fa-fist-raised" data-tooltip="Raw"></i>
+            </span>
+          </div>
+          <div class="description">{{{item.system.description}}}</div>
+        </div>
+      </div>
+      {{/each}}
+      <!-- <h2>Relics</h2>
+      wip -->
+      <h2>Abilities</h2>
+      {{#each system.activeAbilities as |item id|}}
+      {{#if item.flags.tpo.combatDisplay}}
+      <div class="abilities expand-popout left" data-item-id="{{item._id}}">
+        <div class="grid grid-2col level-{{item.system.level}}">
+          <div class="name ability-name" data-item-id="{{item._id}}">{{item.name}}</div>
+          <div class="field level" data-improve="{{item._id}}">{{item.system.level}}</div>
+        </div>
+        <div class="popout popout-left">
+          <div class="description">{{{item.system.description}}}</div>
+        </div>
+      </div>
+      {{/if}}
+      {{/each}}
     </div>
   </div>
-  <!-- <div>
-    <h2>Relics</h2>
-  </div>
-  <div>
-    <h2>Mundane Weapons</h2>
-  </div> -->
 </div>

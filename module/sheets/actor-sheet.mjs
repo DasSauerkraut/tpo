@@ -15,7 +15,7 @@ export class tpoActorSheet extends ActorSheet {
       width: 650,
       height: 710,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }],
-      scrollY: [".window-content", ".skill-container", ".combat-container", ".inventory-col", ".zone-list"],
+      scrollY: [".window-content", ".skill-container", ".combat-container", "armament-section", ".inventory-col", ".zone-list"],
     });
   }
 
@@ -137,11 +137,15 @@ export class tpoActorSheet extends ActorSheet {
     });
 
     html.find('.money-convert').mousedown(this._onMoneyConvert.bind(this));
+    html.find('.mundane-weapon').mousedown(this._onMundaneWeaponClick.bind(this));
+
 
     //--------------------------ARMAMENT SPECIFIC-------------------------//
     html.find(".loaded-input").change(this._onAmmoChange.bind(this));
     html.find(".shell-input").change(this._onShellChange.bind(this));
     html.find(".stamina-checkbox").change(this._onStaminaChange.bind(this));
+    html.find(".ability-display").click(this._onAbilityDisplay.bind(this));
+    html.find(".element-select").click(this._onElementSelect.bind(this));
     html.find(".add-order").click(this._addOrder.bind(this))
     html.find(".order-input").change(this._changeOrder.bind(this))
     html.find(".order-input").mousedown(this._deleteOrder.bind(this))
@@ -199,7 +203,10 @@ export class tpoActorSheet extends ActorSheet {
     html.find('.action').click(this._onCombatAction.bind(this))
 
     html.find('.upgradeDelete').click(ev => {
-      const li = $(ev.currentTarget).parents(".expand-container-nested");
+      let li = $(ev.currentTarget).parents(".expand-container-nested");
+      if(!li.data("itemId")){
+        li = $(ev.currentTarget).parents(".expand-popout");
+      }
       const item = this.actor.items.get(li.data("itemId"));
       item.delete();
       li.slideUp(200, () => this.render(false));
@@ -306,7 +313,10 @@ export class tpoActorSheet extends ActorSheet {
   }
 
   async _onAmmoChange(event) {
-    const li = $(event.currentTarget).parents(".expandable");
+    let li = $(event.currentTarget).parents(".expandable");
+    if(!li.data("itemId")){
+      li = $(event.currentTarget).parents(".armament-container")
+    }
     const select = $(event.currentTarget).attr('id');
     const item = this.actor.items.get(li.data("itemId"));
     let flag = {};
@@ -315,7 +325,10 @@ export class tpoActorSheet extends ActorSheet {
   }
 
   async _onShellChange(event) {
-    const li = $(event.currentTarget).parents(".expandable");
+    let li = $(event.currentTarget).parents(".expandable");
+    if(!li.data("itemId")){
+      li = $(event.currentTarget).parents(".armament-container")
+    }
     const select = $(event.currentTarget).attr('id');
     const item = this.actor.items.get(li.data("itemId"));
     let flag = {};
@@ -324,15 +337,55 @@ export class tpoActorSheet extends ActorSheet {
   }
 
   async _onStaminaChange(event) {
-    const li = $(event.currentTarget).parents(".expandable");
+    let li = $(event.currentTarget).parents(".expandable");
+    if(!li.data("itemId")){
+      li = $(event.currentTarget).parents(".armament-container")
+    }
     const select = $(event.currentTarget).attr('id');
     const item = this.actor.items.get(li.data("itemId"));
     const prev = await item.getFlag('tpo', `stamina.${select}`)
     await item.setFlag('tpo', `stamina.${select}`, !prev)
   }
 
+  async _onAbilityDisplay(event) {
+    const li = $(event.currentTarget).parents(".expand-container")
+    // const select = $(event.currentTarget).attr('id');
+    console.log(li)
+    const item = this.actor.items.get(li.data("itemId"));
+    console.log(item)
+    const prev = await item.getFlag('tpo', `combatDisplay`)
+    console.log(prev)
+    console.log(!prev)
+    await item.setFlag('tpo', `combatDisplay`, !prev)
+    console.log(await item.getFlag('tpo', `combatDisplay`))
+  }
+
+  async _onElementSelect(event) {
+    const li = $(event.currentTarget).parents(".armament-container");
+    const select = $(event.currentTarget).attr('class');
+    const item = this.actor.items.get(li.data("itemId"));
+    let selectedElement;
+    if(select.includes('fire')){
+      selectedElement = 'fire';
+    } else if(select.includes('water')){
+      selectedElement = 'water';
+    } else if(select.includes('ice')){
+      selectedElement = 'ice';
+    } else if(select.includes('electric')){
+      selectedElement = 'elec';
+    } else if(select.includes('dragon')){
+      selectedElement = 'dragon';
+    }
+    let itemToEdit = duplicate(item)
+    itemToEdit.system.selectedElement[selectedElement] = !itemToEdit.system.selectedElement[selectedElement];
+    await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
+  }
+
   async _addOrder(event){
-    const li = $(event.currentTarget).parents(".expandable");
+    let li = $(event.currentTarget).parents(".expandable");
+    if(!li.data("itemId")){
+      li = $(event.currentTarget).parents(".armament-container")
+    }
     const item = this.actor.items.get(li.data("itemId"));
     let orderArray = await item.getFlag('tpo', `orders`)
     
@@ -344,7 +397,10 @@ export class tpoActorSheet extends ActorSheet {
   }
 
   async _changeOrder(event){
-    const li = $(event.currentTarget).parents(".expandable");
+    let li = $(event.currentTarget).parents(".expandable");
+    if(!li.data("itemId")){
+      li = $(event.currentTarget).parents(".armament-container")
+    }
     const item = this.actor.items.get(li.data("itemId"));
     const select = Number($(event.currentTarget).attr('id'));
     let orderArray = await item.getFlag('tpo', `orders`)
@@ -359,7 +415,10 @@ export class tpoActorSheet extends ActorSheet {
 
   async _deleteOrder(event){
     if(event.button !== 0) {
-      const li = $(event.currentTarget).parents(".expandable");
+      let li = $(event.currentTarget).parents(".expandable");
+      if(!li.data("itemId")){
+        li = $(event.currentTarget).parents(".armament-container")
+      }
       const item = this.actor.items.get(li.data("itemId"));
       const select = Number($(event.currentTarget).attr('id'));
       let orderArray = await item.getFlag('tpo', `orders`)
@@ -398,20 +457,54 @@ export class tpoActorSheet extends ActorSheet {
     }
   }
 
+  _onMundaneWeaponClick(event) {
+    if(event.button !== 0){
+      this.actor.items.get(event.currentTarget.getAttribute("data-item-id")).sheet.render(true);
+    } else {
+      const weapon = this.actor.items.get(event.currentTarget.getAttribute("data-item-id"));
+      
+      if(weapon.system.apCost > this.actor.system.derived.ap.value)
+        ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
+      this.actor.update({[`system.derived.ap.value`]: this.actor.system.derived.ap.value - weapon.system.apCost })
+  
+      let testData = {
+        advantage: 0,
+        disadvantage: 0,
+        modifier: 0,
+        risk: false,
+        difficulty: 0,
+        hasDamage: true,
+        weakDamage: false,
+        damage: weapon.system.damage,
+        element: "",
+        elementDamage: 0,
+        attacks: 1
+      }
+
+      let skill = this.actor.items.getName(`Weapon (Mundane)`);
+      if(skill === undefined){
+        skill = {
+          name: "Weapon Skill",
+          system: {
+            total: this.actor.system.stats.ws.value
+          }
+        }
+      }
+      this._performTest(skill, testData, 0, 0, weapon.name);
+    }
+  }
+
   async _onDragItemStart(ev) {
     let itemId = ev.currentTarget.getAttribute("data-item-id");
     if (!itemId)
       return
     let item = this.actor.items.get(itemId)
-    console.log(item)
     const dragData = {
       type: "Item",
       data: item,
     };
     ev.dataTransfer.setData("text/plain", JSON.stringify(dragData));
     item.delete()
-    console.log(item)
-    console.log(this.actor.items)
   }
 
   _onRest(event){
@@ -732,7 +825,7 @@ export class tpoActorSheet extends ActorSheet {
         //   UtilsTPO.payForItem(i.system, this.actor.data._id)
         // }
 
-        if(i.type === "item" || i.type === "armament")
+        if(i.type === "item" || i.type === "armament" || i.type === "mundaneWeapon")
           await this._onItemDrop(event, duplicate(i))
         else if (i.type === "power"){
           if($(event.target).parents(".armament-container").length)
@@ -915,7 +1008,7 @@ export class tpoActorSheet extends ActorSheet {
 
   _onItemDelete(event){
     event.preventDefault();
-    const container = $(event.target).parents(".expandable");
+    const container = $(event.target).parents(".popout");
     const item = this.actor.items.get(container.data("id"));
     item.delete();
   }
@@ -963,13 +1056,14 @@ export class tpoActorSheet extends ActorSheet {
       event.preventDefault();
       container = $(event.target).parents(".subheader");
     }
+
+    if(!container.data("power-id"))
+      container = $(event.target).parents(".power");
     
     if(!power)
       power = await this.actor.items.get(container.data("power-id"));
     
-    console.log(power)
     const armament = await this.actor.items.get(power.system.parent.id);
-    console.log(armament)
 
     if(power.system.type === "Daily" || power.system.type === "Adventure"){
       if(power.system.used)

@@ -83,11 +83,28 @@
     top: 0;
     right: 0;
     width: 400px;
-    border: 2px solid;
+    border: 2px solid #606060;
+    box-shadow: 6px 4px 6px 0px #0000007a;
     border-radius: 4px;
+    min-height: 20px;
     .subheader {
       color: var(--color-text-light-2);
     }
+    .itemDelete{
+      position: absolute;
+      font-size: 12px;
+      right: 3px;
+      top: 2px;
+    }
+    .description {
+      padding-top: 5px;
+    }
+  }
+  .popout-left {
+    box-shadow: -6px 4px 6px 0px #0000007a;
+  }
+  .inherit {
+    background-color: inherit;
   }
 }
 

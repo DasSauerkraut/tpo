@@ -146,6 +146,7 @@ export class tpoActor extends Actor {
     let unsortedPowers = [];
     let zones = [];
     let traits = [];
+    let mundaneWeapons = [];
     let inventory = {
       lScabbard: [],
       lThigh: [],
@@ -314,6 +315,10 @@ export class tpoActor extends Actor {
           inventory[i.system.location].push(i)
           actorData.derived.encumbrance.locations[i.system.location].value += i.system.enc;
         }
+      } else if(i.type === "mundaneWeapon" && this.type === "character"){
+        mundaneWeapons.push(i)
+        inventory[i.system.location].push(i)
+        actorData.derived.encumbrance.locations[i.system.location].value += i.system.enc;
       } else if (i.type ==="zone" && this.type === "largenpc"){
         i.system.powers.forEach((pwr, idx) => {
           const item = this.items.get(pwr._id);
@@ -390,6 +395,7 @@ export class tpoActor extends Actor {
     actorData.unsortedPowers = unsortedPowers;
     actorData.activeAbilities = activeAbilities;
     actorData.inactiveAbilities = inactiveAbilities;
+    actorData.mundaneWeapons = mundaneWeapons;
     if(this.type === "character")
       actorData.inventory = inventory;
     else if(this.type === "largenpc"){

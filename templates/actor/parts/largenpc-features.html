@@ -1,7 +1,7 @@
 <div class="zone-page grid grid-3col">
   <div class="grid-span-2">
     {{#if system.unsortedPowers.length}}
-    <h2>Unsorted Powers</h2>
+    <h2>Unequipped Powers</h2>
     {{#each system.unsortedPowers as |power id|}}
     <div class="power expand-container-nested power-draggable"
       data-item-id="{{power._id}}"
@@ -148,7 +148,7 @@
         class="fas fa-trash powerDelete rollable"
       ></i>
       </div>
-        <div class="popout trait">
+        <div class="popout popout-left trait">
           <div class="description">
             {{{trait.system.descriptionDisplay}}}
           </div>

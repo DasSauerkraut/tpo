@@ -922,13 +922,33 @@
 }
 
 .tpo .combat-container {
-  overflow-y: auto;
   scrollbar-width: thin;
   height: 450px;
 }
 
+.tpo .combat-container .armament-section {
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.tpo .combat-container .other-section {
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.tpo .armament-list {
+  min-width: 205px;
+}
+
+.tpo .armament-container {
+  width: 100%;
+  border-radius: 5px;
+  border: 3px solid var(--color-border-light-tertiary);
+  margin-right: 2px;
+  min-width: 200px;
+}
+
 .tpo .armament-container .armament-name {
-  font-weight: bold;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -938,11 +958,31 @@
   align-items: center;
   font-family: "TypographerRotunda";
   font-size: 16px;
-  color: var(--color-underline-active);
+  color: var(--color-text-light-2);
+  margin-top: -3px;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.tpo .armament-container .armament-name .item-control {
+  color: #ffffff4f;
+}
+
+.tpo .armament-container .armament-name .item-control:hover {
+  color: var(--color-text-light-2);
 }
 
 .tpo .armament {
   max-height: unset;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
 }
 
 .tpo .trash {
@@ -965,9 +1005,73 @@
   overflow: auto;
 }
 
+.tpo .half-width {
+  width: 50%;
+}
+
 .tpo .expand-controller-nested:hover {
   text-shadow: 0 0 10px red;
   cursor: pointer;
+}
+
+.tpo .damage-container {
+  border-bottom: 1px solid var(--color-border-light-tertiary);
+  gap: 0px;
+}
+
+.tpo .damage-container .raw {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  padding-right: 10px;
+  border-right: 1px solid var(--color-border-light-tertiary);
+}
+
+.tpo .damage-container .elemental {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding-left: 10px;
+}
+
+.tpo .damage {
+  font-family: "TypographerRotunda";
+  font-size: 18px;
+}
+
+.tpo .element-selector {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--color-border-light-primary);
+}
+
+.tpo .element-selector .element-select:hover {
+  cursor: pointer !important;
+}
+
+.tpo .armament-field {
+  padding-top: 5px;
+  border-bottom: 1px solid var(--color-border-light-tertiary);
 }
 
 .tpo .container-header {
@@ -978,6 +1082,22 @@
 .tpo .power {
   border-radius: 4px;
   border: 1px solid var(--color-border-light-tertiary);
+}
+
+.tpo .power .header:hover {
+  cursor: pointer;
+  text-shadow: 0px 0px 10px #000000;
+}
+
+.tpo .power .header:hover .name .dice {
+  -webkit-transform: rotate(360deg);
+  -ms-transform: rotate(360deg);
+  transform: rotate(360deg);
+  visibility: initial;
+  -webkit-transition: all .7s ease-in;
+  -o-transition: all .7s ease-in;
+  transition: all .7s ease-in;
+  width: auto;
 }
 
 .tpo .power .header {
@@ -994,6 +1114,11 @@
 .tpo .power .header .name {
   font-weight: bold;
   padding: 3px;
+}
+
+.tpo .power .header .name .dice {
+  width: 0;
+  visibility: hidden;
 }
 
 .tpo .power .header .type {
@@ -1193,6 +1318,86 @@
   margin: 0px;
 }
 
+.tpo .magazine {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.tpo .magazine.row {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  gap: 2px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.tpo .mundane-weapon:hover {
+  cursor: pointer;
+}
+
+.tpo .mundane-weapon:hover .name .dice {
+  -webkit-transform: rotate(360deg);
+  -ms-transform: rotate(360deg);
+  transform: rotate(360deg);
+  visibility: initial;
+  -webkit-transition: all .7s ease-in;
+  -o-transition: all .7s ease-in;
+  transition: all .7s ease-in;
+  width: auto;
+}
+
+.tpo .mundane-weapon {
+  background-color: #a19f93d1;
+  margin-bottom: 2px;
+  border-radius: 5px;
+  height: 19px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.tpo .mundane-weapon .name {
+  padding-left: 3px;
+  font-weight: bold;
+}
+
+.tpo .mundane-weapon .name .dice {
+  width: 0;
+  visibility: hidden;
+}
+
+.tpo .mundane-weapon .popout {
+  margin-left: -4px;
+  background-color: #BFAC8C;
+  color: var(--color-text-dark-1);
+}
+
+.tpo .mundane-weapon .popout .subheader {
+  background-color: #a19f93d1;
+  color: var(--color-text-dark-1) !important;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.tpo .mundane-weapon .popout p {
+  margin: 0;
+}
+
 .tpo .abilities {
   text-align: center;
   margin-top: 3px;
@@ -1280,6 +1485,24 @@
 
 .tpo .abilities .expandable .description {
   padding-inline: 3px;
+}
+
+.tpo .abilities .popout {
+  text-align: initial;
+  border-radius: 4px;
+  background-color: #BFAC8C;
+}
+
+.tpo .abilities .popout .description {
+  padding-inline: 3px;
+}
+
+.tpo .ability-not-displayed {
+  opacity: 30%;
+}
+
+.tpo .ability-displayed {
+  opacity: 100%;
 }
 
 .tpo .level--3 {
@@ -1456,7 +1679,7 @@
 }
 
 .tpo .inventory-col .inventory-section .inventory-item {
-  background-color: #b5b3a487;
+  background-color: #aaa89c;
   border-radius: 3px;
   margin-bottom: 3px;
   padding: 1px;
@@ -1483,20 +1706,13 @@
   position: relative;
 }
 
-.tpo .inventory-col .inventory-section .inventory-item .expandable .itemDelete {
-  position: absolute;
-  font-size: 12px;
-  right: 3px;
-  top: 2px;
-}
-
 .tpo .inventory-col .inventory-section .inventory-item .expandable .description {
   font-size: 12px;
   border-top: 1px solid black;
 }
 
 .tpo .inventory-col .inventory-section .inventory-item:nth-child(2n) {
-  background-color: #a19f93d1;
+  background-color: #c8c6b8;
 }
 
 .tpo .inventory-col .inventory-section ul {
@@ -1752,12 +1968,35 @@
   top: 0;
   right: 0;
   width: 400px;
-  border: 2px solid;
+  border: 2px solid #606060;
+  -webkit-box-shadow: 6px 4px 6px 0px #0000007a;
+  box-shadow: 6px 4px 6px 0px #0000007a;
   border-radius: 4px;
+  min-height: 20px;
 }
 
 .tpo .expand-popout .popout .subheader {
   color: var(--color-text-light-2);
+}
+
+.tpo .expand-popout .popout .itemDelete {
+  position: absolute;
+  font-size: 12px;
+  right: 3px;
+  top: 2px;
+}
+
+.tpo .expand-popout .popout .description {
+  padding-top: 5px;
+}
+
+.tpo .expand-popout .popout-left {
+  -webkit-box-shadow: -6px 4px 6px 0px #0000007a;
+  box-shadow: -6px 4px 6px 0px #0000007a;
+}
+
+.tpo .expand-popout .inherit {
+  background-color: inherit;
 }
 
 .tpo .popout.trait {

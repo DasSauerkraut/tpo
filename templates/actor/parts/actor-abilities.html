@@ -21,7 +21,8 @@
         <div class="field ability-imp-btn" title="Improve Ability by 1 | Cost 1XP" data-improve="{{item._id}}">{{item.system.value}}<span class="improvement">+</span></div>
         <div class="field level ability-imp-btn" title="Improve Ability by 20 | Cost 20XP" data-improve="{{item._id}}">{{item.system.level}}<span class="level improvement">+</span></div>
         <div class="field controls">
-          <a class="item-control ability-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+          <a class="item-control ability-display {{#if item.flags.tpo.combatDisplay}}ability-displayed {{else}} ability-not-displayed {{/if}}" title="Display Ability on the Combat tab"><i class="fas fa-user-shield"></i></a>
+          <a class="item-control ability-delete" title="Delete Ability"><i class="fas fa-trash"></i></a>
         </div>
       </div>
       <div class="expandable">

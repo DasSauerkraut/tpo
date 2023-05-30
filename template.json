@@ -298,7 +298,7 @@
     }
   },
   "Item": {
-    "types": ["item", "skill", "armament", "power", "ability", "zone"],
+    "types": ["item", "skill", "armament", "power", "ability", "zone", "mundaneWeapon"],
     "templates": {
       "base": {
         "description": "",
@@ -329,6 +329,12 @@
         "current": 1
       }
     },
+    "mundaneWeapon": {
+      "templates": ["base", "physical"],
+      "damage": 0,
+      "splendor": 0,
+      "apCost": 2
+    },
     "skill": {
       "templates": ["base"],
       "stat": "ws",
@@ -342,6 +348,7 @@
       "templates": ["base", "physical"],
       "type": "",
       "skill": "",
+      "color": "#51632C",
       "damage": {
         "base": 0,
         "upgrades": 0,
