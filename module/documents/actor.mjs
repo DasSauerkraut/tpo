@@ -78,7 +78,10 @@ export class tpoActor extends Actor {
       if(data.details.species.value === game.i18n.format("SPECIES.Slepilide") || data.details.species.value === game.i18n.format("SPECIES.Ocnilide")){
         data.derived.absorption.value = Math.floor(data.stats.con.bonus / 2) + 2;
         data.derived.absorption.max = 5;
-      } else{
+      } else if (data.details.species.value === game.i18n.format("SPECIES.Thulanjos") || data.details.species.value === game.i18n.format("SPECIES.Ildere")) {
+        data.derived.absorption.value = Math.floor(data.stats.con.bonus / 2) + 1;
+        data.derived.absorption.max = 3;
+      } else {
         data.derived.absorption.value = Math.floor(data.stats.con.bonus / 2);
         data.derived.absorption.max = 3;
       }

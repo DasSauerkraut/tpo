@@ -1,6 +1,6 @@
 import { TPO } from "./config.mjs";
 export class DiceTPO {
-  static async rollTest(skill, rollData) {
+  static async rollTest(skill, rollData, hidden = false) {
     //calculate target
     let target;
     if(skill.system?.total)
@@ -30,9 +30,9 @@ export class DiceTPO {
       if(rollData.risk){
         let riskTarget = 50 + advantages * 10;
         let roll1 = await new Roll("1d100").roll({async: true})
-        await this.showDiceSoNice(roll1);
+        if(!hidden) await this.showDiceSoNice(roll1);
         let roll2 = await new Roll("1d100").roll({async: true})
-        await this.showDiceSoNice(roll2);
+        if(!hidden) await this.showDiceSoNice(roll2);
         dice.push(roll1.total);
         dice.push(roll2.total);
 
@@ -48,13 +48,13 @@ export class DiceTPO {
         if(advantages !== 0){
           let roll = await new Roll(`${Math.abs(advantages)+1}d100${advantages > 0 ? 'kl' : 'kh' }`).roll({async: true})
           console.log(roll)
-          await this.showDiceSoNice(roll);
+          if(!hidden) await this.showDiceSoNice(roll);
           roll.terms[0].results.forEach(die => {
             dice.push(die.result)
           })
         } else {
           let roll = await new Roll("1d100").roll({async: true})
-          await this.showDiceSoNice(roll);
+          if(!hidden) await this.showDiceSoNice(roll);
           dice.push(roll.terms[0].results[0].result);
         }
         dice.sort((a, b) => {return a - b});
@@ -1066,12 +1066,12 @@ export class UtilsTPO {
     combatant.actor.system.details.species.value === game.i18n.format("SPECIES.Ildere")) &&
     combatant.actor.system.derived.hp.value < combatant.actor.system.derived.hp.max){
       abilities += `
-      <br><b>${game.i18n.format("SPECIES.Thuskos")} - Adrenaline</b><br>
+      <br><b>${combatant.actor.system.details.species.value} - Adrenaline</b><br>
       <div>${game.i18n.format("ABILITY.Adrenaline")}</div>
       `
       const currentTempHp = combatant.actor.system.derived.tempHp.value
       const maxTempHp = combatant.actor.system.derived.tempHp.max
-      combatant.actor.update({"data.derived.tempHp.value": currentTempHp + 3 > maxTempHp ? maxTempHp : currentTempHp + 3})
+      combatant.actor.update({"data.derived.tempHp.value": currentTempHp + 2 > maxTempHp ? maxTempHp : currentTempHp + 2})
     }
 
     if(combatant.actor.system.details.species.value === game.i18n.format("SPECIES.Raivoaa") &&

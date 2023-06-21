@@ -4,14 +4,6 @@
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
       <div class="grid grid-2col">
-        <div class="resource">
-          <label class="resource-label">Splendor</label>
-          <input type="text" name="system.splendor" value="{{system.system.splendor}}" data-dtype="Number"/>
-        </div>
-        <div class="resource">
-          <label class="resource-label">Encumberence</label>
-          <input type="text" name="system.enc" value="{{system.system.enc}}" data-dtype="Number"/>
-        </div>
         <div class="money-header">
           <div class="money-grid grid grid-4col">
             <span class="money"><input class="money-field" type="text" name="system.value.l" value="{{system.system.value.l}}" data-dtype="Number"/>ℓ</span>
@@ -20,6 +12,31 @@
             <div class="money-total">{{system.system.value.total}}ℓ</div>
           </div>
           <span class="money-label">Value</span>
+          </div>
+          <div class="resource">
+            <label class="resource-label">Splendor</label>
+            <input type="text" name="system.splendor" value="{{system.system.splendor}}" data-dtype="Number"/>
+          </div>
+          <div class="resource">
+            <label class="resource-label">Encumberence</label>
+            <input type="text" name="system.enc" value="{{system.system.enc}}" data-dtype="Number"/>
+          </div>
+          <div class="resource">
+            <label class="resource-label">Stackable</label>
+            {{#if system.system.stack.stackable}}
+            <input class="advanced" id="stackable" type="checkbox" checked data-dtype="Boolean"/>
+            {{else}}
+            <input class="advanced" id="stackable" type="checkbox" data-dtype="Boolean"/>
+            {{/if}}
+          </div>
+          <div class="resource">
+            <label class="resource-label">Current Stack</label>
+            <input type="text" name="system.stack.current" value="{{system.system.stack.current}}" data-dtype="Number"/>
+          </div>
+          <div class="resource">
+            <label class="resource-label">Max Stack</label>
+            <input type="text" name="system.stack.max" value="{{system.system.stack.max}}" data-dtype="Number"/>
+          </div>
         <div class="resource">
           <label class="resource-label">AP Cost</label>
           <input type="text" name="system.apCost" value="{{system.system.apCost}}" data-dtype="Number"/>

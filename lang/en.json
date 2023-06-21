@@ -65,7 +65,9 @@
   "ABILITY.Wavering": "When in combat and not bloodied, Närvid have a +10 modifier to WS, Agi, and Will. When bloodied, Närvid have disadvantage on any Morale test. Furthermore, Närvid are bloodied at ½ their Max HP, rounding down.",
   "ABILITY.Momentous1": "After 3 rounds of combat, gain an additional 1 AP on your turn.",
   "ABILITY.Momentous2": "After 2 rounds of combat, gain an additional 1 AP on your turn.",
-  "ABILITY.Adrenaline": " When in combat, and your HP is below your below max HP, gain 3 temporary hit points per round.",
+  "ABILITY.Persistance1": "After 3 rounds of combat, gain +1 Movement.",
+  "ABILITY.Persistance2": "After 2 rounds of combat, gain +1 Movement.",
+  "ABILITY.Adrenaline": " When in combat, and your HP is below your below max HP, gain 2 temporary hit points per round.",
 
   "ARM.GS": "Greatsword",
   "ARM.LA": "Lance",
