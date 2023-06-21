@@ -282,10 +282,10 @@
         },
         "splendor": {
           "items": 0,
+          "spent": 0,
           "mod": 0,
           "total": 0,
-          "cap": 0,
-          "rerolls": 0
+          "cap": 0
         }
       }
     },

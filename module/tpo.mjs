@@ -212,7 +212,7 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
     if(actor.system.derived.hp?.value > 0 && data.system.derived.hp?.value <= 0){
       chatContent += `
         ${chatContent !== '' ? '<hr>': ''}<b>${actor.name} is Downed!</b><br>
-        <div>They suffer a Major Injury and their allies must perform a Morale Test. Furthermore, any clothing they were wearing is ruined and must be repaired!
+        <div>They suffer a Major Injury and their allies must perform a Morale Test. Furthermore, any clothing they were wearing is ruined and must be repaired or it will have -1 Splendor!
         </div>
         `
       if(data.system.derived.hp?.value <= actor.system.derived.tempHp.max * -1){

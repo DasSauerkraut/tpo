@@ -138,10 +138,7 @@ export class tpoActor extends Actor {
     if(data.info.splendor.items > data.info.splendor.cap)
       data.info.splendor.items = data.info.splendor.cap;
 
-    data.info.splendor.total = data.info.splendor.items + data.info.splendor.mod;
-
-    data.info.splendor.rerolls = Math.floor(data.info.splendor.total / 4);
-
+    data.info.splendor.total = data.info.splendor.items + data.info.splendor.mod - data.info.splendor.spent;
     //AP
     if(data.autocalc.ap)
       data.derived.ap.max = 4;
