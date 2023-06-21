@@ -37,6 +37,17 @@
             <label class="resource-label">Max Stack</label>
             <input type="text" name="system.stack.max" value="{{system.system.stack.max}}" data-dtype="Number"/>
           </div>
+          <div class="resource">
+            <label class="resource-label">Rarity</label>
+            <select name="system.rarity" type="text" value="{{system.system.rarity}}">
+              {{#select system.system.rarity}}
+                <option value="{{localize 'RARITY.Common'}}">{{localize 'RARITY.Common'}}</option>
+                <option value="{{localize 'RARITY.Uncommon'}}">{{localize 'RARITY.Uncommon'}}</option>
+                <option value="{{localize 'RARITY.Scarce'}}">{{localize 'RARITY.Scarce'}}</option>
+                <option value="{{localize 'RARITY.Exotic'}}">{{localize 'RARITY.Exotic'}}</option>
+              {{/select}}
+            </select>
+          </div>
         <div class="resource">
           <label class="resource-label">AP Cost</label>
           <input type="text" name="system.apCost" value="{{system.system.apCost}}" data-dtype="Number"/>

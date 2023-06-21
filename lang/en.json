@@ -82,6 +82,11 @@
   "ARM.Light": "Light",
   "ARM.Ranged": "Ranged",
 
+  "RARITY.Common": "Common",
+  "RARITY.Uncommon": "Uncommon",
+  "RARITY.Scarce": "Scarce",
+  "RARITY.Exotic": "Exotic",
+
   "PWR.AtWill": "At-Will",
   "PWR.Encounter": "Daily",
   "PWR.Weekly": "Adventure",
