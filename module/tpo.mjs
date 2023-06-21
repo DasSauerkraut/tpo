@@ -172,7 +172,6 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
     const tempHp = actor.system.derived.tempHp.value
     let chatContent = ''
     if(tempHp > 0){
-
       if(tempHp - damageTaken >= 0){
         data.system.derived = {
           hp: {
@@ -202,21 +201,33 @@ Hooks.on("preUpdateActor", (actor, data, diff) => {
         <br>HP: ${actor.system.derived.hp.value} → ${actor.system.derived.hp.value - (damageTaken - tempHp)}</div>
         `
       }
-      if(actor.system.derived.hp?.value > actor.system.derived.bloodied?.value && data.system.derived.hp?.value <= actor.system.derived.bloodied?.value){
-        chatContent += `
-          ${chatContent !== '' ? '<hr>': ''}<b>${actor.name} is Bloodied!</b><br>
-          <div>They suffer a Minor Injury and must perform a Morale Test.
-          </div>
-          `
-      }
-  
-      let chatData = {
-        content: chatContent,
-        user: game.user._id,
-      };
-      if(chatContent !== '')
-        ChatMessage.create(chatData, {});
     }
+    if(actor.system.derived.hp?.value > actor.system.derived.bloodied?.value && data.system.derived.hp?.value <= actor.system.derived.bloodied?.value){
+      chatContent += `
+        ${chatContent !== '' ? '<hr>': ''}<b>${actor.name} is Bloodied!</b><br>
+        <div>They suffer a Minor Injury and must perform a Morale Test.
+        </div>
+        `
+    }
+    if(actor.system.derived.hp?.value > 0 && data.system.derived.hp?.value <= 0){
+      chatContent += `
+        ${chatContent !== '' ? '<hr>': ''}<b>${actor.name} is Downed!</b><br>
+        <div>They suffer a Major Injury and their allies must perform a Morale Test. Furthermore, any clothing they were wearing is ruined and must be repaired!
+        </div>
+        `
+      if(data.system.derived.hp?.value <= actor.system.derived.tempHp.max * -1){
+        chatContent += `
+          <br><b>Instant Death!</b>
+          <div>${actor.name} must succeed a <b>Hard (-20) Endurance Test</b> or immediately die.</div>
+        `
+      }
+    }
+    let chatData = {
+      content: chatContent,
+      user: game.user._id,
+    };
+    if(chatContent !== '')
+      ChatMessage.create(chatData, {});
   }
 })
 
