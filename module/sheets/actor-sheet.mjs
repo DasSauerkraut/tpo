@@ -597,7 +597,10 @@ export class tpoActorSheet extends ActorSheet {
                   }
                 })
               })
-              this.actor.update({[`system.derived.hp.value`]: currentHp + heal > maxHp ? maxHp : currentHp + heal })
+              this.actor.update({
+                [`system.derived.hp.value`]: currentHp + heal > maxHp ? maxHp : currentHp + heal, 
+                ['system.info.splendor.spent']: 0
+              })
             }
           },
         },

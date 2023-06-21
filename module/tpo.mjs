@@ -156,7 +156,6 @@ Hooks.on("updateCombat", (combat) => {
 
 Hooks.on("getChatLogEntryContext", (html, options) => {
   UtilsTPO.addResolveRerollToChatCard(options);
-  UtilsTPO.addSplendorRerollToChatCard(options);
 });
 
 Hooks.on("preUpdateActor", (actor, data, diff) => {

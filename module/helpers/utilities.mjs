@@ -864,41 +864,6 @@ export class UtilsTPO {
     })
   }
 
-  static addSplendorRerollToChatCard(options){
-    options.push({
-      name: game.i18n.localize("SYS.RerollWithSplendor"),
-      icon: '<i class="fas fa-crown"></i>',
-      condition: (li) => {
-        const message = game.messages.get(li.data("message-id"))
-        const context = message.getFlag('tpo', 'context')
-        let actor;
-        if(context.actorId.isToken)
-          actor = canvas.scene.tokens.get(context.actorId.id).getActor()
-        else
-          actor = game.actors.get(context.actorId.id)
-        return (!context.rerolled && actor.system.info.splendor.rerolls > 0)
-      },
-      callback: li => {
-        const message = game.messages.get(li.data("message-id"))
-        let context = message.getFlag('tpo', 'context')
-        let actor;
-        if(context.actorId.isToken)
-          actor = canvas.scene.tokens.get(context.actorId.id).getActor()
-        else
-          actor = game.actors.get(context.actorId.id)
-        if(!context.rerolled && actor.system.info.splendor.rerolls > 0){
-          context.testData.actor = actor;
-          DiceTPO.rollTest(context.skill, context.testData).then(result => {
-            DiceTPO.prepareChatCard(result, true).then(chatCard => {
-              DiceTPO.createChatCard(chatCard.chatData, chatCard.chatContext)
-            })
-          })
-          message.setFlag('tpo', 'context.rerolled', true)
-        }
-      }
-    })
-  }
-
   static hasResolve(actor){
     return (actor.system.info.resolve.resolve1 || actor.system.info.resolve.resolve2 || actor.system.info.resolve.resolve3);
   }
