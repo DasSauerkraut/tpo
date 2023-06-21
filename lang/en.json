@@ -61,8 +61,8 @@
   "SPECIES.Thulanjos": "Thulanjos",
   "SPECIES.Ildere": "Ildere",
 
-  "ABILITY.Berserk": "When in combat and bloodied, Raivo have Advantage on all rolls that use WS, Agi, or Will, however they cannot Disengage or Shift without a successful Challenging (+0) Cool Test. This takes effect before making the Bloodied Morale Roll.",
-  "ABILITY.Wavering": "When in combat and not bloodied, Närvid have a +10 modifier to WS, Agi, and Will. When bloodied, Närvid have disadvantage on any Morale test. Furthermore, Närvid are bloodied at ½ their Max HP, rounding down.",
+  "ABILITY.Berserk": "When in combat and Bloodied, you have Advantage on all Tests that key off of Agi, WS, or Will, however, you  cannot Disengage or Shift without a successful Challenging (+0) Cool Test. This takes effect before performing the Bloodied Morale Test.",
+  "ABILITY.Wavering": "When in combat and not Bloodied, you have a +10 modifier to WS, Agi, and Will. While Bloodied, you have Disadvantage on Morale Tests. Furthermore, you are bloodied at ½ your Max HP, rounding down.",
   "ABILITY.Momentous1": "After 3 rounds of combat, gain an additional 1 AP on your turn.",
   "ABILITY.Momentous2": "After 2 rounds of combat, gain an additional 1 AP on your turn.",
   "ABILITY.Persistance1": "After 3 rounds of combat, gain +1 Movement.",

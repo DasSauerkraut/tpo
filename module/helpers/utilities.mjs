@@ -1088,6 +1088,23 @@ export class UtilsTPO {
       <div>${game.i18n.format("ABILITY.Wavering")}</div>
       `
 
+    const auldlonder = combatant.actor.items.getName("Auldlonder")
+    if(auldlonder){
+      if(auldlonder.system.level > 1 && combat.current.round > 2){
+        abilities += `
+        <br><b>${game.i18n.format("SPECIES.Auldlonder")} - Persistence</b><br>
+        <div>${game.i18n.format("ABILITY.Persistance2")}</div>
+        `
+        combatant.actor.update({"data.derived.movement.value": combatant.actor.system.derived.movement.value + 1})
+      }else if (auldlonder.system.level > 0 && combat.current.round > 3){
+        abilities += `
+        <br><b>${game.i18n.format("SPECIES.Auldlonder")} - Persistence</b><br>
+        <div>${game.i18n.format("ABILITY.Persistance1")}</div>
+        `
+        combatant.actor.update({"data.derived.movement.value": combatant.actor.system.derived.movement.value + 1})
+      }
+    }
+    
     if(combatant.actor.items.getName("Momentous")){
       const momentous = combatant.actor.items.getName("Momentous")
       if(momentous.system.level > 1 && combat.current.round > 2){
