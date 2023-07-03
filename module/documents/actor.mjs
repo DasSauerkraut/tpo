@@ -320,8 +320,11 @@ export class tpoActor extends Actor {
         inventory.nonEnc.push(i)
       } else if(i.type === "ability" && this.type === "character"){
         i.system.value = i.system.improvements + i.system.mod - Math.abs(i.system.malus);
-        i.system.level = Math.sign(i.system.value) * Math.floor(Math.abs(i.system.value) / 20);
-        if(i.system.level !== 0)
+        if(i.system.value > 0)
+          i.system.level = Math.floor(Math.abs(i.system.value) / 20);
+        else
+          i.system.level = 0;
+        if(i.system.level > 0)
           activeAbilities.push(i);
         else
           inactiveAbilities.push(i);
