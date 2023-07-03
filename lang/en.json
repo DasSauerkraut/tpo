@@ -63,8 +63,8 @@
 
   "ABILITY.Berserk": "When in combat and Bloodied, you have Advantage on all Tests that key off of Agi, WS, or Will, however, you  cannot Disengage or Shift without a successful Challenging (+0) Cool Test. This takes effect before performing the Bloodied Morale Test.",
   "ABILITY.Wavering": "When in combat and not Bloodied, you have a +10 modifier to WS, Agi, and Will. While Bloodied, you have Disadvantage on Morale Tests. Furthermore, you are bloodied at ½ your Max HP, rounding down.",
-  "ABILITY.Momentous1": "After 3 rounds of combat, gain an additional 1 AP on your turn.",
-  "ABILITY.Momentous2": "After 2 rounds of combat, gain an additional 1 AP on your turn.",
+  "ABILITY.Momentous1": "After 4 rounds of combat, gain an additional 1 AP on your turn.",
+  "ABILITY.Momentous2": "After 3 rounds of combat, gain an additional 1 AP on your turn.",
   "ABILITY.Persistance1": "After 3 rounds of combat, gain +1 Movement.",
   "ABILITY.Persistance2": "After 2 rounds of combat, gain +1 Movement.",
   "ABILITY.Adrenaline": " When in combat, and your HP is below your below max HP, gain 2 temporary hit points per round.",
@@ -147,7 +147,7 @@
   "STATUS.Hampered1": "Hampered 1",
   "STATUS.Hampered2": "Hampered 2",
   "STATUS.Hampered3": "Hampered 3",
-  "STATUS.HalfPanicking": "Half-Panicking",
+  "STATUS.HalfPanicking": "Wavering",
   "STATUS.Panicking": "Panicking",
   "STATUS.HalfParalyzed": "Half-Paralyzed",
   "STATUS.Paralyzed1": "Paralyzed 1",
@@ -189,7 +189,7 @@
   "INJURY.InternalBleeding": "Internal Bleeding",
   "INJURY.Decapitated": "Decapitated",
 
-  "KEYWORD.Delay": "Declare a target. After NUM rounds, at the start of your turn, before you perform any action, immediately perform the listed Power if you are still in range.\rIf you perform an attack while a Delayed Power has not resolved yet, suffer Disadvantage on that attack.",
+  "KEYWORD.Delay": "Declare a target. At the start of your turn, before performing any action, reduce this Power's Delay Rating by 1.\rIf the Rating is now 0, immediately perform the Power against your chosen target if you are still in range.\rOn your turn you may spend 2 AP to reduce any Delayed Power’s Rating by 1.",
   "KEYWORD.Flexible": "This power has effects that key off of the one’s place of the roll.\rFor example, it might say On Even Hit, this means that if the one’s place is even and the attack hits, the following effect will occur. You may also see On #’s where if the one’s place is that number, the effect will occur.\rMultiple effects can trigger off of a roll, for example an On Even Hit and an On 4’s Hit could both trigger if the roll was 34 and the attack hit.",
   "KEYWORD.Leech": "You may spend up to NUM HP to increase the damage of this attack by the amount of HP spent.\rYou may also heal by reducing the damage the attack dealt by up to NUM, healing your HP by each point reduced.",
   "KEYWORD.Optional": "If the Power has you make an attack, you can choose to ignore that, and gain the other benefits the Power provides.",

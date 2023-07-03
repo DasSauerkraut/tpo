@@ -35,13 +35,13 @@ TPO.statuses = [
     id: "halfpanicking",
     label: "STATUS.HalfPanicking",
     icon: "systems/tpo/module/assets/halfpanicking.png",
-    description: "No effect... yet."
+    description: "The Difficulty of all Dodge, Weapon, and Cool Tests in increased by one step. If you fail a Morale Test while you have a Wavering Status, gain a Panicking Status. <br>An ally can remove this status from you by spending 1 AP and succeeding a <b>Challenging (+0) Leadership Test</b>."
   },
   {
     id: "panicking",
     label: "STATUS.Panicking",
     icon: "icons/svg/terror.svg",
-    description: "You are panicking, unable to think straight, and convinced that death has come a-knocking. You must use your AP to get yourself as far away from danger as you can on your turn, fleeing without taking any time to Disengage. You suffer Disadvantage on all Tests not related to running and hiding.<br><br>This status lasts until you can either spend a round out of sight from any danger or you succeed a <b>Challenging (+0) Cool Test</b> at the end of your turn, provided you were not engaged at the start of your turn."
+    description: "You are panicking, unable to think straight, and convinced that death has come a-knocking. You must use your AP to get yourself as far away from danger as you can on your turn, fleeing without taking any time to Disengage. You suffer Disadvantage on all Tests not related to running and hiding.<br><br>This status lasts until you can either spend a round out of sight from any danger or you succeed a <b>Challenging (+0) Cool Test</b> at the end of your turn, provided you were not engaged at the start of your turn.<br>An ally can remove this status from you by spending 1 AP and succeeding a <b>Challenging (+0) Leadership Test</b>."
   },
   {
     id: "halfprone",

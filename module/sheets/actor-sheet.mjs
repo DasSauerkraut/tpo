@@ -698,7 +698,7 @@ export class tpoActorSheet extends ActorSheet {
         break;
       case "morale":
         skill = this.actor.items.getName("Cool");
-        testData.difficulty = 20;
+        testData.difficulty = 10;
 
         if((this.actor.system.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
         (this.actor.system.derived.hp.value <= this.actor.system.derived.bloodied.value)){
@@ -720,7 +720,6 @@ export class tpoActorSheet extends ActorSheet {
                 total: this.actor.system.stats.will.value
             }
           }
-          testData.disadvantage += 1;
         }
         this._performTest(skill, testData, 0, 0, "Morale Test");
         break;

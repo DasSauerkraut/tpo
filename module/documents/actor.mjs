@@ -116,9 +116,17 @@ export class tpoActor extends Actor {
         data.derived.absorption.value = Math.floor(data.stats.con.bonus / 2);
         data.derived.absorption.max = 3;
       }
+      const ironHide = this.items.getName("Iron Hide")
+      if(ironHide){
+        if(ironHide.system.level > 0)
+          data.derived.absorption.max += 1;
+        if(ironHide.system.level > 1)
+          data.derived.absorption.value += 1;
+      }
       if(data.derived.absorption.value > data.derived.absorption.max)
         data.derived.absorption.value = data.derived.absorption.max;
     }
+
     data.derived.absorption.total = data.derived.absorption.value + data.derived.absorption.armor;
 
     //Bloodied

@@ -1072,14 +1072,14 @@ export class UtilsTPO {
     
     if(combatant.actor.items.getName("Momentous")){
       const momentous = combatant.actor.items.getName("Momentous")
-      if(momentous.system.level > 1 && combat.current.round > 2){
+      if(momentous.system.level > 1 && combat.current.round > 3){
         abilities += `
         <br><b>Momentous - Level 2</b><br>
         <div>${game.i18n.format("ABILITY.Momentous2")}</div>
         `
         combatant.actor.update({"data.derived.ap.value": combatant.actor.system.derived.ap.max + 1})
         apMessage = `AP refreshed to ${combatant.actor.system.derived.ap.max + 1}.`
-      }else if (momentous.system.level > 0 && combat.current.round > 3){
+      }else if (momentous.system.level > 0 && combat.current.round > 4){
         abilities += `
         <br><b>Momentous  - Level 1</b><br>
         <div>${game.i18n.format("ABILITY.Momentous1")}</div>
