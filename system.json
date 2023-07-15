@@ -1,22 +1,19 @@
 {
-  "name": "tpo",
   "title": "The Pillars of Old",
   "description": "The Pillars of Old system for FoundryVTT!",
   "version": "1.1.4",
-  "minimumCoreVersion": "10",
-  "compatibleCoreVersion": "10",
-  "author": "Michael Sebelski",
   "esmodules": [
     "module/tpo.mjs"
   ],
-  "styles": ["css/tpo.css"],
-  "scripts": [],
-  "packs": [],
+  "styles": [
+    "css/tpo.css"
+  ],
   "languages": [
     {
       "lang": "en",
       "name": "English",
-      "path": "lang/en.json"
+      "path": "lang/en.json",
+      "flags": {}
     }
   ],
   "gridDistance": 1,
@@ -26,5 +23,16 @@
   "url": "https://github.com/DasSauerkraut/tpo",
   "manifest": "https://github.com/DasSauerkraut/tpo/releases/download/v1.1.4/system.json",
   "download": "https://github.com/DasSauerkraut/tpo/releases/download/v1.1.4/tpo.zip",
-  "license": "LICENSE.txt"
+  "license": "LICENSE.txt",
+  "id": "tpo",
+  "authors": [
+    {
+      "name": "Michael Sebelski",
+      "flags": {}
+    }
+  ],
+  "compatibility": {
+    "minimum": "10",
+    "verified": "10"
+  }
 }

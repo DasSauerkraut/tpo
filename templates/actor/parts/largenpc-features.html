@@ -140,8 +140,8 @@
   <div class="traits">
     <h2>Traits</h2>
     {{#each system.traits as |trait id|}}
-    <div class="power expand-popout power-draggable left"
-    data-item-id="{{trait._id}}">
+    <div class="power expand-popout power-draggable left subheader"
+    data-power-id="{{trait._id}}" data-item-id="{{trait._id}}">
       <div class="header Upgrade trait-header">
         <span class="name">{{trait.name}}</span> <i
         title="Delete Power"

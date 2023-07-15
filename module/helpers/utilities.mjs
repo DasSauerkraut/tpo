@@ -238,8 +238,8 @@ export class DiceTPO {
               </span>
               &nbsp=&nbsp
               <b style="color:#642422">
-                Strong
-                <div style="text-align:center">${damage}</div>
+                Resists
+                <div style="text-align:center">${damage + Math.floor(elementDamage * 0.5)}</div>
                 &nbsp
               </b>
               &nbsp
@@ -249,8 +249,8 @@ export class DiceTPO {
               </b>
               &nbsp
               <b style="color:#51632C">
-                Weak
-                <div style="text-align:center">${damage + elementDamage * 3}</div>
+                Vulnerable
+                <div style="text-align:center">${damage + (elementDamage * 2)}</div>
               </b>
             </div>
           `
@@ -952,7 +952,6 @@ export class UtilsTPO {
     let paralyzeds = [];
     let hampereds = [];
     combatant.actor.effects.forEach(effect => {
-      console.log(effect)
       if(effect.label.includes("Bleeding")){
         bleedings.push(effect);
         return;

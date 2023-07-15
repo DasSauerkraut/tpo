@@ -168,6 +168,12 @@
   "STATUS.Marked": "Marked",
   "STATUS.Stabilized": "Stabilized",
 
+  "BURN.Singed": "Singed",
+  "BURN.Shocked": "Shocked",
+  "BURN.Harrowed": "Harrowed",
+  "BURN.Frozen": "Frozen",
+  "BURN.Drenched": "Drenched",
+
   "INJURY.FashionableScar": "Fashionable Scar",
   "INJURY.StunningBlow": "Stunning Blow",
   "INJURY.FleshWound": "Flesh Wound",

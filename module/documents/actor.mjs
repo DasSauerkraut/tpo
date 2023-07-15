@@ -159,7 +159,8 @@ export class tpoActor extends Actor {
         data.derived.movement.value = 3;
     }
     //XP
-    data.info.xp.value = data.info.xp.earned - data.info.xp.spent;
+    if(this.type === "character")
+      data.info.xp.value = data.info.xp.earned - data.info.xp.spent;
   }
 
   /**
