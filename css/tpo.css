@@ -1673,6 +1673,24 @@
   bottom: 0px;
 }
 
+.tpo .inventory-col .inventory-section {
+  position: relative;
+}
+
+.tpo .inventory-col .inventory-section .add-item {
+  background: #00000014;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  position: absolute;
+  right: 0;
+}
+
+.tpo .inventory-col .inventory-section .add-item:hover {
+  background: #00000049;
+  cursor: pointer;
+}
+
 .tpo .inventory-col .inventory-section .ap {
   text-align: center;
   font-size: 12px;

@@ -85,7 +85,7 @@ export class tpoActorSheet extends ActorSheet {
     if (!this.isEditable) return;
 
     // Add Inventory Item
-    html.find('.item-create').click(this._onItemCreate.bind(this));
+    html.find('.add-item').click(this._onItemCreate.bind(this));
 
     // Delete Inventory Item
     html.find('.item-delete').click(ev => {
@@ -1160,21 +1160,16 @@ export class tpoActorSheet extends ActorSheet {
    */
   async _onItemCreate(event) {
     event.preventDefault();
-    const header = event.currentTarget;
     // Get the type of item to create.
-    const type = header.dataset.type;
     // Grab any data associated with this control.
-    const data = duplicate(header.dataset);
     // Initialize a default name.
-    const name = `New ${type.capitalize()}`;
+    const name = `New Item`;
     // Prepare the item object.
     const itemData = {
       name: name,
-      type: type,
-      data: data
+      type: 'item'
     };
     // Remove the type from the dataset since it's in the itemData.type prop.
-    delete itemData.data["type"];
 
     // Finally, create the item!
     return await Item.create(itemData, {parent: this.actor});

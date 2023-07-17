@@ -34,6 +34,19 @@
     bottom: 0px;
   }
   .inventory-section{
+    position: relative;
+    .add-item {
+      background: #00000014;
+      height: 12px;
+      width: 12px;
+      border-radius: 50%;
+      position: absolute;
+      right: 0;
+    }
+    .add-item:hover {
+      background: #00000049;
+      cursor: pointer;
+    }
     .ap {
       text-align: center;
       font-size: 12px;
