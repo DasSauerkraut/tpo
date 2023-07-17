@@ -1162,6 +1162,16 @@
   padding: 3px;
 }
 
+.tpo .power .damage-header {
+  background: url(../../../ui/parchment.jpg) repeat;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
 .tpo .power .description {
   background-color: #BFAC8C;
   color: var(--color-text-dark-1);
@@ -1209,6 +1219,16 @@
 
 .tpo .unused-power .subheader .target {
   padding: 3px;
+}
+
+.tpo .unused-power .damage-header {
+  background: url(../../../ui/parchment.jpg) repeat;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
 }
 
 .tpo .unused-power .description {
