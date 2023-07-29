@@ -413,6 +413,7 @@
                         ></i
                       ></span>
                     </div>
+                    {{#greaterThan power.system.attacks 0}}
                     <div class="damage-header">
                       {{#if power.system.isWeak}}
                       <span class="target">Weak&nbsp;<i class="fas fa-fist-raised" data-tooltip="Raw Damage"></i></span>
@@ -421,6 +422,7 @@
                       <span class="target">{{#greaterThan power.system.elementDamageMod 0}}+{{/greaterThan}}{{power.system.elementDamageMod}}&nbsp;{{{../system.selectedElement.display}}}</span>
                       {{/if}}
                     </div>
+                    {{/greaterThan}}
                     <div class="description">
                       {{{power.system.descriptionDisplay}}}
                     </div>

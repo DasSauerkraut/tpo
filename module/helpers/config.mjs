@@ -8,36 +8,6 @@ TPO.foobar = {
 
 TPO.statuses = [
   {
-    id: "singed",
-    label: "BURN.Singed",
-    icon: "systems/tpo/module/assets/singed.png",
-    description: "At the start of this creatures turn, it takes its 3 Piercing Damage. If the creature is Large, it takes 5 Piercing Damage instead."
-  },
-  {
-    id: "shocked",
-    label: "BURN.Shocked",
-    icon: "systems/tpo/module/assets/shocked.png",
-    description: "The next attack this creature makes has Disadvantage."
-  },
-  {
-    id: "harrowed",
-    label: "BURN.Harrowed",
-    icon: "systems/tpo/module/assets/harrowed.png",
-    description: "+1 Movement. The next instance of damage this creature suffers ignores Absorption."
-  },
-  {
-    id: "frozen",
-    label: "BURN.Frozen",
-    icon: "systems/tpo/module/assets/frozen.png",
-    description: "This creature cannot take the Move or Shift action. The next Defend action this creature takes has Disadvantage."
-  },
-  {
-    id: "drenched",
-    label: "BURN.Drenched",
-    icon: "systems/tpo/module/assets/drenched.png",
-    description: "-1 Movement. This creature becomes Vulnerable to Electric and Ice."
-  },
-  {
     id: "halfablaze",
     label: "STATUS.HalfAblaze",
     icon: "systems/tpo/module/assets/halfablaze.png",
@@ -252,6 +222,36 @@ TPO.statuses = [
     label: "STATUS.Hampered3",
     icon: "systems/tpo/module/assets/hampered3.png",
     description: "Something is preventing you from properly using your weapon. Reduce all Damage you deal by REPLACE. At the end of your turn, you may attempt a Challenging (+0) Endurance Test, reducing the Rating by SLs scored, to a minimum of 0. Once the Rating is reduced to 0, the status ends. Unless otherwise specified, the test is an Endurance Test."
+  },
+  {
+    id: "singed",
+    label: "BURN.Singed",
+    icon: "systems/tpo/module/assets/singed.png",
+    description: "At the start of this creatures turn, it takes its 3 Piercing Damage. If the creature is Large, it takes 5 Piercing Damage instead."
+  },
+  {
+    id: "shocked",
+    label: "BURN.Shocked",
+    icon: "systems/tpo/module/assets/shocked.png",
+    description: "The next attack this creature makes has Disadvantage."
+  },
+  {
+    id: "harrowed",
+    label: "BURN.Harrowed",
+    icon: "systems/tpo/module/assets/harrowed.png",
+    description: "+1 Movement. The next instance of damage this creature suffers ignores Absorption."
+  },
+  {
+    id: "frozen",
+    label: "BURN.Frozen",
+    icon: "systems/tpo/module/assets/frozen.png",
+    description: "This creature cannot take the Move or Shift action. The next Defend action this creature takes has Disadvantage."
+  },
+  {
+    id: "drenched",
+    label: "BURN.Drenched",
+    icon: "systems/tpo/module/assets/drenched.png",
+    description: "-1 Movement. This creature becomes Vulnerable to Electric and Ice."
   },
   {
     id: "marked",
