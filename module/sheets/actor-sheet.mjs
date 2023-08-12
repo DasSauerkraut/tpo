@@ -1191,7 +1191,7 @@ export class tpoActorSheet extends ActorSheet {
     const newXpCalc = game.settings.get("tpo", "Xp2");
 
     if(event.button === 0){
-      const cost = newXpCalc ? 4 + Math.floor(improvements / 5) * 5 : 4 + Math.floor(improvements / 5) * 2;
+      const cost = 4 + Math.floor(improvements / 5) * 5;
 
       if(improvements >= IMPROVEMENT_CAP){
         ui.notifications.error(game.i18n.format("ERROR.StatImpCap"));
@@ -1208,7 +1208,7 @@ export class tpoActorSheet extends ActorSheet {
         })
 
     } else {
-      const cost = 4 + Math.floor((improvements - 1) / 5) * 2;
+      const cost = 4 + Math.floor((improvements - 1) / 5) * 5;
 
       if(improvements <= 0){
         ui.notifications.error(game.i18n.format("ERROR.StatLessThanZero"));
