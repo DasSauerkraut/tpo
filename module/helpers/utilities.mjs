@@ -1092,8 +1092,8 @@ export class UtilsTPO {
           delayedPowers += `<div><br><b>${powerItem.name}</b> - Delay ${power.delayRemaining + 1} → ${power.delayRemaining}</div>`
           newDelayedPowers.push({
             delayRemaining: Number(power.delayRemaining),
-            powerId: power.id,
-            armamentId: armament.id
+            powerId: power.powerId,
+            armamentId: power.armamentId
           })
         }
       })
