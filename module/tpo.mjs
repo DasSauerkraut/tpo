@@ -7,7 +7,7 @@ import { tpoItemSheet } from "./sheets/item-sheet.mjs";
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { TPO } from "./helpers/config.mjs";
-import { DiceTPO, UtilsTPO } from "./helpers/utilities.mjs";
+import { DiceTPO, UtilsTPO, PowersTPO } from "./helpers/utilities.mjs";
 
 
 /* -------------------------------------------- */
@@ -269,6 +269,23 @@ Hooks.on("preUpdateItem", (item, data, diff) => {
       }}
     }
   }
+})
+
+Hooks.on('renderChatMessage', (chatMessage, html) => {
+  html.find('.delayed-power-btn').click(ev => {
+    const btn = $(ev.currentTarget);
+    const actorId = btn.data("actorId")
+    const powerId = btn.data("powerId")
+    const armamentId = btn.data("armamentId")
+    const actor = game.actors.get(actorId)
+    if(actor){
+      const power = actor.items.get(powerId)
+      const armament = actor.items.get(armamentId)
+      if(power && armament){
+        PowersTPO.powerRollHelper(actor, power, armament)
+      }
+    }
+  })
 })
 
 /* -------------------------------------------- */

@@ -249,3 +249,12 @@
 .load-dialog{
   display: flex;
 }
+
+.delayed-power-btn-used {
+  cursor: not-allowed;
+  background: none;
+  color: grey;
+}
+.delayed-power-btn-used:hover {
+  box-shadow: none;
+}

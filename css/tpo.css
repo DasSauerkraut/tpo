@@ -638,6 +638,17 @@
   display: flex;
 }
 
+.tpo .delayed-power-btn-used {
+  cursor: not-allowed;
+  background: none;
+  color: grey;
+}
+
+.tpo .delayed-power-btn-used:hover {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
 .tpo .resource-label {
   font-size: 12px;
   position: relative;

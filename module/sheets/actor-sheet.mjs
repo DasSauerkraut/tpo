@@ -1,5 +1,5 @@
 import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
-import { DiceTPO, UtilsTPO } from "../helpers/utilities.mjs";
+import { PowersTPO, UtilsTPO } from "../helpers/utilities.mjs";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -490,7 +490,7 @@ export class tpoActorSheet extends ActorSheet {
           }
         }
       }
-      this._performTest(skill, testData, 0, 0, weapon.name);
+      PowersTPO.performTest(this.actor, skill, testData, 0, 0, weapon.name);
     }
   }
 
@@ -566,7 +566,7 @@ export class tpoActorSheet extends ActorSheet {
                   }
                 }
               }
-              const result = await this._performTest(skill, testData, 0, 0, `Resting w/ ${selectedSkill}`);
+              const result = await PowersTPO.performTest(this.actor, skill, testData, 0, 0, `Resting w/ ${selectedSkill}`);
               let heal = 0;
               const SLs = result.results[0].SLs
               switch (selectedSupply) {
@@ -666,7 +666,7 @@ export class tpoActorSheet extends ActorSheet {
                         },
                     }
                   }
-                  this._performTest(skill, testData, 0, 0, `Defending w/ ${selectedSkill}`);
+                  PowersTPO.performTest(this.actor, skill, testData, 0, 0, `Defending w/ ${selectedSkill}`);
                   if(selectedSkill === "Dodge")
                     UtilsTPO.playContextSound({type: "combatAction"}, "dodge")
                   else
@@ -694,7 +694,7 @@ export class tpoActorSheet extends ActorSheet {
           ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
         this.actor.update({[`system.derived.ap.value`]: this.actor.system.derived.ap.value - 1 })
 
-        this._performTest(skill, testData, 0, 0, "Disengaging");
+        PowersTPO.performTest(this.actor, skill, testData, 0, 0, "Disengaging");
         break;
       case "morale":
         skill = this.actor.items.getName("Cool");
@@ -721,7 +721,7 @@ export class tpoActorSheet extends ActorSheet {
             }
           }
         }
-        this._performTest(skill, testData, 0, 0, "Morale Test");
+        PowersTPO.performTest(this.actor, skill, testData, 0, 0, "Morale Test");
         break;
       case "grapple":
         skill = this.actor.items.getName("Grapple");
@@ -739,7 +739,7 @@ export class tpoActorSheet extends ActorSheet {
           }
           testData.disadvantage = 1;
         }
-        this._performTest(skill, testData, 0, 0, "Grappling");
+        PowersTPO.performTest(this.actor, skill, testData, 0, 0, "Grappling");
         break;
       case "mounted":
         selectedSkill;
@@ -779,7 +779,7 @@ export class tpoActorSheet extends ActorSheet {
                       }
                     }
                   }
-                  this._performTest(skill, testData, 0, 0, `Defending w/ ${selectedSkill}`);
+                  PowersTPO.performTest(this.actor, skill, testData, 0, 0, `Defending w/ ${selectedSkill}`);
                 }
               },
             },
@@ -1049,7 +1049,7 @@ export class tpoActorSheet extends ActorSheet {
         }
       }
       
-    this._performTest(statOut, testData);
+    PowersTPO.performTest(this.actor, statOut, testData);
   }
 
   async _onPowerRoll(event, power = null){
@@ -1077,80 +1077,50 @@ export class tpoActorSheet extends ActorSheet {
     if(power.system.apCost > this.actor.system.derived.ap.value)
       ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
     this.actor.update({[`system.derived.ap.value`]: this.actor.system.derived.ap.value - power.system.apCost })
-    
-    if(armament.system.armamentType === 'Arquebus'){
-      await UtilsTPO.arquebusPowerHelper(this.actor, power).then((ammo) => this._preformPower(power, armament, {ammo: ammo}))
-    } else if(armament.system.armamentType === 'Warbanner'){
-      await UtilsTPO.warbannerHelper(this.actor, power).then(() => this._preformPower(power, armament))
-    } else if(armament.system.armamentType === 'Vapor Launcher'){
-      await UtilsTPO.vaporLauncherHelper(this.actor, power).then((ammo) => this._preformPower(power, armament, {ammo: ammo}))
-    } else if(armament.system.armamentType === 'Leech Blade'){
-      await UtilsTPO.leechBladeHelper(this.actor, power).then((damageBns) => this._preformPower(power, armament, {damageBns: damageBns}))
+
+    const delayMatches = power.system.description.match(/(Delay\s)(\d)/i)
+
+    if (delayMatches?.length > 0 && delayMatches[2] > 0) {
+      new Dialog({
+        title:'Power has Delay Keyword',
+        content:``,
+        buttons:{
+          yes: {
+            icon: "<i class='fas fa-check'></i>",
+            label: `Delay [${delayMatches[2]}] Power`,
+            callback: () => {
+              ui.notifications.info(`TPO | Power has been Delayed. It will trigger after ${delayMatches[2]} turns.`);
+              if(this.actor.system?.delayedPowers){
+                this.actor.update({
+                  [`system.delayedPowers`]: [...this.actor.system.delayedPowers, {
+                    delayRemaining: Number(delayMatches[2]),
+                    powerId: power.id,
+                    armamentId: armament.id
+                  }]
+                })
+              } else {
+                this.actor.update({
+                  [`system.delayedPowers`]: [{
+                    delayRemaining: Number(delayMatches[2]),
+                    powerId: power.id,
+                    armamentId: armament.id
+                  }]
+                })
+              }
+            },
+          },
+          no: {
+            icon: "<i class='fas fa-cancel'></i>",
+            label: `Do Not Delay Power`,
+            callback: () => {
+              PowersTPO.powerRollHelper(this.actor, power, armament)
+            }
+          }},
+        default:'yes',
+      }).render(true);
     } else {
-      this._preformPower(power, armament)
+      PowersTPO.powerRollHelper(this.actor, power, armament)
     }
-  }
-
-  _preformPower(power, armament, options = {}){
-    let usesAmmo = false;
-    let ammo;
-    if(options.ammo){
-      ammo = this.actor.items.getName(options.ammo).system
-      usesAmmo = true;
-    }
-
-    let damage = usesAmmo ? ammo.damageMod : power.system.damageMod;
-    if(options.damageBns){
-      damage = usesAmmo ? Number(ammo.damageMod) + Number(options.damageBns) : Number(power.system.damageMod) + Number(options.damageBns);
-    }
-
-    if(!power.name.includes("Reload"))
-      UtilsTPO.playContextSound(power, "use")
-
-    let skill = this.actor.items.getName(`Weapon (${armament.system.skill})`);
-    const isArmament = armament.type === "armament"
-
-    let element = ""
-    if(isArmament)
-      element = armament.system?.selectedElement?.display + " " + power.system?.selectedElement?.display
-    else
-      element = power.system?.selectedElement?.display
-
-    let testData = {
-      advantage: 0,
-      disadvantage: 0,
-      modifier: 0,
-      risk: false,
-      difficulty: 0,
-      hasDamage: true,
-      weakDamage: usesAmmo ? ammo.isWeak : power.system.isWeak,
-      damage: damage,
-      element: element,
-      elementDamage: usesAmmo ? ammo.elementDamageMod : power.system.elementDamageMod,
-      attacks: power.system.attacks
-    }
-
-    if(skill === undefined){
-      skill = {
-        name: "Weapon Skill",
-        system: {
-          total: this.actor.system.stats.ws.value
-        }
-      }
-    }
-    if(testData.attacks < 1){
-      let chatContent = `
-        <b>${this.actor.name} | ${power.name}</b><br>
-        ${power.system.descriptionDisplay}
-      `
-      let chatData = {
-        content: chatContent,
-        user: game.user._id,
-      };
-      ChatMessage.create(chatData, {});
-      return;
-    }
-    this._performTest(skill, testData, isArmament ? armament.system.damage.value : 0, isArmament ? armament.system.elementDamage.value : 0, power.name);
   }
 
   /**
@@ -1383,86 +1353,10 @@ export class tpoActorSheet extends ActorSheet {
     const skill = this.actor.items.get(li.data("itemId"));
 
     if(event.button === 0){
-      this._performTest(skill);
+      PowersTPO.performTest(this.actor, skill);
     } else {
       skill.sheet.render(true);
     }
-  }
-
-  async _performTest(skill, testData = {}, armamentDmg = 0, armamentEleDmg = 0, name = null){
-    return new Promise(resolve => {
-      if(Object.keys(testData).length === 0){
-        testData = {
-          hasDamage: false,
-          advantage: 0,
-          disadvantage: 0,
-          modifier: 0,
-          risk: false,
-          weakDamage: false,
-          difficulty: 20,
-          damage: 0,
-          name: null
-        }
-      }
-  
-      testData.actor = this.actor
-  
-      if(name) testData.name = name;
-      console.log(skill)
-      testData.target = skill.system.total;
-  
-      //Narvid Racial Bonus
-      if((this.actor.system.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
-      (skill.system.stat === 'ws' || skill.system.stat === 'agi' || skill.system.stat === 'will') &&
-      this.actor.system.derived.hp.value > this.actor.system.derived.bloodied.value){
-        if(UtilsTPO.isInCombat(this.actor._id))
-          testData.modifier += 10;
-      }
-  
-      //Raivo Racial Bonus
-      if((this.actor.system.details.species.value === game.i18n.format("SPECIES.Raivoaa")) && 
-      (skill.system.stat === 'ws' || skill.system.stat === 'agi' || skill.system.stat === 'will') &&
-      this.actor.system.derived.hp.value <= this.actor.system.derived.bloodied.value){
-        if(UtilsTPO.isInCombat(this.actor._id))
-          testData.advantage += 1;
-      }
-  
-      testData.actorName = this.actor.name;
-  
-      let callback = (html) => {
-        testData.advantage = Number(html.find('[name="advantage"]').val());
-        testData.disadvantage = Number(html.find('[name="disadvantage"]').val());
-        testData.modifier = Number(html.find('[name="modifier"]').val());
-        testData.risk = html.find('[name="risk"]').is(':checked');
-        testData.difficulty = Number(html.find('[name="difficulty"]').val());
-        testData.damage = Number(html.find('[name="damage"]').val()) + this.actor.system.stats.str.bonus + armamentDmg;
-        testData.weakDamage = html.find('[name="weak-damage"]').is(':checked');
-        testData.elementDamage = Number(html.find('[name="elementDamage"]').val()) + armamentEleDmg;
-        return testData;
-      }
-
-      renderTemplate('systems/tpo/templates/dialog/rollTest.html', testData).then(dlg => {
-        new Dialog({
-          title: game.i18n.localize("SYS.PerformTest"),
-          content: dlg,
-          buttons: {
-            rollButton: {
-              label: game.i18n.localize("SYS.PerformTest"),
-              callback: html => {
-                callback(html);
-                DiceTPO.rollTest(skill, testData).then(result => {
-                  DiceTPO.prepareChatCard(result).then(context => {
-                    DiceTPO.createChatCard(context.chatData, context.chatContext)
-                  });
-                  resolve(result)
-                });
-              }
-            },
-          },
-          default: "rollButton"
-        }).render(true);
-      });
-    })
   }
 
   _onArmamentExpand(event) {
