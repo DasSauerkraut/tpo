@@ -1,5 +1,6 @@
 import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
 import { PowersTPO, UtilsTPO } from "../helpers/utilities.mjs";
+import { TPO } from "../helpers/config.mjs";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -40,6 +41,7 @@ export class tpoActorSheet extends ActorSheet {
     // Add the actor's data to context.data for easier access, as well as flags.
     context.system = actorData.system;
     context.flags = actorData.flags;
+    context.isGm = game.user.isGM;
 
     // Prepare character data and items.
     if (actorData.type == 'character') {
@@ -169,6 +171,8 @@ export class tpoActorSheet extends ActorSheet {
     })
 
     html.find('#hp-heal').click(this._onRest.bind(this));
+
+    html.find('#char-roll').click(this._onRollStats.bind(this));
 
     html.find('#ap-max').click(event => {
       event.preventDefault();
@@ -607,6 +611,73 @@ export class tpoActorSheet extends ActorSheet {
         default: "rollButton"
       }).render(true);
     });
+  }
+
+  _onRollStats(event){
+    new Dialog({
+      title:`Randomize This Character's Stats`,
+      content:``,
+      buttons:{
+        yes: {
+          icon: "<i class='fas fa-dice'></i>",
+          label: `Fresh Stat Randomization`,
+          callback: async () => {
+            const rollArray = [
+              await new Roll(`2d10`).roll(),
+              await new Roll(`2d10`).roll(),
+              await new Roll(`2d10`).roll(),
+              await new Roll(`2d10`).roll(),
+              await new Roll(`2d10`).roll(),
+              await new Roll(`2d10`).roll(),
+              await new Roll(`2d10`).roll(),
+              await new Roll(`2d10`).roll(),
+            ]
+            const culture = this.actor.system.details.species.value;
+            this.actor.update({
+              [`system.stats.ws.initial`]: rollArray[0].total + TPO.stats[culture].ws,
+              [`system.stats.str.initial`]: rollArray[1].total + TPO.stats[culture].str,
+              [`system.stats.con.initial`]: rollArray[2].total + TPO.stats[culture].con,
+              [`system.stats.agi.initial`]: rollArray[3].total + TPO.stats[culture].agi,
+              [`system.stats.dex.initial`]: rollArray[4].total + TPO.stats[culture].dex,
+              [`system.stats.int.initial`]: rollArray[5].total + TPO.stats[culture].int,
+              [`system.stats.will.initial`]: rollArray[6].total + TPO.stats[culture].will,
+              [`system.stats.cha.initial`]: rollArray[7].total + TPO.stats[culture].cha,
+            })
+          }
+        },
+        existing: {
+          icon: "<i class='fas fa-check'></i>",
+          label: `Randomize From Existing Stats`,
+          callback: async () => {
+            const rollArray = [
+              await new Roll(`2d10`).roll(),
+              await new Roll(`2d10`).roll(),
+              await new Roll(`2d10`).roll(),
+              await new Roll(`2d10`).roll(),
+              await new Roll(`2d10`).roll(),
+              await new Roll(`2d10`).roll(),
+              await new Roll(`2d10`).roll(),
+              await new Roll(`2d10`).roll(),
+            ]
+            this.actor.update({
+              [`system.stats.ws.initial`]: rollArray[0].total + this.actor.system.stats.ws.initial - 10,
+              [`system.stats.str.initial`]: rollArray[1].total + this.actor.system.stats.str.initial - 10,
+              [`system.stats.con.initial`]: rollArray[2].total + this.actor.system.stats.con.initial - 10,
+              [`system.stats.agi.initial`]: rollArray[3].total + this.actor.system.stats.agi.initial - 10,
+              [`system.stats.dex.initial`]: rollArray[4].total + this.actor.system.stats.dex.initial - 10,
+              [`system.stats.int.initial`]: rollArray[5].total + this.actor.system.stats.int.initial - 10,
+              [`system.stats.will.initial`]: rollArray[6].total + this.actor.system.stats.will.initial - 10,
+              [`system.stats.cha.initial`]: rollArray[7].total + this.actor.system.stats.cha.initial - 10,
+            })
+          }
+        },
+        no: {
+          icon: "<i class='fas fa-cancel'></i>",
+          label: `Cancel`
+        },
+      },
+      default:'no',
+    }).render(true);
   }
 
   async  _onCombatAction(event) {

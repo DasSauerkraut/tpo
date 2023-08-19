@@ -1,7 +1,12 @@
 <div>
   <div class="grid grid-9col stats">
     <div class="stat-container">
-      <div class="stat-header">&nbsp</div>
+      <div class="stat-header-row">
+        {{#if isGm}}
+        <a title="Randomize Character Stats" id="char-roll" class="rest"><i class="fas fa-dice"></i></a>
+        {{/if}}
+        &nbsp
+      </div>
       <div title="{{localize 'TIP.StatInit'}}" class="stat-header-row">Initial</div>
       <div title="{{localize 'TIP.StatImp'}}" class="stat-header-row">Imp.</div>
       <div title="{{localize 'TIP.StatMod'}}" class="stat-header-row">Mod.</div>
