@@ -50,9 +50,24 @@
         {{#each system.inventory.lThigh as |item id|}}
         <li class="inventory-item expand-popout" data-item-id="{{item._id}}">
           <div class="grid grid-5col small-gap">
-            <div class="grid-span-3 name rollable  item-name" title="{{item.name}}" data-item-id="{{item._id}}">{{item.name}}</div>
+            <div class="grid-span-3 name rollable  item-name" title="{{item.name}}" data-item-id="{{item._id}}">
+              {{#ifEquals item.type "wornItem"}}
+                <i class="wear-item fas fa-helmet-battle {{#if item.system.worn}}worn{{/if}}"></i>
+              {{/ifEquals}}
+              {{item.name}}
+            </div>
             <div class="field">{{item.system.splendor}}</div>
-            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.system.enc}}
+            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">
+              {{#ifEquals item.type "wornItem"}}
+                {{#if item.system.worn}}
+                {{item.system.encPerZone}}
+                {{else}}
+                {{item.system.enc}}
+                {{/if}}
+              {{/ifEquals}}
+              {{#ifNotEqual item.type "wornItem"}}
+              {{item.system.enc}}
+              {{/ifNotEqual}}
               {{#if item.system.stack.stackable}}
                 ({{item.system.stack.current}}/{{item.system.stack.max}})
               {{/if}}
@@ -114,9 +129,24 @@
         {{#each system.inventory.lHip as |item id|}}
         <li class="inventory-item expand-popout" data-item-id="{{item._id}}">
           <div class="grid grid-5col small-gap">
-            <div class="grid-span-3 name rollable  item-name" title="{{item.name}}" data-item-id="{{item._id}}">{{item.name}}</div>
+            <div class="grid-span-3 name rollable  item-name" title="{{item.name}}" data-item-id="{{item._id}}">
+              {{#ifEquals item.type "wornItem"}}
+                <i class="wear-item fas fa-helmet-battle {{#if item.system.worn}}worn{{/if}}"></i>
+              {{/ifEquals}}
+              {{item.name}}
+            </div>
             <div class="field">{{item.system.splendor}}</div>
-            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.system.enc}}
+            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">
+              {{#ifEquals item.type "wornItem"}}
+                {{#if item.system.worn}}
+                {{item.system.encPerZone}}
+                {{else}}
+                {{item.system.enc}}
+                {{/if}}
+              {{/ifEquals}}
+              {{#ifNotEqual item.type "wornItem"}}
+              {{item.system.enc}}
+              {{/ifNotEqual}}
               {{#if item.system.stack.stackable}}
                 ({{item.system.stack.current}}/{{item.system.stack.max}})
               {{/if}}
@@ -187,9 +217,24 @@
         {{#each system.inventory.chest as |item id|}}
         <li class="inventory-item expand-popout" data-item-id="{{item._id}}">
           <div class="grid grid-5col small-gap">
-            <div class="grid-span-3 name rollable  item-name" title="{{item.name}}" data-item-id="{{item._id}}">{{item.name}}</div>
+            <div class="grid-span-3 name rollable  item-name" title="{{item.name}}" data-item-id="{{item._id}}">
+              {{#ifEquals item.type "wornItem"}}
+                <i class="wear-item fas fa-helmet-battle {{#if item.system.worn}}worn{{/if}}"></i>
+              {{/ifEquals}}
+              {{item.name}}
+            </div>
             <div class="field">{{item.system.splendor}}</div>
-            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.system.enc}}
+            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">
+              {{#ifEquals item.type "wornItem"}}
+                {{#if item.system.worn}}
+                {{item.system.encPerZone}}
+                {{else}}
+                {{item.system.enc}}
+                {{/if}}
+              {{/ifEquals}}
+              {{#ifNotEqual item.type "wornItem"}}
+              {{item.system.enc}}
+              {{/ifNotEqual}}
               {{#if item.system.stack.stackable}}
                 ({{item.system.stack.current}}/{{item.system.stack.max}})
               {{/if}}
@@ -260,9 +305,24 @@
         {{#each system.inventory.rThigh as |item id|}}
         <li class="inventory-item expand-popout inventory-item" data-item-id="{{item._id}}">
           <div class="grid grid-5col small-gap">
-            <div class="grid-span-3 name rollable  item-name" title="{{item.name}}" data-item-id="{{item._id}}">{{item.name}}</div>
+            <div class="grid-span-3 name rollable  item-name" title="{{item.name}}" data-item-id="{{item._id}}">
+              {{#ifEquals item.type "wornItem"}}
+                <i class="wear-item fas fa-helmet-battle {{#if item.system.worn}}worn{{/if}}"></i>
+              {{/ifEquals}}
+              {{item.name}}
+            </div>
             <div class="field">{{item.system.splendor}}</div>
-            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.system.enc}}
+            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">
+              {{#ifEquals item.type "wornItem"}}
+                {{#if item.system.worn}}
+                {{item.system.encPerZone}}
+                {{else}}
+                {{item.system.enc}}
+                {{/if}}
+              {{/ifEquals}}
+              {{#ifNotEqual item.type "wornItem"}}
+              {{item.system.enc}}
+              {{/ifNotEqual}}
               {{#if item.system.stack.stackable}}
                 ({{item.system.stack.current}}/{{item.system.stack.max}})
               {{/if}}
@@ -324,9 +384,24 @@
         {{#each system.inventory.rHip as |item id|}}
         <li class="inventory-item expand-popout" data-item-id="{{item._id}}">
           <div class="grid grid-5col small-gap">
-            <div class="grid-span-3 name rollable  item-name" title="{{item.name}}" data-item-id="{{item._id}}">{{item.name}}</div>
+            <div class="grid-span-3 name rollable  item-name" title="{{item.name}}" data-item-id="{{item._id}}">
+              {{#ifEquals item.type "wornItem"}}
+                <i class="wear-item fas fa-helmet-battle {{#if item.system.worn}}worn{{/if}}"></i>
+              {{/ifEquals}}
+              {{item.name}}
+            </div>
             <div class="field">{{item.system.splendor}}</div>
-            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">{{item.system.enc}}
+            <div class="field rollable stack" data-item-id="{{item._id}}" title="{{#if item.system.stack.stackable}}Stack Enc (Stack Current/Stack Max){{/if}}">
+              {{#ifEquals item.type "wornItem"}}
+                {{#if item.system.worn}}
+                {{item.system.encPerZone}}
+                {{else}}
+                {{item.system.enc}}
+                {{/if}}
+              {{/ifEquals}}
+              {{#ifNotEqual item.type "wornItem"}}
+              {{item.system.enc}}
+              {{/ifNotEqual}}
               {{#if item.system.stack.stackable}}
                 ({{item.system.stack.current}}/{{item.system.stack.max}})
               {{/if}}

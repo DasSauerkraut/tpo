@@ -1665,23 +1665,31 @@
 .tpo .inventory-col .sticky-1 {
   position: sticky;
   top: 0px;
+  z-index: 1;
+  background: #dad8cc;
 }
 
 .tpo .inventory-col .sticky-2 {
   position: sticky;
   bottom: 41px;
   top: 21px;
+  z-index: 1;
+  background: #dad8cc;
 }
 
 .tpo .inventory-col .sticky-3 {
   position: sticky;
   top: 41px;
   bottom: 21px;
+  z-index: 1;
+  background: #dad8cc;
 }
 
 .tpo .inventory-col .sticky-4 {
   position: sticky;
   bottom: 0px;
+  z-index: 1;
+  background: #dad8cc;
 }
 
 .tpo .inventory-col .inventory-section {
@@ -1737,6 +1745,12 @@
 .tpo .inventory-col .inventory-section .inventory-item .name {
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
 }
 
 .tpo .inventory-col .inventory-section .inventory-item .field {
@@ -1767,6 +1781,17 @@
 .tpo .inventory-col .inventory-section ul {
   list-style: none;
   padding: 0px;
+}
+
+.tpo .wear-item {
+  height: 12px;
+  margin: 0px;
+  margin-right: 3px;
+  color: var(--color-border-light-primary);
+}
+
+.tpo .worn {
+  color: var(--color-text-dark-primary);
 }
 
 .tpo .inventory-header {
@@ -2013,7 +2038,7 @@
 .tpo .expand-popout .popout {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 200;
   top: 0;
   right: 0;
   width: 400px;

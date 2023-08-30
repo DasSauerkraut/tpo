@@ -211,7 +211,7 @@ export class tpoActor extends Actor {
     }
 
     this.items.forEach( async i => {
-      if(i.system.splendor){
+      if(i.system.splendor && i.type !== "wornItem" || (i.type === "wornItem" && i.system.worn)){
         actorData.info.splendor.items += i.system.splendor;
       }
 
@@ -362,6 +362,25 @@ export class tpoActor extends Actor {
         mundaneWeapons.push(i)
         inventory[i.system.location].push(i)
         actorData.derived.encumbrance.locations[i.system.location].value += i.system.enc;
+      } else if(i.type === "wornItem" && this.type === "character"){
+        const enc = i.system.worn ? i.system.encPerZone : i.system.enc
+        if(i.system.worn && i.system.encPerZone > 0) {
+          inventory.lHip.push(i)
+          inventory.lThigh.push(i)
+          inventory.chest.push(i)
+          inventory.rThigh.push(i)
+          inventory.rHip.push(i)
+          actorData.derived.encumbrance.locations.lHip.value += enc;
+          actorData.derived.encumbrance.locations.lThigh.value += enc;
+          actorData.derived.encumbrance.locations.chest.value += enc;
+          actorData.derived.encumbrance.locations.rThigh.value += enc;
+          actorData.derived.encumbrance.locations.rHip.value += enc;
+          if(actorData.autocalc.absorption)
+            actorData.derived.absorption.armor = i.system.absorption;
+        } else {
+          inventory[i.system.location].push(i)
+          actorData.derived.encumbrance.locations[i.system.location].value += enc;
+        }
       } else if (i.type ==="zone" && this.type === "largenpc"){
         i.system.powers.forEach((pwr, idx) => {
           const item = this.items.get(pwr._id);
@@ -418,6 +437,12 @@ export class tpoActor extends Actor {
     if(this.type === "character"){
       locations.forEach(location => {
         inventory[location] = UtilsTPO.sortAlphabetically(inventory[location]);
+        inventory[location].forEach((item, i) => {
+          if(item.type === "wornItem"){
+            inventory[location].splice(i, 1);
+            inventory[location].unshift(item);
+          }
+        });
         let overenc = actorData.derived.encumbrance.locations[location].value - actorData.derived.encumbrance.locations[location].max
         if(location === 'chest')
           overenc = actorData.derived.encumbrance.locations[location].value - (actorData.stats.str.bonus + 1)

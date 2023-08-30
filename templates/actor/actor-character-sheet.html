@@ -124,7 +124,14 @@
               <span class="absorption-label">Base</span>
             </span>
             <span class="absorption-item">
-              <input type="text" name="system.derived.absorption.armor" value="{{system.derived.absorption.armor}}" data-dtype="Number"/>
+              {{#if system.autocalc.absorption}}
+              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="armor-absorption" class="field two-value">{{system.derived.absorption.armor}}</a>
+              {{else}}
+              <div class="two-value autocalc">
+                <input type="text" name="system.derived.absorption.armor" value="{{system.derived.absorption.armor}}" data-dtype="Number"/>
+                <a title="{{localize 'SYS.ToggleAutocalc'}}" id="armor-absorption" class="reset"><i class="fas fa-reply"></i></a>
+              </div>
+              {{/if}}
               <span class="absorption-label">Armor</span>
             </span>
             <span class="absorption-item">

@@ -18,20 +18,28 @@
   .sticky-1{
     position: sticky;
     top: 0px;
+    z-index: 1;
+    background: #dad8cc;
   }
   .sticky-2{
     position: sticky;
     bottom: 41px;
     top: 21px;
+    z-index: 1;
+    background: #dad8cc;
   }
   .sticky-3{
     position: sticky;
     top: 41px;
-    bottom: 21px
+    bottom: 21px;
+    z-index: 1;
+    background: #dad8cc;
   }
   .sticky-4{
     position: sticky;
     bottom: 0px;
+    z-index: 1;
+    background: #dad8cc;
   }
   .inventory-section{
     position: relative;
@@ -69,6 +77,8 @@
       padding: 1px;
       .name{
         text-overflow: ellipsis;
+        display: flex;
+        align-items: center;
       }
       .field{
         display: flex;
@@ -91,6 +101,17 @@
       padding: 0px;
     }
   }  
+}
+
+.wear-item {
+  height: 12px;
+  margin: 0px;
+  margin-right: 3px;
+  color: var(--color-border-light-primary);
+}
+
+.worn {
+  color: var(--color-text-dark-primary);
 }
 
 .inventory-header{

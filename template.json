@@ -298,7 +298,7 @@
     }
   },
   "Item": {
-    "types": ["item", "skill", "armament", "power", "ability", "zone", "mundaneWeapon"],
+    "types": ["item", "skill", "armament", "power", "ability", "zone", "mundaneWeapon", "wornItem"],
     "templates": {
       "base": {
         "description": "",
@@ -335,6 +335,13 @@
       "damage": 0,
       "splendor": 0,
       "apCost": 2
+    },
+    "wornItem": {
+      "templates": ["base", "physical"],
+      "absorption": 0,
+      "splendor": 0,
+      "encPerZone": 0,
+      "worn": false
     },
     "skill": {
       "templates": ["base"],

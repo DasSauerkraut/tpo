@@ -198,6 +198,10 @@ export class tpoActorSheet extends ActorSheet {
       event.preventDefault();
       this.actor.update({[`system.autocalc.absorption`]: !this.actor.system.autocalc.absorption })
     })
+    html.find('#armor-absorption').click(event => {
+      event.preventDefault();
+      this.actor.update({[`system.autocalc.absorption`]: !this.actor.system.autocalc.absorption })
+    })
 
     html.find('.powerDelete').click(this._onPowerDelete.bind(this))
     html.find('.powerRoll').click(this._onPowerRoll.bind(this))
@@ -240,6 +244,8 @@ export class tpoActorSheet extends ActorSheet {
     })
     html.find('.item-name').mousedown(this._onPowerOrArmamentEdit.bind(this))
     html.find('.stack').mousedown(this._onStackClick.bind(this))
+    html.find('.wear-item').click(this._onWearItemToggle.bind(this));
+
 
     html.find('.containerDelete').click(this._onContainerDelete.bind(this))
 
@@ -899,7 +905,7 @@ export class tpoActorSheet extends ActorSheet {
         //   UtilsTPO.payForItem(i.system, this.actor.data._id)
         // }
 
-        if(i.type === "item" || i.type === "armament" || i.type === "mundaneWeapon")
+        if(i.type === "item" || i.type === "armament" || i.type === "mundaneWeapon" || i.type === "wornItem")
           await this._onItemDrop(event, duplicate(i))
         else if (i.type === "power"){
           if($(event.target).parents(".armament-container").length)
@@ -1538,5 +1544,16 @@ export class tpoActorSheet extends ActorSheet {
   async _onResolveToggle(event){
     const element = event.currentTarget;
     await this.actor.update({[`system.info.resolve.${element.id}`]: !this.actor.system.info.resolve[element.id] })
+  }
+
+  async _onWearItemToggle(event){
+    event.preventDefault()
+    let li = $(event.currentTarget).parents(".inventory-item");
+    const item = duplicate(this.actor.items.get(li.data("itemId")));
+    console.log(item)
+
+    item.system.worn = !item.system.worn;
+
+    await this.actor.updateEmbeddedDocuments("Item", [item]);
   }
 }

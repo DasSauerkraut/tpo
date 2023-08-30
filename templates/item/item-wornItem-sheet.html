@@ -1,0 +1,61 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+      <div class="grid grid-2col">
+        <div class="money-header">
+          <div class="money-grid grid grid-4col">
+            <span class="money"><input class="money-field" type="text" name="system.value.l" value="{{system.system.value.l}}" data-dtype="Number"/>ℓ</span>
+            <span class="money"><input class="money-field" type="text" name="system.value.s" value="{{system.system.value.s}}" data-dtype="Number"/>s</span>
+            <span class="money"><input class="money-field" type="text" name="system.value.c" value="{{system.system.value.c}}" data-dtype="Number"/>c = </span>
+            <div class="money-total">{{system.system.value.total}}ℓ</div>
+          </div>
+          <span class="money-label">Value</span>
+          </div>
+          <div class="resource">
+            <label class="resource-label">Splendor</label>
+            <input type="text" name="system.splendor" value="{{system.system.splendor}}" data-dtype="Number"/>
+          </div>
+          <div class="resource">
+            <label class="resource-label">Encumberence (When Not Worn)</label>
+            <input type="text" name="system.enc" value="{{system.system.enc}}" data-dtype="Number"/>
+          </div>
+          <div class="resource">
+            <label class="resource-label">Encumberence Per Zone</label>
+            <input type="text" name="system.encPerZone" value="{{system.system.encPerZone}}" data-dtype="Number"/>
+          </div>
+          <div class="resource">
+            <label class="resource-label">Rarity</label>
+            <select name="system.rarity" type="text" value="{{system.system.rarity}}">
+              {{#select system.system.rarity}}
+                <option value="{{localize 'RARITY.Common'}}">{{localize 'RARITY.Common'}}</option>
+                <option value="{{localize 'RARITY.Uncommon'}}">{{localize 'RARITY.Uncommon'}}</option>
+                <option value="{{localize 'RARITY.Scarce'}}">{{localize 'RARITY.Scarce'}}</option>
+                <option value="{{localize 'RARITY.Exotic'}}">{{localize 'RARITY.Exotic'}}</option>
+              {{/select}}
+            </select>
+          </div>
+        <div class="resource">
+          <label class="resource-label">Absorption</label>
+          <input type="text" name="system.absorption" value="{{system.system.absorption}}" data-dtype="Number"/>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="description">Description</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="description">
+      {{!-- To render inline rolls in a TinyMCE editor, you need to pass the parent actor's (if any) roll data to the rollData prop. --}}
+      {{editor system.system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
+  </section>
+</form>
