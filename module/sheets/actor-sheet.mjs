@@ -201,6 +201,7 @@ export class tpoActorSheet extends ActorSheet {
 
     html.find('.powerDelete').click(this._onPowerDelete.bind(this))
     html.find('.powerRoll').click(this._onPowerRoll.bind(this))
+    html.find('.basic-attack').click(this._onBasicAttack.bind(this))
     html.find('.power-draggable').mousedown(this._onPowerOrArmamentEdit.bind(this))
     html.find('.armament-name').mousedown(this._onPowerOrArmamentEdit.bind(this))
 
@@ -1121,6 +1122,56 @@ export class tpoActorSheet extends ActorSheet {
       }
       
     PowersTPO.performTest(this.actor, statOut, testData);
+  }
+
+  async _onBasicAttack(event){
+    let container = null;
+    if(event){
+      event.preventDefault();
+      container = $(event.target).parents(".container-header");
+    }
+
+    console.log(container)
+    
+    const armament = await this.actor.items.get(container.data("armament-id"));
+    console.log(armament)
+    let skill = this.actor.items.getName(`Weapon (${armament.system.skill})`);
+
+    if(skill === undefined){
+      skill = {
+        name: "Weapon Skill",
+        system: {
+          total: this.actor.system.stats.ws.value
+        }
+      }
+    }
+
+    const apCost = 2;
+    if(apCost > this.actor.system.derived.ap.value)
+      ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
+    this.actor.update({[`system.derived.ap.value`]: this.actor.system.derived.ap.value - apCost })
+
+    let weakDamage = false;
+    if(armament.system.armamentType === 'Vapor Launcher' || armament.system.armamentType === 'Arquebus')
+      weakDamage = true;
+
+    let damage = armament.system.armamentType === 'Greatsword' ? -4 : 0
+
+    const testData = {
+      advantage: 0,
+      disadvantage: 0,
+      modifier: 0,
+      risk: false,
+      difficulty: 0,
+      hasDamage: true,
+      weakDamage: weakDamage,
+      damage: damage,
+      element: armament.system?.selectedElement?.display,
+      elementDamage: 0,
+      attacks: 1
+    }
+
+    PowersTPO.performTest(this.actor, skill, testData, armament.system.damage.value, armament.system.elementDamage.value, "Basic Attack")
   }
 
   async _onPowerRoll(event, power = null){

@@ -361,9 +361,10 @@
               data-item-id="{{armament._id}}"
             >
               <div>
-                <div class="container-header">
+                <div class="container-header" data-armament-id="{{armament._id}}">
                   Powers
                   ({{armament.system.capacity.currentPowers}}/{{armament.system.capacity.power}})
+                  <i class="fas fa-sword basic-attack rollable" data-tooltip="Basic Melee Attack"></i>
                 </div>
                 {{#ifEquals item.system.powers.length 0}}
                 <div>No powers</div>

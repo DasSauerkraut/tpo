@@ -320,7 +320,7 @@ TPO.injuries = [
   {
     label: "INJURY.Disorientated",
     icon: "icons/skills/wounds/blood-spurt-spray-red.webp",
-    description: "The blow knocks you about, disorientating you. Make a Demanding (+10) Endurance Test, if you fail, immediately make a basic attack directed at the nearest creature, allied or not. Gain a Stunned Status."
+    description: "The blow knocks you about, disorientating you. Make a Demanding (+10) Endurance Test, if you fail, immediately make a basic attack directed at the nearest creature, allied or not. Gain a Rattled Status."
   },
   {
     label: "INJURY.BrokenNose",
