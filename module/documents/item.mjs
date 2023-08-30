@@ -182,7 +182,7 @@ export class tpoItem extends Item {
         .replaceAll("NUM", match[2])
       }"><b>Launched ${match[2]}</b></a>`)    })
     // Weak
-    description = description.replaceAll("Weak", `<a class='rollable' title="${game.i18n.format("KEYWORD.Weak")}"><b>Weak</b></a>`)
+    description = description.replaceAll("Weak", `<a class='rollable' title="${game.i18n.format("KEYWORD.Weak").replaceAll("NUM", this.actor.system.stats.str.bonus)}"><b>Weak</b></a>`)
 
     const rechargeRegExp = /(Recharge )(\d+)/g
     const rechargeMatches = [...description.matchAll(rechargeRegExp)]

@@ -8,102 +8,6 @@ TPO.foobar = {
 
 TPO.statuses = [
   {
-    id: "halfablaze",
-    label: "STATUS.HalfAblaze",
-    icon: "systems/tpo/module/assets/halfablaze.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "ablaze",
-    label: "STATUS.Ablaze",
-    icon: "icons/svg/fire.svg",
-    description: "You have been set on fire, which is quite unpleasant.<br>At the start of your turn, you must make a Morale Test, and then take 1d10 damage.<br><br>This status lasts until you succeed a<b>Difficult (-10) Athletics Test</b> at the end of your turn."
-  },
-  {
-    id: "halfblinded",
-    label: "STATUS.HalfBlinded",
-    icon: "systems/tpo/module/assets/halfblinded.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "blinded",
-    label: "STATUS.Blinded",
-    icon: "icons/svg/blind.svg",
-    description: "You cannot see, being blinded by some means.<br>You have Disadvantage when defending against attacks, and when making Melee Attacks. If you’re performing a ranged attack, you have 2 Disadvantages.<br><br>This status will last until what is obscuring your vision is removed, or if it is some irritant in your eye, until you succeed a <b>Challenging (+0) Endurance Test</b>."
-  },
-  {
-    id: "halfpanicking",
-    label: "STATUS.HalfPanicking",
-    icon: "systems/tpo/module/assets/halfpanicking.png",
-    description: "The Difficulty of all Dodge, Weapon, and Cool Tests in increased by one step. If you fail a Morale Test while you have a Wavering Status, gain a Panicking Status. <br>An ally can remove this status from you by spending 1 AP and succeeding a <b>Challenging (+0) Leadership Test</b>."
-  },
-  {
-    id: "panicking",
-    label: "STATUS.Panicking",
-    icon: "icons/svg/terror.svg",
-    description: "You are panicking, unable to think straight, and convinced that death has come a-knocking. You must use your AP to get yourself as far away from danger as you can on your turn, fleeing without taking any time to Disengage. You suffer Disadvantage on all Tests not related to running and hiding.<br><br>This status lasts until you can either spend a round out of sight from any danger or you succeed a <b>Challenging (+0) Cool Test</b> at the end of your turn, provided you were not engaged at the start of your turn.<br>An ally can remove this status from you by spending 1 AP and succeeding a <b>Challenging (+0) Leadership Test</b>."
-  },
-  {
-    id: "halfprone",
-    label: "STATUS.HalfProne",
-    icon: "systems/tpo/module/assets/halfprone.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "prone",
-    label: "STATUS.Prone",
-    icon: "icons/svg/falling.svg",
-    description: "You’ve either laid down intentionally or been knocked to the ground. Melee attacks targeting you have Advantage. Any melee attack you make has Disadvantage. Ranged attacks targeting you have Disadvantage. Movement Costs are doubled.<br><br>You can stand with 1 AP."
-  },
-  {
-    id: "halfslowed",
-    label: "STATUS.HalfSlowed",
-    icon: "systems/tpo/module/assets/halfslowed.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "slowed",
-    label: "STATUS.Slowed",
-    icon: "icons/svg/anchor.svg",
-    description: "The AP cost of taking the Move Action is increased by 1 AP. <br><br>This status lasts until you succeed a <b>Hard (-20) Might Test</b> at the end of your turn."
-  },
-  {
-    id: "halfstunned",
-    label: "STATUS.HalfStunned",
-    icon: "systems/tpo/module/assets/halfstunned.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "stunned",
-    label: "STATUS.Stunned",
-    icon: "icons/svg/daze.svg",
-    description: "A heavy blow has disoriented you or you are otherwise dazed and confused. The AP cost of taking the Move Action is increased by 1 AP. You have Disadvantage on all rolls.<br><br>This status lasts until you succeed a <b>Challenging (+0) Endurance Test</b> at the end of your turn."
-  },
-  {
-    id: "halfunconcious",
-    label: "STATUS.HalfUnconcious",
-    icon: "systems/tpo/module/assets/halfunconcious.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "unconcious",
-    label: "STATUS.Unconcious",
-    icon: "icons/svg/sleep.svg",
-    description: "You cannot move, perform any action, and you cannot oppose any roll. If you are Downed, you can still make tests to Stabilize, however. The first attack made against you automatically crits and deals 2x damage.<br><br>You will wake up after succeeding 2 <b>Challenging (+0) Endurance Tests</b> or upon taking damage, provided you are not Downed."
-  },
-  {
-    id: "halfweakened",
-    label: "STATUS.HalfWeakened",
-    icon: "systems/tpo/module/assets/halfweakened.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "weakened",
-    label: "STATUS.Weakened",
-    icon: "icons/svg/downgrade.svg",
-    description: "For the duration of this status, treat your Absorption as if it were 0 when determining damage.<br><br>This status lasts until you succeed a <b>Difficult (-10)Endurance Test</b> at the end of your turn."
-  },
-  {
     id: "halfbleeding",
     label: "STATUS.HalfBleeding",
     icon: "systems/tpo/module/assets/halfbleeding.png",
@@ -224,6 +128,102 @@ TPO.statuses = [
     description: "Something is preventing you from properly using your weapon. Reduce all Damage you deal by REPLACE. At the end of your turn, you may attempt a Challenging (+0) Endurance Test, reducing the Rating by SLs scored, to a minimum of 0. Once the Rating is reduced to 0, the status ends. Unless otherwise specified, the test is an Endurance Test."
   },
   {
+    id: "halfablaze",
+    label: "STATUS.HalfAblaze",
+    icon: "systems/tpo/module/assets/halfablaze.png",
+    description: "No effect... yet."
+  },
+  {
+    id: "ablaze",
+    label: "STATUS.Ablaze",
+    icon: "icons/svg/fire.svg",
+    description: "You have been set on fire, which is quite unpleasant.<br>At the start of your turn, you must make a Morale Test, and then take 1d10 damage.<br><br>This status lasts until you succeed a<b>Difficult (-10) Athletics Test</b> at the end of your turn."
+  },
+  {
+    id: "halfblinded",
+    label: "STATUS.HalfBlinded",
+    icon: "systems/tpo/module/assets/halfblinded.png",
+    description: "No effect... yet."
+  },
+  {
+    id: "blinded",
+    label: "STATUS.Blinded",
+    icon: "icons/svg/blind.svg",
+    description: "You cannot see, being blinded by some means.<br>You have Disadvantage when defending against attacks, and when making Melee Attacks. If you’re performing a ranged attack, you have 2 Disadvantages.<br><br>This status will last until what is obscuring your vision is removed, or if it is some irritant in your eye, until you succeed a <b>Challenging (+0) Endurance Test</b>."
+  },
+  {
+    id: "halfpanicking",
+    label: "STATUS.HalfPanicking",
+    icon: "systems/tpo/module/assets/halfpanicking.png",
+    description: "The Difficulty of all Dodge, Weapon, and Cool Tests in increased by one step. If you fail a Morale Test while you have a Wavering Status, gain a Panicking Status. <br>An ally can remove this status from you by spending 1 AP and succeeding a <b>Challenging (+0) Leadership Test</b>."
+  },
+  {
+    id: "panicking",
+    label: "STATUS.Panicking",
+    icon: "icons/svg/terror.svg",
+    description: "You are panicking, unable to think straight, and convinced that death has come a-knocking. You must use your AP to get yourself as far away from danger as you can on your turn, fleeing without taking any time to Disengage. You suffer Disadvantage on all Tests not related to running and hiding.<br><br>This status lasts until you can either spend a round out of sight from any danger or you succeed a <b>Challenging (+0) Cool Test</b> at the end of your turn, provided you were not engaged at the start of your turn.<br>An ally can remove this status from you by spending 1 AP and succeeding a <b>Challenging (+0) Leadership Test</b>."
+  },
+  {
+    id: "halfrattled",
+    label: "STATUS.HalfRattled",
+    icon: "systems/tpo/module/assets/halfrattled.png",
+    description: "No effect... yet."
+  },
+  {
+    id: "rattled",
+    label: "STATUS.Rattled",
+    icon: "icons/svg/explosion.svg",
+    description: "You have been struck asides the head with heavy blow. The Difficulty of all tests is increased by one step. This status lasts until you succeed a <b>Challenging (+0) Endurance Test</b> at the end of your turn."
+  },
+  {
+    id: "halfslowed",
+    label: "STATUS.HalfSlowed",
+    icon: "systems/tpo/module/assets/halfslowed.png",
+    description: "No effect... yet."
+  },
+  {
+    id: "slowed",
+    label: "STATUS.Slowed",
+    icon: "icons/svg/anchor.svg",
+    description: "The AP cost of taking the Move Action is increased by 1 AP. <br><br>This status lasts until you succeed a <b>Hard (-20) Might Test</b> at the end of your turn."
+  },
+  {
+    id: "halfstunned",
+    label: "STATUS.HalfStunned",
+    icon: "systems/tpo/module/assets/halfstunned.png",
+    description: "No effect... yet."
+  },
+  {
+    id: "stunned",
+    label: "STATUS.Stunned",
+    icon: "icons/svg/daze.svg",
+    description: "A heavy blow has disoriented you or you are otherwise dazed and confused. The AP cost of taking the Move Action is increased by 1 AP. You have Disadvantage on all rolls.<br><br>This status lasts until you succeed a <b>Challenging (+0) Endurance Test</b> at the end of your turn."
+  },
+  {
+    id: "halfunconcious",
+    label: "STATUS.HalfUnconcious",
+    icon: "systems/tpo/module/assets/halfunconcious.png",
+    description: "No effect... yet."
+  },
+  {
+    id: "unconcious",
+    label: "STATUS.Unconcious",
+    icon: "icons/svg/sleep.svg",
+    description: "You cannot move, perform any action, and you cannot oppose any roll. If you are Downed, you can still make tests to Stabilize, however. The first attack made against you automatically crits and deals 2x damage.<br><br>You will wake up after succeeding 2 <b>Challenging (+0) Endurance Tests</b> or upon taking damage, provided you are not Downed."
+  },
+  {
+    id: "halfweakened",
+    label: "STATUS.HalfWeakened",
+    icon: "systems/tpo/module/assets/halfweakened.png",
+    description: "No effect... yet."
+  },
+  {
+    id: "weakened",
+    label: "STATUS.Weakened",
+    icon: "icons/svg/downgrade.svg",
+    description: "For the duration of this status, treat your Absorption as if it were 0 when determining damage.<br><br>This status lasts until you succeed a <b>Difficult (-10)Endurance Test</b> at the end of your turn."
+  },
+  {
     id: "singed",
     label: "BURN.Singed",
     icon: "systems/tpo/module/assets/singed.png",
@@ -245,7 +245,7 @@ TPO.statuses = [
     id: "frozen",
     label: "BURN.Frozen",
     icon: "systems/tpo/module/assets/frozen.png",
-    description: "This creature cannot take the Move or Shift action. The next Defend action this creature takes has Disadvantage."
+    description: "The next Defend action this creature takes has Disadvantage."
   },
   {
     id: "drenched",
@@ -258,6 +258,18 @@ TPO.statuses = [
     label: "STATUS.Marked",
     icon: "icons/svg/target.svg",
     description: "A creature has marked you. The effects of which depend on what power marked you."
+  },
+  {
+    id: "hidden",
+    label: "STATUS.Hidden",
+    icon: "icons/svg/invisible.svg",
+    description: "You are hidden from the sight of your enemies. You have Advantage on all attacks and Grapple Tests, though the first attack or grapple you perform makes you no longer hidden. While Hidden, perform a Challenging (+0) Stealth Test at the start of your turn. Any time you cross in front of an enemy’s line of sight, or move within 2sq. of an enemy, they must perform a Challenging (+0) Perception Test. If your Stealth Test’s SLs are higher than their perception test’s, you remain Hidden, otherwise you are spotted and are no longer Hidden."
+  },
+  {
+    id: "prone",
+    label: "STATUS.Prone",
+    icon: "icons/svg/falling.svg",
+    description: "You’ve either laid down intentionally or been knocked to the ground. Melee attacks targeting you have Advantage. Any melee attack you make has Disadvantage. Ranged attacks targeting you have Disadvantage. Movement Costs are doubled.<br><br>You can stand with 1 AP."
   },
   {
     id: "downed",

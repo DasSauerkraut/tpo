@@ -1073,7 +1073,7 @@ export class UtilsTPO {
     combatant.actor.update({"system.derived.ap.value": combatant.actor.system.derived.ap.max})
     let apMessage = `AP refreshed to ${combatant.actor.system.derived.ap.max}.`
     let delayedPowers = ``
-    if(combatant.actor.system?.delayedPowers.length > 0){
+    if(combatant.actor.system.delayedPowers && combatant.actor.system?.delayedPowers.length > 0){
       delayedPowers = `
         <hr>
         <div>${combatant.actor.system.name} has the following Delayed Powers:<div>
