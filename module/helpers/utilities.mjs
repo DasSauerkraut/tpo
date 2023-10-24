@@ -1,4 +1,5 @@
 import { TPO } from "./config.mjs";
+import { OpposedTPO } from "./opposed.mjs";
 export class DiceTPO {
   static async rollTest(skill, rollData, hidden = false) {
     //calculate target
@@ -138,28 +139,7 @@ export class DiceTPO {
       else 
         SLs = didTestSucceed ? 1 : -1;
 
-      switch (Math.abs(SLs)) {
-        case 0:
-        case 1:
-          result = game.i18n.localize("ROLL.Marginal") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
-          break;
-        case 2:
-        case 3:
-          result = didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure");
-          break;
-        case 4:
-        case 5:
-          result = game.i18n.localize("ROLL.Impressive") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
-          break;
-        case 6:
-          result = game.i18n.localize("ROLL.Astounding") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
-          break;
-      
-        default:
-          if(Math.abs(SLs) > 6)
-            result = game.i18n.localize("ROLL.Astounding") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
-          break;
-      }
+      result = DiceTPO.getTestResults(SLs, didTestSucceed)
 
       if(didCrit)
         result = game.i18n.localize("ROLL.Crit") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
@@ -191,8 +171,36 @@ export class DiceTPO {
       element: rollData.element,
       elementDamage: rollData.elementDamage,
       testData: rollData,
+      testInfo: rollData.testInfo,
       results: results
     };
+  }
+
+  static getTestResults (SLs, didTestSucceed) {
+    let result;
+    switch (Math.abs(SLs)) {
+      case 0:
+      case 1:
+        result = game.i18n.localize("ROLL.Marginal") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
+        break;
+      case 2:
+      case 3:
+        result = didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure");
+        break;
+      case 4:
+      case 5:
+        result = game.i18n.localize("ROLL.Impressive") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
+        break;
+      case 6:
+        result = game.i18n.localize("ROLL.Astounding") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
+        break;
+    
+      default:
+        if(Math.abs(SLs) > 6)
+          result = game.i18n.localize("ROLL.Astounding") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
+        break;
+    }
+    return result;
   }
 
   static async prepareChatCard(testData, rerolled = false){
@@ -201,6 +209,7 @@ export class DiceTPO {
     let testOutput = '';
     let healString = '';
     let testSymbol = '';
+    let contextResults = [];
 
     testData.results.forEach((test) => {
       let damage = testData.damage + test.SLs
@@ -226,7 +235,21 @@ export class DiceTPO {
             break;
         }
         if(elementDamage > 0)
-          damageString = `
+          if(game.user.targets.size > 0) {
+            damageString = `
+              <b>Damage:</b>
+                <div style="display:flex;gap: 3px; text-align:center;">
+                  <span>
+                    <i class="fas fa-fist-raised" data-tooltip="Raw"></i> ${damage}
+                  </span>
+                  &nbsp+&nbsp 
+                  <span>
+                    ${testData.element}${elementDamage}
+                  </span>
+                </div>
+              `
+          } else {
+            damageString = `
             <b>Damage:</b>
             <div style="display:flex;justify-content:space-between;height: 34px; text-align:center;">
               <span>
@@ -254,6 +277,7 @@ export class DiceTPO {
               </b>
             </div>
           `
+          }
         else
         damageString = `
             <span>
@@ -318,16 +342,61 @@ export class DiceTPO {
       testOutput += `
         <hr>
         <h3 class="${critFormat}"> ${test.result} </h3>
-        <b>Roll${testData.risk ? ` with Risk` : ''}:</b> ${test.selectedRoll} vs ${testData.target} <br>
+        <b>Roll${testData.risk ? ` with Risk` : ''}:</b> ${test.selectedRoll} vs ${testData.target} 
+        <br>
         <b>SLs:</b> ${test.SLs} <br>
         ${testDice} 
         ${damageString}
         ${healString}
       `
+
+      contextResults.push({
+        roll: test.selectedRoll,
+        sl: test.SLs,
+        success: test.result.includes(game.i18n.localize("ROLL.Success")),
+        damage: {
+          hasDamage: testData.hasDamage,
+          raw: damage,
+          elementDamage: elementDamage,
+          element: testData.element
+        }
+      })
     })
 
+    let chatDescription;
+    if(testData.testInfo.isPower){
+      chatDescription = `
+      <span class="tpo expand-popout left">
+        ${testData.name} <i class="far fa-info-circle" style="font-size: 12px;color: grey;"></i>
+        <div class="tpo popout ${testData.testInfo.type}-border" style="left: 1356.81px; display: none; position: fixed; z-index: 1; top: 77px; right: 0px; width: 400px; border: 2px solid rgb(96, 96, 96); box-shadow: rgba(0, 0, 0, 0.48) 6px 4px 6px 0px; border-radius: 4px; min-height: 20px;color: var(--color-text-light-2); font-weight: normal;font-family: EBGaramond;">
+          <div class="subheader ${testData.testInfo.type}" style="display: flex;-webkit-box-pack: justify;-ms-flex-pack: justify;justify-content: space-between;font-size: 12px;border-bottom: 1px solid var(--color-border-light-primary);">
+            <span class="cost">${testData.testInfo.apCost} AP</span>
+            <span class="target">
+              Target ${testData.testInfo.target}
+            </span>
+          </div>
+          <div class="description" style="background-color:#BFAC8C;color:var(--color-text-dark-1);padding-bottom: 1px;padding-top: 1px;">
+            ${testData.testInfo.description}
+          </div>
+        </div>
+      </span>
+      `
+    } else {
+      chatDescription = `
+      <span class="tpo expand-popout left">
+        ${testData.name} <i class="far fa-info-circle"></i>
+        <div class="tpo popout" style="left: 1356.81px; display: none; position: fixed; z-index: 1; top: 77px; right: 0px; width: 400px; border: 2px solid rgb(96, 96, 96); box-shadow: rgba(0, 0, 0, 0.48) 6px 4px 6px 0px; border-radius: 4px; min-height: 20px;color: var(--color-text-light-2); font-weight: normal;font-family: EBGaramond;">
+          <div class="description" style="background-color:#BFAC8C;color:var(--color-text-dark-1);padding-bottom: 1px;padding-top: 1px;">
+            ${testData.testInfo.description}
+          </div>
+        </div>
+      </span>
+      `
+    }
+    
+
     let chatContent = `
-      <b>${testSymbol} ${testData.actorName} | ${rerolled ? 'Rerolled' : ''} ${testData.name}</b><br>
+      <b>${testSymbol} ${testData.actorName} | ${rerolled ? 'Rerolled' : ''} ${chatDescription}</b><a class="tpo opposed-tst" style="float:right;" data-tooltip="Start Opposed Test w/ Targets"><i class="fas fa-exchange-alt"></i></a> <br>
       ${testOutput}
     `
     let chatData = {
@@ -339,6 +408,7 @@ export class DiceTPO {
       chatContext: {
         rerolled: rerolled,
         testData: duplicate(testData.testData),
+        result: contextResults,
         actorId: testData.actorId,
         skill: duplicate(testData.skill)
       }
@@ -351,8 +421,23 @@ export class DiceTPO {
       rerolled: chatContext.rerolled,
       testData: chatContext.testData,
       actorId: chatContext.actorId,
-      skill: chatContext.skill
+      skill: chatContext.skill,
+      result: chatContext.result,
+      opposed: false,
     })
+    DiceTPO.handleOpposed(message)
+  }
+
+  static handleOpposed(message) {
+    const context = message.getFlag('tpo', 'context')
+    if(context && 
+      context?.actorId && 
+      UtilsTPO.getActor(context.actorId).getFlag('tpo', 'opposed')?.length > 0) {
+      OpposedTPO.defenderRoll(message.id, context.actorId)
+    }
+    else if(game.user.targets.size > 0) {
+      OpposedTPO.startOpposedTest(message.id)
+    }
   }
 
   static async showDiceSoNice(roll) {
@@ -413,7 +498,14 @@ export class PowersTPO {
       damage: damage,
       element: element,
       elementDamage: usesAmmo ? ammo.elementDamageMod : power.system.elementDamageMod,
-      attacks: power.system.attacks
+      attacks: power.system.attacks,
+      testInfo: {
+        isPower: true,
+        apCost: power.system.apCost,
+        target: power.system.target,
+        description: power.system.descriptionDisplay ? power.system.descriptionDisplay : power.system.description,
+        type: power.system.type
+      }
     }
 
     if(skill === undefined){
@@ -451,7 +543,14 @@ export class PowersTPO {
           weakDamage: false,
           difficulty: 20,
           damage: 0,
-          name: null
+          name: null,
+          testInfo: {
+            isPower: false,
+            apCost: 0,
+            target: null,
+            description: null,
+            type: null
+          }
         }
       }
   
@@ -478,7 +577,11 @@ export class PowersTPO {
       }
   
       testData.actorName = actor.name;
-  
+
+      if(!testData.testInfo?.isPower && skill.system.description){
+        testData.testInfo.description = skill.system.description;
+      }
+
       let callback = (html) => {
         testData.advantage = Number(html.find('[name="advantage"]').val());
         testData.disadvantage = Number(html.find('[name="disadvantage"]').val());
@@ -988,12 +1091,7 @@ export class UtilsTPO {
       condition: (li) => {
         const message = game.messages.get(li.data("message-id"))
         const context = message.getFlag('tpo', 'context')
-        let actor;
-        if(context.actorId.isToken)
-          actor = canvas.scene.tokens.get(context.actorId.id).getActor()
-        else
-          actor = game.actors.get(context.actorId.id)
-        return !context.rerolled && UtilsTPO.hasResolve(actor)
+        return !context?.rerolled && !context?.opposedTest && UtilsTPO.hasResolve(UtilsTPO.getActor(context.actorId))
       },
       callback: li => {
         const message = game.messages.get(li.data("message-id"))
@@ -1018,6 +1116,121 @@ export class UtilsTPO {
     })
   }
 
+  static addDamageOptionToChatCard(options){
+    options.push({
+      name: game.i18n.localize("SYS.ApplyDamage"),
+      icon: '<i class="fas fa-swords"></i>',
+      condition: (li) => {
+        const message = game.messages.get(li.data("message-id"))
+        const context = message.getFlag('tpo', 'context')
+        return context?.opposedTest && context?.attackerWin && game.user.isGM
+      },
+      callback: li => {
+        const message = game.messages.get(li.data("message-id"))
+        let context = message.getFlag('tpo', 'context')
+        if(UtilsTPO.getActor(context.defenderId).isOwner)
+          UtilsTPO.applyDamage(context.defenderId, context.damage, false, li.data("message-id"))
+      }
+    })
+  }
+
+  static addPiercingDamageOptionToChatCard(options){
+    options.push({
+      name: game.i18n.localize("SYS.ApplyPiercingDamage"),
+      icon: '<i class="fas fa-bullseye-arrow"></i>',
+      condition: (li) => {
+        const message = game.messages.get(li.data("message-id"))
+        const context = message.getFlag('tpo', 'context')
+        return context?.opposedTest && context?.attackerWin && game.user.isGM
+      },
+      callback: li => {
+        const message = game.messages.get(li.data("message-id"))
+        let context = message.getFlag('tpo', 'context')
+        if(UtilsTPO.getActor(context.defenderId).isOwner)
+          UtilsTPO.applyDamage(context.defenderId, context.damage, true, li.data("message-id"))
+      }
+    })
+  }
+
+  static applyDamage(actorId, damage, piercing, messageId = null) {
+    const actor = UtilsTPO.getActor(actorId);
+    const abs = actor.system.derived.absorption.total;
+
+    let damageTaken = piercing ? damage : damage - abs;
+    if (damageTaken < 0) damageTaken = 1;
+
+    if(damageTaken >= 10)
+      UtilsTPO.playContextSound({type: "damage"}, "major")
+    else if (damageTaken >= 3)
+      UtilsTPO.playContextSound({type: "damage"}, "normal")
+    else
+      UtilsTPO.playContextSound({type: "damage"}, "minor")
+    
+    const tempHp = actor.system.derived.tempHp.value
+    const hp = actor.system.derived.hp.value
+    let chatContent = `Inflicted ${damageTaken} ${piercing ? "Piercing ": ""}Damage!`
+    let newHp = hp;
+    let newTempHp = tempHp;
+    if(tempHp > 0){
+      if(tempHp - damageTaken >= 0){
+        newTempHp = tempHp - damageTaken;
+        chatContent += `
+        <b>${actor.name}</b><br>
+        <div>Temp. HP absorbs the blow!<br>Temp. HP: ${tempHp} → ${newTempHp}</div>
+        `
+      } else {
+        newTempHp = 0;
+        newHp = hp - (damageTaken - tempHp)
+        chatContent += `
+        <b>${actor.name}</b><br>
+        <div>Temp. HP softens the blow!
+        <br>Temp. HP: ${tempHp} → ${0}
+        <br>HP: ${hp} → ${newHp}</div>
+        `
+      }
+    } else {
+      newHp -= damageTaken;
+    }
+    if(hp > actor.system.derived.bloodied?.value && newHp <= actor.system.derived.bloodied?.value){
+      chatContent += `
+        ${chatContent !== '' ? '<hr>': ''}<b>${actor.name} is Bloodied!</b><br>
+        <div>They suffer a Minor Injury and must perform a Morale Test.
+        </div>
+        `
+    }
+    if(hp > 0 && newHp <= 0){
+      chatContent += `
+        ${chatContent !== '' ? '<hr>': ''}<b>${actor.name} is Downed!</b><br>
+        <div>They suffer a Major Injury and their allies must perform a Morale Test. Furthermore, any clothing they were wearing is ruined and must be repaired or it will have -1 Splendor!
+        </div>
+        `
+      if(newHp <= actor.system.derived.tempHp.max * -1){
+        chatContent += `
+          <br><b>Instant Death!</b>
+          <div>${actor.name} must succeed a <b>Hard (-20) Endurance Test</b> or immediately die.</div>
+        `
+      }
+    }
+    let chatData = {
+      content: chatContent,
+      user: game.user._id,
+    };
+    if(chatContent !== '' && !messageId)
+      ChatMessage.create(chatData, {});
+    else {
+      const message = game.messages.get(messageId);
+      message.update({content: message.content + chatContent})
+      // message.content += chatContent;
+      // message.sheet.render();
+      // console.log(message)
+    }
+
+    actor.update({
+      [`system.derived.hp.value`]: newHp,
+      [`system.derived.tempHp.value`]: newTempHp,
+    })
+  }
+
   static hasResolve(actor){
     return (actor.system.info.resolve.resolve1 || actor.system.info.resolve.resolve2 || actor.system.info.resolve.resolve3);
   }
@@ -1038,13 +1251,12 @@ export class UtilsTPO {
 
     if(canvas.scene.tokens.get(combat.previous.tokenId)){
       const prevCombatant = canvas.scene.tokens.get(combat.previous.tokenId)
-      const flags = prevCombatant.actor.flags;
 
-      if(flags?.tpo?.rechargePowers.length > 0){
+      if(prevCombatant?.actor?.system?.rechargePowers.length > 0){
         let potentialRechargedPowers = '';
         let notCharged = '';
         const roll = new Roll('1d100').roll({async: false}).total
-        flags.tpo.rechargePowers.forEach(pwr => {
+        prevCombatant.actor.system.rechargePowers.forEach(pwr => {
           if(Number(pwr.target) >= roll)
             potentialRechargedPowers += `${pwr.name} - ${pwr.target}<br>`
           else
@@ -1190,18 +1402,18 @@ export class UtilsTPO {
     if(paralyzeds.length > 0) statuses += UtilsTPO.formatRatingStatus(paralyzeds);
     if(hampereds.length > 0) statuses += UtilsTPO.formatRatingStatus(hampereds);
 
-    const overencumbered = combatant.actor.getFlag('tpo', 'overencumbered')
-    if(overencumbered.total > 0){
+    const overencumbered = combatant.actor.system.derived.encumbrance.overencumbered
+    if(overencumbered > 0){
 
       let description = 'Movement is reduced by 1sq.'
-      if(overencumbered.total > 4)
+      if(overencumbered > 4)
         description = 'Cannot move.<br>Disadvantage on all physical actions.'
-      else if (overencumbered.total > 2)
+      else if (overencumbered > 2)
         description = 'Movement reduced by 2sq.<br>Disadvantage on all physical actions'
 
       statuses += `
         <br>
-        <b>Overencumbered ${overencumbered.total}</b>
+        <b>Overencumbered ${overencumbered}</b>
         <div style="display:flex;">
           <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="icons/svg/barrel.svg" alt="overencumbered">
           <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
@@ -1305,6 +1517,42 @@ export class UtilsTPO {
       })
       if(inCombat)
         return true
+    }
+  }
+
+  static getActor(actorId) {
+    if(actorId.isToken)
+      return canvas.scene.tokens.get(actorId.id).actor
+    else
+      return game.actors.get(actorId.id)
+  }
+
+  static getMessageContext(messageId) {
+    const message = game.messages.get(messageId)
+    if(message)
+      return message.getFlag('tpo', 'context')
+    else 
+      return false;
+  }
+
+  static expandPopout(event) {
+    event.preventDefault();
+    let li = $(event.currentTarget);
+    let expand = $(event.currentTarget).find('.popout')[0];
+
+    if(li.className === "name")
+      li = $(li.parents(".expand-popout")[0])
+
+    if(expand.style.display !== "block"){
+      expand.style.display = "block";
+      expand.style.top = (li.offset().top + 1 )+ "px"
+      if(li.hasClass("left"))
+        expand.style.left = (li.offset().left - $(expand).width()) + "px"
+      else {
+        expand.style.left = (li.offset().left + li.width()) + "px"
+      }
+    } else {
+      expand.style.display = "none";
     }
   }
 }

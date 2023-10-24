@@ -40,6 +40,7 @@
           "encumbrance": {
             "label": "Encumbrance",
             "abrev": "Enc.",
+            "overencumbered": 0,
             "money": {
               "l": 0,
               "s": 0,
@@ -53,38 +54,46 @@
               },
               "lThigh": {
                 "value": 0,
-                "max": 2
+                "max": 2,
+                "overencumbered": false
               },
               "lPouch": {
                 "owned": false,
                 "value": 0,
-                "max": 2
+                "max": 2,
+                "overencumbered": false
               },
               "lHip": {
                 "value": 0,
-                "max": 3
+                "max": 3,
+                "overencumbered": false
               },
               "chest": {
                 "value": 0,
-                "max": 3
+                "max": 3,
+                "overencumbered": false
               },
               "backpack": {
                 "owned": false,
                 "value": 0,
-                "max": 6
+                "max": 6,
+                "overencumbered": false
               },
               "rHip": {
                 "value": 0,
-                "max": 3
+                "max": 3,
+                "overencumbered": false
               },
               "rPouch": {
                 "owned": false,
                 "value": 0,
-                "max": 2
+                "max": 2,
+                "overencumbered": false
               },
               "rThigh": {
                 "value": 0,
-                "max": 2
+                "max": 2,
+                "overencumbered": false
               },
               "rScabbard": {
                 "owned": false,

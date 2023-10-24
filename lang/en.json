@@ -119,6 +119,8 @@
   "SYS.Reroll": "Reroll this Test",
   "SYS.RerollWithSplendor": "Use your Splendor to reroll this Test",
   "SYS.LocationItems": "Please remove all items from this container before removing it.",
+  "SYS.ApplyDamage": "Inflict Damage",
+  "SYS.ApplyPiercingDamage": "Inflict Piercing Damage",
 
   "ROLL.Marginal": "Marginal",
   "ROLL.Impressive": "Impressive",

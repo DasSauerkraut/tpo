@@ -496,3 +496,14 @@ TPO.stats = {
     "cha": 25,
   },
 }
+
+TPO.statDescriptions = {
+  "ws": "Weapon Skill is your ability to hit your enemy with melee and ranged weapons alike. This skill applies to Armaments, mundane weapons, even fist fights and brawls as the fundamentals of combat are universal, no matter the weapon.",
+  "str": "Strength governs how much damage you deal in combat, as well as your ability to lift and carry things. It also helps determine your Character’s maximum Hit Points (HP)",
+  "con": "Your ability to endure and overcome both damage in combat, and the draining effects of the world. It is primarily used to determine your Character’s max HP.",
+  "agi": "Agility is your Character’s ability to weave and dodge in combat and their natural athleticism for things such as running or acrobatics.",
+  "dex": "Dexterity is fine motor control. It’s how well your character can move their hands for things such as crafting, lockpicking, sleight of hand, or forging letters.",
+  "int": "Intellect governs the ‘smarts’ of your character. It’s how well your Character can think through complicated problems or call up old knowledge from memory. It helps with healing, determining an enemy’s weakness, as well as calling up lore.",
+  "will": "Will is a measure of your character’s levelheadedness and willpower. It helps with keeping a steady head during combat.",
+  "cha": "Charisma is your character's personableness. It will help with convincing people to do things, deception, bribery, and all manner of other social skills",
+}

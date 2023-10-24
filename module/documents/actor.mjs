@@ -417,24 +417,10 @@ export class tpoActor extends Actor {
 
     const locations = ['lScabbard','lThigh', 'lHip', 'lPouch', 'chest', 'backpack', 'rScabbard', 'rThigh', 'rHip', 'rPouch']
 
-    if(!this.flags.tpo)
-      this.flags['tpo'] = {
-        overencumbered: {
-          total: 0
-        }
-      }
-    else if (!this.flags.tpo['overencumbered'])
-      this.flags['tpo'] = {
-        overencumbered: {
-          total: 0
-        }
-      }
-    else
-      this.flags.tpo['overencumbered']['total'] = 0;
-
-    this.flags['tpo']['rechargePowers'] = rechargePowers
+    actorData["rechargePowers"] = rechargePowers
 
     if(this.type === "character"){
+      let totalOverenc = 0
       locations.forEach(location => {
         inventory[location] = UtilsTPO.sortAlphabetically(inventory[location]);
         inventory[location].forEach((item, i) => {
@@ -448,12 +434,13 @@ export class tpoActor extends Actor {
           overenc = actorData.derived.encumbrance.locations[location].value - (actorData.stats.str.bonus + 1)
   
         if(overenc > 0 && !location.includes('Scabbard')){
-          this.flags.tpo['overencumbered'][location] = true;
-          this.flags.tpo['overencumbered']['total'] += overenc;
+          actorData.derived.encumbrance.locations[location].overencumbered = true;
+          totalOverenc += overenc;
         } else {
-          this.flags.tpo['overencumbered'][location] = false;
+          actorData.derived.encumbrance.locations[location].overencumbered = false;
         }
       })
+      actorData.derived.encumbrance.overencumbered = totalOverenc;
     }
     
 

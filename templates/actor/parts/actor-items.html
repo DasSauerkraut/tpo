@@ -33,7 +33,7 @@
 <div class="grid grid-3col">
   <div class="inventory-col">
     <h2 class="sticky-1">
-      {{#if flags.tpo.overencumbered.lThigh}}
+      {{#if system.derived.encumbrance.locations.lThigh.overencumbered}}
         <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
       {{/if}}
       &nbsp;Left Thigh&nbsp;
@@ -84,7 +84,7 @@
     {{#if system.derived.encumbrance.locations.lScabbard.owned}}
     <h2 class="sticky-2">Scabbard&nbsp;<i title="Delete Item" class="fas fa-trash containerDelete rollable" data-location="lScabbard" data-type="Scabbard"></i></h2>
     <div class="inventory-section" data-location="lScabbard" data-type="Scabbard">
-        <div class="ap">0 AP to Retrieve/Stow</div>
+        <div class="ap">0 AP to Retrieve, 1 AP to Stow</div>
         <ul class="inventory-list">
           <li class="grid grid-5col header small-gap">
             <div class="grid-span-3">Name</div>
@@ -112,7 +112,7 @@
     </div>
     {{/if}}
     <h2 class="sticky-3">
-        {{#if flags.tpo.overencumbered.lHip}}
+        {{#if system.derived.encumbrance.locations.lHip.overencumbered}}
           <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
         {{/if}}
         &nbsp;Left Hip&nbsp;
@@ -162,7 +162,7 @@
     </div>
     {{#if system.derived.encumbrance.locations.lPouch.owned}}
     <h2 class="sticky-4">
-      {{#if flags.tpo.overencumbered.lPouch}}
+      {{#if system.derived.encumbrance.locations.lPouch.overencumbered}}
         <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
       {{/if}}
       &nbsp;Pouch&nbsp;
@@ -200,7 +200,7 @@
   </div>
   <div class="inventory-col">
     <h2 class="sticky-1">
-      {{#if flags.tpo.overencumbered.chest}}
+      {{#if system.derived.encumbrance.locations.chest.overencumbered}}
         <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
       {{/if}}
       &nbsp;Chest&nbsp;
@@ -250,7 +250,7 @@
     </div>
     {{#if system.derived.encumbrance.locations.backpack.owned}}
     <h2 class="sticky-4">
-      {{#if flags.tpo.overencumbered.backpack}}
+      {{#if system.derived.encumbrance.locations.backpack.overencumbered}}
         <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
       {{/if}}
       &nbsp;Backpack&nbsp;
@@ -288,7 +288,7 @@
   </div>
   <div class="inventory-col">
     <h2 class="sticky-1">
-      {{#if flags.tpo.overencumbered.rThigh}}
+      {{#if system.derived.encumbrance.locations.rThigh.overencumbered}}
         <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
       {{/if}}
       &nbsp;Right Thigh&nbsp;
@@ -339,7 +339,7 @@
     {{#if system.derived.encumbrance.locations.rScabbard.owned}}
     <h2 class="sticky-2">Scabbard&nbsp;<i title="Delete Item" class="fas fa-trash containerDelete rollable" data-location="rScabbard" data-type="Scabbard"></i></h2>
     <div class="inventory-section" data-location="rScabbard" data-type="Scabbard">
-        <div class="ap">0 AP to Retrieve/Stow</div>
+        <div class="ap">0 AP to Retrieve, 1 AP to Stow</div>
         <ul class="inventory-list">
           <li class="grid grid-5col header small-gap">
             <div class="grid-span-3">Name</div>
@@ -367,7 +367,7 @@
       </div>
     {{/if}}
     <h2 class="sticky-3">
-      {{#if flags.tpo.overencumbered.rHip}}
+      {{#if system.derived.encumbrance.locations.rHip.overencumbered}}
         <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
       {{/if}}
       &nbsp;Right Hip&nbsp;
@@ -417,7 +417,7 @@
     </div>
     {{#if system.derived.encumbrance.locations.rPouch.owned}}
     <h2 class="sticky-4">
-      {{#if flags.tpo.overencumbered.rPouch}}
+      {{#if system.derived.encumbrance.locations.rPouch.overencumbered}}
         <i title="Overencumbered!" class="fas fa-exclamation-triangle"></i>
       {{/if}}
       &nbsp;Pouch&nbsp;

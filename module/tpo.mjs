@@ -8,6 +8,7 @@ import { tpoItemSheet } from "./sheets/item-sheet.mjs";
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { TPO } from "./helpers/config.mjs";
 import { DiceTPO, UtilsTPO, PowersTPO } from "./helpers/utilities.mjs";
+import { OpposedTPO } from "./helpers/opposed.mjs";
 
 
 /* -------------------------------------------- */
@@ -148,6 +149,16 @@ Handlebars.registerHelper("math", function(lvalue, operator, rvalue, options) {
 Hooks.once("ready", async function() {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on("hotbarDrop", (bar, data, slot) => createItemMacro(data, slot));
+
+  game.socket.on('system.tpo', (data) => {
+    switch (data.type) {
+      case "opposedTarget":
+        OpposedTPO.opposedTarget(data.data)
+        break;
+      default:
+        break;
+    }
+  });
 });
 
 Hooks.on("updateCombat", (combat) => {
@@ -156,6 +167,8 @@ Hooks.on("updateCombat", (combat) => {
 
 Hooks.on("getChatLogEntryContext", (html, options) => {
   UtilsTPO.addResolveRerollToChatCard(options);
+  UtilsTPO.addDamageOptionToChatCard(options);
+  UtilsTPO.addPiercingDamageOptionToChatCard(options);
 });
 
 Hooks.on("preUpdateActor", (actor, data, diff) => {
@@ -286,6 +299,20 @@ Hooks.on('renderChatMessage', (chatMessage, html) => {
       }
     }
   })
+  html.find('.opposed-tst').click(ev => {
+    const li = $(ev.currentTarget).parents(".chat-message")
+    const messageId = li.data("message-id")
+    OpposedTPO.startOpposedTest(messageId)
+  })
+  html.find('.unopposed-tst').click(ev => {
+    const li = $(ev.currentTarget).parents(".chat-message")
+    const messageId = li.data("message-id")
+    OpposedTPO.unopposedTest(messageId)
+  })
+  html.find('.expand-popout').hover(UtilsTPO.expandPopout.bind(this));
+  if (!game.user.isGM) {
+    html.find(".unopposed-tst").remove();
+  }
 })
 
 /* -------------------------------------------- */

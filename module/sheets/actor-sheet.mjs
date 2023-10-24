@@ -489,7 +489,14 @@ export class tpoActorSheet extends ActorSheet {
         damage: weapon.system.damage,
         element: "",
         elementDamage: 0,
-        attacks: 1
+        attacks: 1,
+        testInfo: {
+          isPower: false,
+          apCost: weapon.system.apCost,
+          target: null,
+          description: weapon.system.descriptionDisplay,
+          type: null
+        }
       }
 
       let skill = this.actor.items.getName(`Weapon (Mundane)`);
@@ -526,6 +533,13 @@ export class tpoActorSheet extends ActorSheet {
       modifier: 0,
       risk: false,
       difficulty: 0,
+      testInfo: {
+        isPower: false,
+        apCost: 0,
+        target: null,
+        description: null,
+        type: null
+      }
     };
 
     let selectedSupply;
@@ -697,6 +711,13 @@ export class tpoActorSheet extends ActorSheet {
       modifier: 0,
       risk: false,
       difficulty: 0,
+      testInfo: {
+        isPower: false,
+        apCost: 0,
+        target: null,
+        description: null,
+        type: null
+      }
     };
 
     let selectedSkill;
@@ -1117,13 +1138,21 @@ export class tpoActorSheet extends ActorSheet {
       modifier: 0,
       risk: false,
       difficulty: 20,
-      hasDamage: false
+      hasDamage: false,
+      testInfo: {
+        isPower: false,
+        apCost: 0,
+        target: null,
+        description: null,
+        type: null
+      }
     }
     
     const statOut = {
         name: game.i18n.localize(this.actor.system.stats[stat].label),
         system: {
-            total: this.actor.system.stats[stat].value
+            total: this.actor.system.stats[stat].value,
+            description: TPO.statDescriptions[stat]
         }
       }
       
@@ -1174,7 +1203,14 @@ export class tpoActorSheet extends ActorSheet {
       damage: damage,
       element: armament.system?.selectedElement?.display,
       elementDamage: 0,
-      attacks: 1
+      attacks: 1,
+      testInfo: {
+        isPower: false,
+        apCost: 0,
+        target: null,
+        description: "Perform a Basic Melee Attack",
+        type: null
+      }
     }
 
     PowersTPO.performTest(this.actor, skill, testData, armament.system.damage.value, armament.system.elementDamage.value, "Basic Attack")

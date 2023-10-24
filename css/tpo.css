@@ -638,6 +638,14 @@
   display: flex;
 }
 
+.tpo .opposed-tst {
+  float: right;
+}
+
+.tpo .unopposed-tst {
+  float: right;
+}
+
 .tpo .delayed-power-btn-used {
   cursor: not-allowed;
   background: none;
@@ -2038,7 +2046,7 @@
 .tpo .expand-popout .popout {
   display: none;
   position: fixed;
-  z-index: 200;
+  z-index: 1;
   top: 0;
   right: 0;
   width: 400px;
