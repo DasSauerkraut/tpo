@@ -1,7 +1,7 @@
 {
   "title": "The Pillars of Old",
   "description": "The Pillars of Old system for FoundryVTT!",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "socket": true,
   "esmodules": [
     "module/tpo.mjs"
@@ -22,8 +22,8 @@
   "primaryTokenAttribute": "derived.hp",
   "secondaryTokenAttribute": "derived.ap",
   "url": "https://github.com/DasSauerkraut/tpo",
-  "manifest": "https://github.com/DasSauerkraut/tpo/releases/download/v1.1.9/system.json",
-  "download": "https://github.com/DasSauerkraut/tpo/releases/download/v1.1.9/tpo.zip",
+  "manifest": "https://github.com/DasSauerkraut/tpo/releases/download/v1.1.10/system.json",
+  "download": "https://github.com/DasSauerkraut/tpo/releases/download/v1.1.10/tpo.zip",
   "license": "LICENSE.txt",
   "id": "tpo",
   "authors": [
