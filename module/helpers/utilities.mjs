@@ -432,7 +432,8 @@ export class DiceTPO {
     const context = message.getFlag('tpo', 'context')
     if(context && 
       context?.actorId && 
-      UtilsTPO.getActor(context.actorId).getFlag('tpo', 'opposed')?.length > 0) {
+      UtilsTPO.getActor(context.actorId).getFlag('tpo', 'opposed') &&
+      UtilsTPO.getActor(context.actorId).getFlag('tpo', 'opposed').length > 0) {
       OpposedTPO.defenderRoll(message.id, context.actorId)
     }
     else if(game.user.targets.size > 0) {
@@ -578,7 +579,7 @@ export class PowersTPO {
   
       testData.actorName = actor.name;
 
-      if(!testData.testInfo?.isPower && skill.system.description){
+      if(!testData.testInfo?.isPower && skill.system.description && testData.testInfo.description === null){
         testData.testInfo.description = skill.system.description;
       }
 
@@ -1123,7 +1124,7 @@ export class UtilsTPO {
       condition: (li) => {
         const message = game.messages.get(li.data("message-id"))
         const context = message.getFlag('tpo', 'context')
-        return context?.opposedTest && context?.attackerWin && game.user.isGM
+        return context?.opposedTest && game.user.isGM
       },
       callback: li => {
         const message = game.messages.get(li.data("message-id"))
@@ -1141,7 +1142,7 @@ export class UtilsTPO {
       condition: (li) => {
         const message = game.messages.get(li.data("message-id"))
         const context = message.getFlag('tpo', 'context')
-        return context?.opposedTest && context?.attackerWin && game.user.isGM
+        return context?.opposedTest && game.user.isGM
       },
       callback: li => {
         const message = game.messages.get(li.data("message-id"))
@@ -1152,12 +1153,17 @@ export class UtilsTPO {
     })
   }
 
-  static applyDamage(actorId, damage, piercing, messageId = null) {
+  static applyDamage(actorId, damageArray, piercing, messageId = null) {
     const actor = UtilsTPO.getActor(actorId);
     const abs = actor.system.derived.absorption.total;
 
-    let damageTaken = piercing ? damage : damage - abs;
-    if (damageTaken < 0) damageTaken = 1;
+    let damageTaken = 0;
+
+    damageArray.forEach(async damage => {
+      let damageInstance = piercing ? damage : damage - abs;
+      if (damageInstance < 0) damageInstance = 1;
+      damageTaken += damageInstance;
+    })
 
     if(damageTaken >= 10)
       UtilsTPO.playContextSound({type: "damage"}, "major")
@@ -1168,7 +1174,7 @@ export class UtilsTPO {
     
     const tempHp = actor.system.derived.tempHp.value
     const hp = actor.system.derived.hp.value
-    let chatContent = `Inflicted ${damageTaken} ${piercing ? "Piercing ": ""}Damage!`
+    let chatContent = `<br>Inflicted ${damageTaken} ${piercing ? "Piercing ": ""}Damage!`
     let newHp = hp;
     let newTempHp = tempHp;
     if(tempHp > 0){
@@ -1220,9 +1226,6 @@ export class UtilsTPO {
     else {
       const message = game.messages.get(messageId);
       message.update({content: message.content + chatContent})
-      // message.content += chatContent;
-      // message.sheet.render();
-      // console.log(message)
     }
 
     actor.update({

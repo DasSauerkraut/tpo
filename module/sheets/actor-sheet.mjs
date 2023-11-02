@@ -792,7 +792,7 @@ export class tpoActorSheet extends ActorSheet {
         if(1 > this.actor.system.derived.ap.value)
           ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
         this.actor.update({[`system.derived.ap.value`]: this.actor.system.derived.ap.value - 1 })
-
+        testData.testInfo.description = "Attempting to disengage with Dodge."
         PowersTPO.performTest(this.actor, skill, testData, 0, 0, "Disengaging");
         break;
       case "morale":
@@ -838,6 +838,7 @@ export class tpoActorSheet extends ActorSheet {
           }
           testData.disadvantage = 1;
         }
+        testData.testInfo.description = "Fighting is a demanding process, both physically and mentally. Sometimes things don’t go the way they’re supposed to, and sometimes the jaws of panic grip you and you run despite everything."
         PowersTPO.performTest(this.actor, skill, testData, 0, 0, "Grappling");
         break;
       case "mounted":
@@ -878,7 +879,7 @@ export class tpoActorSheet extends ActorSheet {
                       }
                     }
                   }
-                  PowersTPO.performTest(this.actor, skill, testData, 0, 0, `Defending w/ ${selectedSkill}`);
+                  PowersTPO.performTest(this.actor, skill, testData, 0, 0, `Attempting Mount Action w/ ${selectedSkill}`);
                 }
               },
             },

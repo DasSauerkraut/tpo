@@ -27,7 +27,6 @@ export class OpposedTPO {
     const attacker = UtilsTPO.getActor(attackerContext.actorId).name
 
     //create opposed card w/ attacker and defender if applicable
-    console.log(attackerContext)
     const content = `
       <b> ${attackerContext.result.length > 1 ? `${attackerContext.result.length} ` : ''}Opposed Test${attackerContext.result.length > 1 ? 's' : ''} </b><br>
       Initiator: ${attacker}<br>
@@ -52,9 +51,12 @@ export class OpposedTPO {
 
       //set flag for defender to this message id
       if(target.isOwner){
+        const newOpposed = {
+          id: message.id,
+          numTests: attackerContext.result.length,
+        }
         const existingOpposed = await target.actor.getFlag('tpo', 'opposed')
-        console.log(existingOpposed)
-        const opposedArray = existingOpposed ? [...existingOpposed, message.id] : [message.id]
+        const opposedArray = existingOpposed ? [...existingOpposed, newOpposed] : [newOpposed]
         target.actor.setFlag('tpo', 'opposed', opposedArray)
       } else {
         socketTargets.push({
@@ -62,7 +64,8 @@ export class OpposedTPO {
             isToken: !target.document.actorLink,
             id: target.document.actorLink ? target.document.actorId : target.document.id,
           }, 
-          messageId: message.id
+          messageId: message.id,
+          numResults: attackerContext.result.length
         })
       }
     })
@@ -80,7 +83,11 @@ export class OpposedTPO {
     
     do {
       opposedTest = opposedTests.shift()
-      opposedContext = UtilsTPO.getMessageContext(opposedTest)
+      console.log(opposedTest)
+      if(opposedTest?.id)
+        opposedContext = UtilsTPO.getMessageContext(opposedTest.id)
+      else
+        opposedContext = false;
       console.log(opposedContext)
     } while (opposedTests.length > 0 && opposedContext === false);
 
@@ -99,19 +106,21 @@ export class OpposedTPO {
 
     const attacker = UtilsTPO.getActor(attackerContext.actorId);
 
-    const attackerSls = attackerContext.result[0].sl - defenderContext.result[0].sl;
+    const resultKey = opposedTest.numTests > 1 ? opposedTest.numTests - 1 : 0
+
+    const attackerSls = attackerContext.result[resultKey].sl - defenderContext.result[0].sl;
     let attackerWin = attackerSls > 0;
     if(attackerSls === 0)
-      if(attackerContext.result[0].success === defenderContext.result[0].success)
-        attackerWin = attackerContext.result[0].roll < defenderContext.result[0].roll
+      if(attackerContext.result[resultKey].success === defenderContext.result[0].success)
+        attackerWin = attackerContext.result[resultKey].roll < defenderContext.result[0].roll
       else
-        attackerWin = attackerContext.result[0].success
+        attackerWin = attackerContext.result[resultKey].success
 
     let damageString = ``;
     let damage = 0;
-    if(attackerContext.result[0].damage.hasDamage && attackerWin){
+    if(attackerContext.result[resultKey].damage.hasDamage && attackerWin){
       const calculatedDamage = OpposedTPO.calculateDamage(
-        attackerContext.result[0], 
+        attackerContext.result[resultKey], 
         defender.system.details.elementalResistances,
         defenderContext.result[0].sl
       )
@@ -120,8 +129,23 @@ export class OpposedTPO {
       damage = calculatedDamage.damage
     }
 
+    let remainingOpposed = resultKey;
+    opposedTests.forEach(test => {
+      remainingOpposed += test.numTests
+    })
+
     let content = `
-        ${this.generateChatContent(attacker.name, defender.name, attackerWin, attackerContext.result[0].sl, defenderContext.result[0].sl, attackerSls, opposedTests.length, true)}
+        <b>${attacker.name} vs ${defender.name}</b><br>
+        ${this.generateChatContent(
+          attacker.name, 
+          defender.name, 
+          attackerWin, 
+          attackerContext.result[resultKey].sl, 
+          defenderContext.result[0].sl, 
+          attackerSls, 
+          remainingOpposed, 
+          true
+        )}
         ${damageString}
       `
 
@@ -133,11 +157,14 @@ export class OpposedTPO {
     const message = await ChatMessage.create(chatData, {});
     await message.setFlag('tpo', 'context', {
       opposedTest: true,
-      attackerWin: attackerWin,
-      damage: damage,
+      damage: attackerWin ? [damage] : [],
       defenderId: defenderId,
     })
-    defender.setFlag('tpo', 'opposed', [...opposedTests])
+    if(resultKey > 0){
+      opposedTest.numTests = resultKey;
+      defender.setFlag('tpo', 'opposed', [opposedTest, ...opposedTests])
+    } else
+      defender.setFlag('tpo', 'opposed', [...opposedTests])
   }
 
   static async unopposedTest(messageId){
@@ -146,34 +173,57 @@ export class OpposedTPO {
     opposedContext.targets.forEach(async defenderId => {
       const defender = UtilsTPO.getActor(defenderId);
       const attackerContext = UtilsTPO.getMessageContext(opposedContext.attackerMessageId)
-      const opposedTests = defender.getFlag('tpo', 'opposed').filter(id =>  {return id !== messageId})
+      const numTests = defender.getFlag('tpo', 'opposed').filter(test =>  {return test.id === messageId})[0].numTests - 1
+      const opposedTests = defender.getFlag('tpo', 'opposed').filter(test =>  {return test.id !== messageId})
       defender.setFlag('tpo', 'opposed', [...opposedTests])
       if(!attackerContext) {
         console.warn("TPO | Missing attacker message!")
         return;
       }
       const attacker = UtilsTPO.getActor(attackerContext.actorId);
+      let content = `<b>${attacker.name} vs ${defender.name}</b><br>`;
+      let totalDamage = []
 
-      const attackerSls = attackerContext.result[0].sl;
-      let attackerWin = attackerContext.result[0].success;
+      for (let i = numTests; i >= 0; i--){
+        const result = attackerContext.result[i]
+        console.log(result)
+        const attackerSls = result.sl;
+        let attackerWin = result.success;
 
-      let damageString = ``;
-      let damage = 0;
-      if(attackerContext.result[0].damage.hasDamage && attackerWin){
-        const calculatedDamage = OpposedTPO.calculateDamage(
-          attackerContext.result[0], 
-          defender.system.details.elementalResistances,
-          0
-        )
+        let damageString = ``;
+        let damage = 0;
+        if(result.damage.hasDamage && attackerWin){
+          const calculatedDamage = OpposedTPO.calculateDamage(
+            result, 
+            defender.system.details.elementalResistances,
+            0
+          )
 
-        damageString = calculatedDamage.damageString
-        damage = calculatedDamage.damage
+          damageString = calculatedDamage.damageString
+          damage = calculatedDamage.damage
+          totalDamage.push(damage)
+        }
+
+        content += `
+          ${this.generateChatContent(
+            attacker.name,
+            defender.name,
+            attackerWin,
+            result.sl,
+            0,
+            attackerSls,
+            0,
+            true)}
+          ${damageString}
+        `
       }
 
-      let content = `
-        ${this.generateChatContent(attacker.name, defender.name, attackerWin, attackerContext.result[0].sl, 0, attackerSls, opposedTests.length, true)}
-        ${damageString}
-      `
+      let remainingOpposed = 0;
+      opposedTests.forEach(test => {
+        remainingOpposed += test.numTests
+      })
+
+      content += `${remainingOpposed > 0 ? `<br>${defender.name} has ${remainingOpposed} opposed test${remainingOpposed > 1 ? 's' : ''} still to resolve.` : ``}`
 
       let chatData = {
         user: game.user._id,
@@ -183,8 +233,7 @@ export class OpposedTPO {
       const message = await ChatMessage.create(chatData, {});
       await message.setFlag('tpo', 'context', {
         opposedTest: true,
-        attackerWin: attackerWin,
-        damage: damage,
+        damage: totalDamage,
         defenderId: defenderId,
       })
     })
@@ -192,7 +241,6 @@ export class OpposedTPO {
 
   static generateChatContent(attackerName, defenderName, attackerWin, attackerSls, defenderSls, resultSls, remainingOpposed, opposed = false) {
     return `
-      <b>${attackerName} vs ${defenderName}</b><br>
       <hr>
       <h3> ${attackerWin ? `${attackerName} Wins` : `${defenderName} Wins`}</h3>
       <b>SLs:</b><br>${attackerName}: ${attackerSls} <br> ${opposed ? `${defenderName}: ${defenderSls}` : ` ${defenderName}: Did not contest.`}<br>
@@ -252,15 +300,20 @@ export class OpposedTPO {
           ${elementStr}
         </div>
       `
-  
-    return {damageString: damageString, damage: raw - defenderSls + elementDamage}
+    const totalDamage = raw - defenderSls + elementDamage > 0 ? raw - defenderSls + elementDamage : 1
+    return {damageString: damageString, damage: totalDamage}
   }
 
   static opposedTarget(data) {
     data.forEach(async datum => {
       const defender = UtilsTPO.getActor(datum.defenderId)
+      const newOpposed = {
+        id: message.id,
+        numTests: attackerContext.result.length,
+      }
       const existingOpposed = await defender.getFlag('tpo', 'opposed')
-      await defender.setFlag('tpo', 'opposed', [...existingOpposed, datum.messageId])
+      const opposedArray = existingOpposed ? [...existingOpposed, newOpposed] : [newOpposed]
+      await defender.setFlag('tpo', 'opposed', opposedArray)
     })
   }
 }
