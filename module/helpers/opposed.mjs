@@ -88,11 +88,11 @@ export class OpposedTPO {
         opposedContext = UtilsTPO.getMessageContext(opposedTest.id)
       else
         opposedContext = false;
-      console.log(opposedContext)
     } while (opposedTests.length > 0 && opposedContext === false);
 
     if (!opposedContext) {
-      console.warn("TPO | No matching mesages for opposed test!")
+      console.warn("TPO | No matching messages for opposed test!")
+      defender.unsetFlag('tpo', 'opposed')
       return;
     }
 
@@ -101,6 +101,7 @@ export class OpposedTPO {
 
     if(!defenderContext || !attackerContext) {
       console.warn("TPO | Missing attacker or defender message!")
+      defender.setFlag('tpo', 'opposed', [...opposedTests])
       return;
     }
 
@@ -186,7 +187,6 @@ export class OpposedTPO {
 
       for (let i = numTests; i >= 0; i--){
         const result = attackerContext.result[i]
-        console.log(result)
         const attackerSls = result.sl;
         let attackerWin = result.success;
 
@@ -308,8 +308,8 @@ export class OpposedTPO {
     data.forEach(async datum => {
       const defender = UtilsTPO.getActor(datum.defenderId)
       const newOpposed = {
-        id: message.id,
-        numTests: attackerContext.result.length,
+        id: datum.messageId,
+        numTests: datum.numResults,
       }
       const existingOpposed = await defender.getFlag('tpo', 'opposed')
       const opposedArray = existingOpposed ? [...existingOpposed, newOpposed] : [newOpposed]
