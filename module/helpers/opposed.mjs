@@ -1,4 +1,6 @@
-import { DiceTPO, UtilsTPO } from "./utilities.mjs";
+import { UtilsTPO } from "./utilities.mjs";
+import { DiceTPO } from "./dice.mjs";
+
 export class OpposedTPO {
   constructor(data = {}) {
     this.data = {

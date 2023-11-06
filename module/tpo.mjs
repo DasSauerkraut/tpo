@@ -7,7 +7,9 @@ import { tpoItemSheet } from "./sheets/item-sheet.mjs";
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { TPO } from "./helpers/config.mjs";
-import { DiceTPO, UtilsTPO, PowersTPO } from "./helpers/utilities.mjs";
+import { UtilsTPO } from "./helpers/utilities.mjs";
+import { PowersTPO } from "./helpers/powers.mjs";
+import { DiceTPO } from "./helpers/dice.mjs";
 import { OpposedTPO } from "./helpers/opposed.mjs";
 
 

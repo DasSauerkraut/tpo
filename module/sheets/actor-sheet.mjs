@@ -1,5 +1,6 @@
 import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
-import { PowersTPO, UtilsTPO } from "../helpers/utilities.mjs";
+import { UtilsTPO } from "../helpers/utilities.mjs";
+import { PowersTPO } from "../helpers/powers.mjs";
 import { TPO } from "../helpers/config.mjs";
 
 /**
