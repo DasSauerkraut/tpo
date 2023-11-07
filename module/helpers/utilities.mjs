@@ -674,7 +674,6 @@ export class UtilsTPO {
         <hr>
         <div>${combatant.actor.system.name} has the following Delayed Powers:<div>
       `
-      console.log(combatant.actor.system?.delayedPowers)
       const newDelayedPowers = []
       combatant.actor.system?.delayedPowers.forEach(power => {
         power.delayRemaining -= 1;
@@ -696,7 +695,6 @@ export class UtilsTPO {
       combatant.actor.update({
         [`system.delayedPowers`]: newDelayedPowers
       })
-      console.log(combatant.actor.system.delayedPowers)
     }
 
     let statuses = ``;
@@ -732,49 +730,41 @@ export class UtilsTPO {
     let paralyzeds = [];
     let hampereds = [];
     combatant.actor.effects.forEach(effect => {
-      if(effect.label.includes("Bleeding")){
+      if(effect.name.includes("Bleeding")){
         bleedings.push(effect);
         return;
       }
-      if(effect.label.includes("Exhausted")){
+      if(effect.name.includes("Exhausted")){
         exhausteds.push(effect);
         return;
       }
-      if(effect.label.includes("Ongoing")){
+      if(effect.name.includes("Ongoing")){
         ongoings.push(effect);
         return;
       }
-      if(effect.label.includes("Paralyzed")){
+      if(effect.name.includes("Paralyzed")){
         paralyzeds.push(effect);
         return;
       }
-      if(effect.label.includes("Hampered")){
+      if(effect.name.includes("Hampered")){
         hampereds.push(effect);
         return;
       }
-      let lookup = TPO.statuses.filter(s => {
-        return game.i18n.format(s.label) === effect.label;
-      });
 
       let isInjury;
-      if(lookup.length === 0){
-        lookup = TPO.injuries.filter(s => {
-          return game.i18n.format(s.label) === effect.label;
-        });
-        isInjury = lookup.length !== 0
-      }
+      const injuryLookup = TPO.injuries.filter(s => {
+        return game.i18n.format(s.label) === effect.name;
+      });
+      isInjury = injuryLookup.length !== 0
 
-      let description;
-      if(lookup.length === 0){
-        description = "No Description."
-      }else
-        description = lookup[0].description;
+
+      const description = effect.description === "" ? "No Description." : effect.description;
       
       statuses += `
         <br>
-        <b>${effect.label}</b>
+        <b>${effect.name}</b>
         <div style="display:flex;">
-          <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${isInjury ? lookup[0].icon : effect.icon}" alt="${effect.label}">
+          <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${effect.icon}" alt="${effect.name}">
           <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
         </div>
       `
@@ -788,7 +778,6 @@ export class UtilsTPO {
 
     const overencumbered = combatant.actor.system.derived.encumbrance.overencumbered
     if(overencumbered > 0){
-
       let description = 'Movement is reduced by 1sq.'
       if(overencumbered > 4)
         description = 'Cannot move.<br>Disadvantage on all physical actions.'

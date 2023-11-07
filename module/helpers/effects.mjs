@@ -8,6 +8,7 @@
   const a = event.currentTarget;
   const li = a.closest("li");
   const effect = li.dataset.effectId ? owner.effects.get(li.dataset.effectId) : null;
+  console.log(effect)
   switch ( a.dataset.action ) {
     case "create":
       return owner.createEmbeddedDocuments("ActiveEffect", [{
@@ -22,7 +23,7 @@
     case "delete":
       return effect.delete();
     case "toggle":
-      return effect.update({disabled: !effect.system.disabled});
+      return effect.update({disabled: !effect.disabled});
   }
 }
 

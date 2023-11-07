@@ -24,7 +24,8 @@ Hooks.once('init', async function() {
   game.tpo = {
     tpoActor,
     tpoItem,
-    rollItemMacro
+    rollItemMacro,
+    constants: TPO,
   };
 
   // Add custom constants for configuration.
