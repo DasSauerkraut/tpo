@@ -326,6 +326,11 @@
           "current": 0,
           "max": 0
         }
+      },
+      "macro": {
+        "type": "",
+        "trigger": "",
+        "script": ""
       }
     },
     "item": {
@@ -340,7 +345,7 @@
       }
     },
     "mundaneWeapon": {
-      "templates": ["base", "physical"],
+      "templates": ["base", "physical", "macro"],
       "damage": 0,
       "splendor": 0,
       "apCost": 2
@@ -395,7 +400,7 @@
       "upgrades": []
     },
     "power": {
-      "templates": ["base", "physical"],
+      "templates": ["base", "physical", "macro"],
       "type": "atWill",
       "apCost": 0,
       "target": "",

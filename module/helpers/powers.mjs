@@ -82,10 +82,16 @@ export class PowersTPO {
       ChatMessage.create(chatData, {});
       return;
     }
-    PowersTPO.performTest(actor, skill, testData, isArmament ? armament.system.damage.value : 0, isArmament ? armament.system.elementDamage.value : 0, power.name);
+
+    const macro = {
+      trigger: power.system.macro.trigger,
+      type: power.system.macro.type,
+      script: power.system.macro.script,
+    }
+    PowersTPO.performTest(actor, skill, testData, isArmament ? armament.system.damage.value : 0, isArmament ? armament.system.elementDamage.value : 0, power.name, macro);
   }
 
-  static async performTest(actor, skill, testData = {}, armamentDmg = 0, armamentEleDmg = 0, name = null){
+  static async performTest(actor, skill, testData = {}, armamentDmg = 0, armamentEleDmg = 0, name = null, macro = undefined){
     return new Promise(resolve => {
       if(Object.keys(testData).length === 0){
         testData = {
@@ -159,8 +165,12 @@ export class PowersTPO {
                 callback(html);
                 DiceTPO.rollTest(skill, testData).then(result => {
                   DiceTPO.prepareChatCard(result).then(context => {
-                    DiceTPO.createChatCard(context.chatData, context.chatContext)
+                    DiceTPO.createChatCard(context.chatData, context.chatContext, macro)
                   });
+                  console.log("macro")
+                  console.log(macro)
+                  if(macro && macro.trigger === "after")
+                    UtilsTPO.fireMacro(name, macro.type, macro.script, result)
                   resolve(result)
                 });
               }

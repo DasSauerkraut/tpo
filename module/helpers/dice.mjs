@@ -416,7 +416,7 @@ export class DiceTPO {
     }
   }
 
-  static async createChatCard(chatData, chatContext){
+  static async createChatCard(chatData, chatContext, macro){
     const message = await ChatMessage.create(chatData, {});
     await message.setFlag('tpo', 'context', {
       rerolled: chatContext.rerolled,
@@ -425,19 +425,20 @@ export class DiceTPO {
       skill: chatContext.skill,
       result: chatContext.result,
       opposed: false,
+      macro: macro
     })
-    DiceTPO.handleOpposed(message)
+    DiceTPO.handleOpposed(message, macro)
   }
 
-  static handleOpposed(message) {
+  static handleOpposed(message, macro) {
     const context = message.getFlag('tpo', 'context')
     if(game.user.targets.size > 0) {
-      OpposedTPO.startOpposedTest(message.id)
+      OpposedTPO.startOpposedTest(message.id, macro)
     } else if(context && 
       context?.actorId && 
       UtilsTPO.getActor(context.actorId).getFlag('tpo', 'opposed') &&
       UtilsTPO.getActor(context.actorId).getFlag('tpo', 'opposed').length > 0) {
-      OpposedTPO.defenderRoll(message.id, context.actorId)
+      OpposedTPO.defenderRoll(message.id, context.actorId, macro)
     }
   }
 

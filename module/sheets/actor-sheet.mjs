@@ -1246,6 +1246,9 @@ export class tpoActorSheet extends ActorSheet {
 
     const delayMatches = power.system.description.match(/(Delay\s)(\d)/i)
 
+    if(power.system.macro.trigger === "before")
+      UtilsTPO.fireMacro(power.name, power.system.macro.type, power.system.macro.script)
+
     if (delayMatches?.length > 0 && delayMatches[2] > 0) {
       new Dialog({
         title:'Power has Delay Keyword',

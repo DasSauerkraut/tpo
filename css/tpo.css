@@ -907,6 +907,10 @@
   justify-content: center;
 }
 
+.tpo .macro-script {
+  height: 130px;
+}
+
 .tpo .effects .item .effect-source,
 .tpo .effects .item .effect-duration,
 .tpo .effects .item .effect-controls {

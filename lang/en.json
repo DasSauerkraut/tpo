@@ -4,6 +4,10 @@
   "TPO.EffectEdit": "Edit Effect",
   "TPO.EffectDelete": "Delete Effect",
 
+  "TPO.MacroCreate": "Create Macro",
+  "TPO.MacroEdit": "Edit Macro",
+  "TPO.MacroDelete": "Delete Macro",
+
   "TPO.Add": "Add",
 
   "CHAR.WS": "Weapon Skill",

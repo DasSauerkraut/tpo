@@ -1,3 +1,5 @@
+import { UtilsTPO } from "../helpers/utilities.mjs";
+
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -8,8 +10,8 @@ export class tpoItemSheet extends ItemSheet {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["tpo", "sheet", "item"],
-      width: 520,
-      height: 480,
+      width: 580,
+      height: 600,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
     });
   }
@@ -71,9 +73,15 @@ export class tpoItemSheet extends ItemSheet {
 
     html.find('#stackable').click(event => {this._onStackableToggle(event)});
 
+    html.find('.macro-execute').click(this._onMacroExecute.bind(this));
+
     $("input[type=text]").focusin(function() {
       $(this).select();
     });
+  }
+
+  _onMacroExecute(event){
+    UtilsTPO.fireMacro(this.object.name, this.object.system.macro.type, this.object.system.macro.script)
   }
 
   _onAdvancedToggle(event){

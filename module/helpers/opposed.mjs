@@ -13,7 +13,7 @@ export class OpposedTPO {
     }
   }
 
-  static async startOpposedTest(attackerMessageId){
+  static async startOpposedTest(attackerMessageId, macro){
     //get targets
     const targetNames = []
     const targetIds = []
@@ -42,7 +42,8 @@ export class OpposedTPO {
     const message = await ChatMessage.create(chatData, {});
     await message.setFlag('tpo', 'context', {
       attackerMessageId: attackerMessageId,
-      targets: targetIds
+      targets: targetIds,
+      macro: macro
     })
     let socketTargets = []
     game.user.targets.forEach(async (target) => {
@@ -151,6 +152,19 @@ export class OpposedTPO {
         )}
         ${damageString}
       `
+        
+    const result = {
+      attackerWin: attackerWin,
+      resultSls: attackerSls,
+      damage: attackerWin ? [damage] : [],
+      attackerId: attackerContext.actorId,
+      defenderId: defenderId,
+      attackerResult: attackerContext.result[resultKey],
+      defenderResult: defenderContext.result[0],
+    }
+    if(opposedContext.macro && opposedContext.macro.trigger === "afterOpposed") {
+      UtilsTPO.fireMacro("Post-OpposedMacro", opposedContext.macro.type, opposedContext.macro.script, result)
+    }
 
     let chatData = {
       user: game.user._id,
@@ -162,6 +176,8 @@ export class OpposedTPO {
       opposedTest: true,
       damage: attackerWin ? [damage] : [],
       defenderId: defenderId,
+      macro: opposedContext.macro,
+      result: result
     })
     if(resultKey > 0){
       opposedTest.numTests = resultKey;

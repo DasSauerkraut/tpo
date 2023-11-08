@@ -511,7 +511,7 @@ export class UtilsTPO {
         const message = game.messages.get(li.data("message-id"))
         let context = message.getFlag('tpo', 'context')
         if(UtilsTPO.getActor(context.defenderId).isOwner)
-          UtilsTPO.applyDamage(context.defenderId, context.damage, false, li.data("message-id"))
+          UtilsTPO.applyDamage(context.defenderId, context.damage, false, li.data("message-id"), context.macro, context.result)
       }
     })
   }
@@ -529,16 +529,21 @@ export class UtilsTPO {
         const message = game.messages.get(li.data("message-id"))
         let context = message.getFlag('tpo', 'context')
         if(UtilsTPO.getActor(context.defenderId).isOwner)
-          UtilsTPO.applyDamage(context.defenderId, context.damage, true, li.data("message-id"))
+          UtilsTPO.applyDamage(context.defenderId, context.damage, true, li.data("message-id"), context.macro, context.result)
       }
     })
   }
 
-  static applyDamage(actorId, damageArray, piercing, messageId = null) {
+  static applyDamage(actorId, damageArray, piercing, messageId = null, macro, result) {
     const actor = UtilsTPO.getActor(actorId);
     const abs = actor.system.derived.absorption.total;
 
     let damageTaken = 0;
+
+    if(macro && macro.trigger === "beforeDamage") {
+      result["messageId"] = messageId
+      UtilsTPO.fireMacro("before-applying-damage", macro.type, macro.script, result)
+    }
 
     damageArray.forEach(async damage => {
       let damageInstance = piercing ? damage : damage - abs;
@@ -579,9 +584,14 @@ export class UtilsTPO {
       newHp -= damageTaken;
     }
     if(hp > actor.system.derived.bloodied?.value && newHp <= actor.system.derived.bloodied?.value){
+      //generate injury
       chatContent += `
         ${chatContent !== '' ? '<hr>': ''}<b>${actor.name} is Bloodied!</b><br>
-        <div>They suffer a Minor Injury and must perform a Morale Test.
+        <div>
+          They must perform a Morale Test and gain the following injury:
+        </div>
+        <div>
+
         </div>
         `
     }
@@ -613,6 +623,30 @@ export class UtilsTPO {
       [`system.derived.hp.value`]: newHp,
       [`system.derived.tempHp.value`]: newTempHp,
     })
+    if(macro && macro.trigger === "afterDamage") {
+      result["messageId"] = messageId
+      UtilsTPO.fireMacro("after-applying-damage", macro.type, macro.script, result)
+    }
+  }
+
+  static generateInjury(isMinorInjury){
+    //Roll 1d100, -40 mod if minor injury
+    //look up value on contants array
+    //use result to build effect
+    //return effect
+  }
+
+  static async fireMacro(name, type, script, args = {}) {
+    const macro = await Macro.create({
+      name: `${name}-tpo-fired-generated`,
+      type: type,
+      command: script,
+      flags: { "tpo.rollMacro": true }
+    });
+
+    const macroResult = await macro.execute(args);
+    macro.delete();
+    return macroResult;
   }
 
   static hasResolve(actor){

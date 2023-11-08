@@ -25,6 +25,7 @@ Hooks.once('init', async function() {
     tpoActor,
     tpoItem,
     rollItemMacro,
+    getTpoActor: UtilsTPO.getActor,
     constants: TPO,
   };
 
