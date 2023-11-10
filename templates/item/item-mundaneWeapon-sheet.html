@@ -63,6 +63,7 @@
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
     <a class="item" data-tab="description">Description</a>
+    <a class="item" data-tab="macro">Macro</a>
   </nav>
 
   {{!-- Sheet Body --}}
@@ -72,6 +73,35 @@
     <div class="tab" data-group="primary" data-tab="description">
       {{!-- To render inline rolls in a TinyMCE editor, you need to pass the parent actor's (if any) roll data to the rollData prop. --}}
       {{editor system.system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
+    {{!-- Macro Tab --}}
+    <div class="tab" data-group="primary" data-tab="macro">
+      <div class="resource">
+        <label class="resource-label">Trigger: </label>
+        <select name="system.macro.trigger" type="text" value="{{system.system.macro.trigger}}">
+          {{#select system.system.macro.trigger}}
+            <option value="disabled">Disabled</option>
+            <option value="before">Before Test</option>
+            <option value="after">After Test</option>
+            <option value="afterOpposed">After Opposed Test</option>
+            <option value="beforeDamage">Before Inflicting Damage</option>
+            <option value="afterDamage">After Inflicting Damage</option>
+          {{/select}}
+        </select>
+        <label class="resource-label">Type: </label>
+        <select name="system.macro.type" type="text" value="{{system.system.macro.type}}">
+          {{#select system.system.macro.type}}
+            <option value="script">Script</option>
+            <option value="chat">Chat</option>
+          {{/select}}
+        </select>
+      </div>
+      <div class="resource">
+        <textarea class="macro-script" name="system.macro.script">{{system.system.macro.script}}</textarea>
+      </div>
+      <footer class="flexrow">
+        <button class="macro-execute" type="button"><i class="fas fa-dice-d20"></i> Execute Macro</button>
+      </footer>
     </div>
   </section>
 </form>

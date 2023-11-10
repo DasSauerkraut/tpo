@@ -547,7 +547,7 @@ export class UtilsTPO {
 
     damageArray.forEach(async damage => {
       let damageInstance = piercing ? damage : damage - abs;
-      if (damageInstance < 0) damageInstance = 1;
+      if (damageInstance <= 0) damageInstance = 1;
       damageTaken += damageInstance;
     })
 

@@ -509,7 +509,7 @@ export class tpoActorSheet extends ActorSheet {
           }
         }
       }
-      PowersTPO.performTest(this.actor, skill, testData, 0, 0, weapon.name);
+      PowersTPO.performTest(this.actor, skill, testData, 0, 0, weapon.name, weapon.system.macro);
     }
   }
 
