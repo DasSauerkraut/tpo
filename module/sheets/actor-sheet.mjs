@@ -509,7 +509,12 @@ export class tpoActorSheet extends ActorSheet {
           }
         }
       }
-      PowersTPO.performTest(this.actor, skill, testData, 0, 0, weapon.name, weapon.system.macro);
+      const macrosToFire = UtilsTPO.getMacrosByTrigger("before", weapon.system.macros)
+      macrosToFire.forEach(macro => {
+        UtilsTPO.fireMacro(weapon.name, macro.type, macro.script)
+      })
+
+      PowersTPO.performTest(this.actor, skill, testData, 0, 0, weapon.name, weapon.system.macros);
     }
   }
 
@@ -1246,8 +1251,10 @@ export class tpoActorSheet extends ActorSheet {
 
     const delayMatches = power.system.description.match(/(Delay\s)(\d)/i)
 
-    if(power.system.macro.trigger === "before")
-      UtilsTPO.fireMacro(power.name, power.system.macro.type, power.system.macro.script)
+    const macrosToFire = UtilsTPO.getMacrosByTrigger("before", power.system.macros)
+    macrosToFire.forEach(macro => {
+      UtilsTPO.fireMacro(power.name, macro.type, macro.script)
+    })
 
     if (delayMatches?.length > 0 && delayMatches[2] > 0) {
       new Dialog({

@@ -83,12 +83,7 @@ export class PowersTPO {
       return;
     }
 
-    const macro = {
-      trigger: power.system.macro.trigger,
-      type: power.system.macro.type,
-      script: power.system.macro.script,
-    }
-    PowersTPO.performTest(actor, skill, testData, isArmament ? armament.system.damage.value : 0, isArmament ? armament.system.elementDamage.value : 0, power.name, macro);
+    PowersTPO.performTest(actor, skill, testData, isArmament ? armament.system.damage.value : 0, isArmament ? armament.system.elementDamage.value : 0, power.name, power.system.macros);
   }
 
   static async performTest(actor, skill, testData = {}, armamentDmg = 0, armamentEleDmg = 0, name = null, macro = undefined){
@@ -169,8 +164,12 @@ export class PowersTPO {
                   });
                   console.log("macro")
                   console.log(macro)
-                  if(macro && macro.trigger === "after")
-                    UtilsTPO.fireMacro(name, macro.type, macro.script, result)
+                  if(macro){
+                    const macrosToFire = UtilsTPO.getMacrosByTrigger("after", macro)
+                    macrosToFire.forEach(macro => {
+                      UtilsTPO.fireMacro(name, macro.type, macro.script, result)
+                    })
+                  }
                   resolve(result)
                 });
               }

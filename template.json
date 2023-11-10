@@ -327,11 +327,7 @@
           "max": 0
         }
       },
-      "macro": {
-        "type": "",
-        "trigger": "",
-        "script": ""
-      }
+      "macros": []
     },
     "item": {
       "templates": ["base", "physical"],

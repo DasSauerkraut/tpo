@@ -162,8 +162,11 @@ export class OpposedTPO {
       attackerResult: attackerContext.result[resultKey],
       defenderResult: defenderContext.result[0],
     }
-    if(opposedContext.macro && opposedContext.macro.trigger === "afterOpposed") {
-      UtilsTPO.fireMacro("Post-OpposedMacro", opposedContext.macro.type, opposedContext.macro.script, result)
+    if(opposedContext.macro) {
+      const macrosToFire = UtilsTPO.getMacrosByTrigger("afterOpposed", opposedContext.macro)
+      macrosToFire.forEach(macro => {
+        UtilsTPO.fireMacro("Post-OpposedMacro", macro.type, macro.script, result)
+      })
     }
 
     let chatData = {
@@ -202,6 +205,7 @@ export class OpposedTPO {
       const attacker = UtilsTPO.getActor(attackerContext.actorId);
       let content = `<b>${attacker.name} vs ${defender.name}</b><br>`;
       let totalDamage = []
+      const results = []
 
       for (let i = numTests; i >= 0; i--){
         const result = attackerContext.result[i]
@@ -220,6 +224,15 @@ export class OpposedTPO {
           damageString = calculatedDamage.damageString
           damage = calculatedDamage.damage
           totalDamage.push(damage)
+          results.push({
+            attackerWin: attackerWin,
+            resultSls: attackerSls,
+            damage: attackerWin ? [damage] : [],
+            attackerId: attackerContext.actorId,
+            defenderId: defenderId,
+            attackerResult: attackerContext.result,
+            defenderResult: "unopposed",
+          })
         }
 
         content += `
@@ -253,7 +266,15 @@ export class OpposedTPO {
         opposedTest: true,
         damage: totalDamage,
         defenderId: defenderId,
+        macro: opposedContext.macro,
+        result: results
       })
+      if(opposedContext.macro) {
+        const macrosToFire = UtilsTPO.getMacrosByTrigger("afterOpposed", opposedContext.macro)
+        macrosToFire.forEach(macro => {
+          UtilsTPO.fireMacro("Post-OpposedMacro", macro.type, macro.script, results)
+        })
+      }
     })
   }
 

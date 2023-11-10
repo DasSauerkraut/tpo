@@ -540,9 +540,12 @@ export class UtilsTPO {
 
     let damageTaken = 0;
 
-    if(macro && macro.trigger === "beforeDamage") {
+    if(macro) {
       result["messageId"] = messageId
-      UtilsTPO.fireMacro("before-applying-damage", macro.type, macro.script, result)
+      const macrosToFire = UtilsTPO.getMacrosByTrigger("beforeDamage", macro)
+      macrosToFire.forEach(m => {
+        UtilsTPO.fireMacro("before-applying-damage", m.type, m.script, result)
+      })
     }
 
     damageArray.forEach(async damage => {
@@ -623,9 +626,12 @@ export class UtilsTPO {
       [`system.derived.hp.value`]: newHp,
       [`system.derived.tempHp.value`]: newTempHp,
     })
-    if(macro && macro.trigger === "afterDamage") {
+    if(macro) {
       result["messageId"] = messageId
-      UtilsTPO.fireMacro("after-applying-damage", macro.type, macro.script, result)
+      const macrosToFire = UtilsTPO.getMacrosByTrigger("afterDamage", macro)
+      macrosToFire.forEach(m => {
+        UtilsTPO.fireMacro("after-applying-damage", m.type, m.script, result)
+      })
     }
   }
 
@@ -634,6 +640,10 @@ export class UtilsTPO {
     //look up value on contants array
     //use result to build effect
     //return effect
+  }
+
+  static getMacrosByTrigger(trigger, macros) {
+    return macros.filter(macro => macro.trigger === trigger)
   }
 
   static async fireMacro(name, type, script, args = {}) {

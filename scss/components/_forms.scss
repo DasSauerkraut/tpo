@@ -189,6 +189,11 @@
   height: 100%;
 }
 
+.tab-scroll {
+  overflow-y: scroll;
+  height: 250px;
+}
+
 .tox {
   .tox-editor-container {
     background: $c-white;

@@ -12,7 +12,8 @@ export class tpoItemSheet extends ItemSheet {
       classes: ["tpo", "sheet", "item"],
       width: 580,
       height: 600,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }],
+      scrollY: [".tab-scroll"],
     });
   }
 
@@ -73,15 +74,56 @@ export class tpoItemSheet extends ItemSheet {
 
     html.find('#stackable').click(event => {this._onStackableToggle(event)});
 
-    html.find('.macro-execute').click(this._onMacroExecute.bind(this));
+    html.find('.add-macro').click(this._onMacroAdd.bind(this));
+    html.find('.macro-delete').click(this._onMacroDelete.bind(this));
+    html.find('.macro-script').focusout(this._onMacroFocusOut.bind(this));
+    html.find('.macro-select').change(this._onMacroChange.bind(this));
 
     $("input[type=text]").focusin(function() {
       $(this).select();
     });
   }
+  _onMacroChange(event) {
+    event.preventDefault();
+    let index = $(event.target).parents(".resource").data("macro-id");
+    const macros = this.object.system.macros;
+    if($(event.target).hasClass("trigger"))
+      macros[index].trigger = event.target.value;
+    else
+      macros[index].type = event.target.value;
 
-  _onMacroExecute(event){
-    UtilsTPO.fireMacro(this.object.name, this.object.system.macro.type, this.object.system.macro.script)
+    this.object.update({[`system.macros`]: macros})
+  }
+
+  _onMacroFocusOut(event) {
+    event.preventDefault();
+    let index = $(event.target).parents(".resource").data("macro-id");
+    const macros = this.object.system.macros;
+    macros[index].script = event.target.value;
+    this.object.update({[`system.macros`]: macros})
+  }
+
+  _onMacroDelete(event) {
+    event.preventDefault();
+    const macroIndex = $(event.target).parents(".macro-delete").data("macro-id")
+    const macros = this.object.system.macros;
+    macros.splice(macroIndex, 1);
+    this.object.update({[`system.macros`]: macros})
+  }
+
+  _onMacroAdd(event) {
+    console.log(this.object.system)
+    let newMacros;
+    const newMacro = {
+      "type": "",
+      "trigger": "",
+      "script": ""
+    }
+    if(this.object.system.macros?.length > 0)
+      newMacros = [...this.object.system.macros, newMacro]
+    else
+      newMacros = [newMacro]
+    this.object.update({[`system.macros`]: newMacros})
   }
 
   _onAdvancedToggle(event){

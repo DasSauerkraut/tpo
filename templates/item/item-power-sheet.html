@@ -123,33 +123,38 @@
       {{editor system.system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
     </div>
     {{!-- Macro Tab --}}
-    <div class="tab" data-group="primary" data-tab="macro">
-      <div class="resource">
-        <label class="resource-label">Trigger: </label>
-        <select name="system.macro.trigger" type="text" value="{{system.system.macro.trigger}}">
-          {{#select system.system.macro.trigger}}
-            <option value="disabled">Disabled</option>
-            <option value="before">Before Test</option>
-            <option value="after">After Test</option>
-            <option value="afterOpposed">After Opposed Test</option>
-            <option value="beforeDamage">Before Inflicting Damage</option>
-            <option value="afterDamage">After Inflicting Damage</option>
-          {{/select}}
-        </select>
-        <label class="resource-label">Type: </label>
-        <select name="system.macro.type" type="text" value="{{system.system.macro.type}}">
-          {{#select system.system.macro.type}}
-            <option value="script">Script</option>
-            <option value="chat">Chat</option>
-          {{/select}}
-        </select>
-      </div>
-      <div class="resource">
-        <textarea class="macro-script" name="system.macro.script">{{system.system.macro.script}}</textarea>
-      </div>
-      <footer class="flexrow">
-        <button class="macro-execute" type="button"><i class="fas fa-dice-d20"></i> Execute Macro</button>
-      </footer>
+    <div class="tab tab-scroll" data-group="primary" data-tab="macro" style="height: 200px;">
+      <a class="add-macro">+ Add Macro</a>
+      <hr>
+      {{#each system.system.macros as |macro id|}}
+        <div class="resource" data-macro-id="{{id}}">
+          <label class="resource-label">Trigger: </label>
+          <select class="macro-select trigger" name="macro.trigger" type="text" value="{{macro.trigger}}">
+            {{#select macro.trigger}}
+              <option value="disabled">Disabled</option>
+              <option value="before">Before Test</option>
+              <option value="after">After Test</option>
+              <option value="afterOpposed">After Opposed Test</option>
+              <option value="beforeDamage">Before Inflicting Damage</option>
+              <option value="afterDamage">After Inflicting Damage</option>
+            {{/select}}
+          </select>
+          <label class="resource-label">Type: </label>
+          <select class="macro-select type" name="macro.type" type="text" value="{{macro.type}}">
+            {{#select macro.type}}
+              <option value="script">Script</option>
+              <option value="chat">Chat</option>
+            {{/select}}
+          </select>
+          <a class="item-control macro-delete rollable" title="Delete Macro" data-macro-id="{{id}}"
+            ><i class="fas fa-trash"></i
+          ></a>
+        </div>
+        <div class="resource" data-macro-id="{{id}}">
+          <textarea class="macro-script" name="macro.script">{{macro.script}}</textarea>
+        </div>
+        <hr>
+      {{/each}}
     </div>
   </section>
 </form>
