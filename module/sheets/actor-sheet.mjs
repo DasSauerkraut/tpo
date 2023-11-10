@@ -511,7 +511,7 @@ export class tpoActorSheet extends ActorSheet {
       }
       const macrosToFire = UtilsTPO.getMacrosByTrigger("before", weapon.system.macros)
       macrosToFire.forEach(macro => {
-        UtilsTPO.fireMacro(weapon.name, macro.type, macro.script)
+        UtilsTPO.fireMacro(weapon.name, macro.type, macro.script, {userId: this.actor.id})
       })
 
       PowersTPO.performTest(this.actor, skill, testData, 0, 0, weapon.name, weapon.system.macros);
@@ -1253,7 +1253,7 @@ export class tpoActorSheet extends ActorSheet {
 
     const macrosToFire = UtilsTPO.getMacrosByTrigger("before", power.system.macros)
     macrosToFire.forEach(macro => {
-      UtilsTPO.fireMacro(power.name, macro.type, macro.script)
+      UtilsTPO.fireMacro(power.name, macro.type, macro.script, {userId: this.actor.id})
     })
 
     if (delayMatches?.length > 0 && delayMatches[2] > 0) {

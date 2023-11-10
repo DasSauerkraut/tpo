@@ -774,44 +774,58 @@ export class UtilsTPO {
     let paralyzeds = [];
     let hampereds = [];
     combatant.actor.effects.forEach(effect => {
-      if(effect.name.includes("Bleeding")){
-        bleedings.push(effect);
-        return;
+      if(!effect.disabled){
+        if(effect.name.includes("Bleeding")){
+          bleedings.push(effect);
+          return;
+        }
+        if(effect.name.includes("Exhausted")){
+          exhausteds.push(effect);
+          return;
+        }
+        if(effect.name.includes("Ongoing")){
+          ongoings.push(effect);
+          return;
+        }
+        if(effect.name.includes("Paralyzed")){
+          paralyzeds.push(effect);
+          return;
+        }
+        if(effect.name.includes("Hampered")){
+          hampereds.push(effect);
+          return;
+        }
+  
+        let isInjury;
+        const injuryLookup = TPO.injuries.filter(s => {
+          return game.i18n.format(s.label) === effect.name;
+        });
+        isInjury = injuryLookup.length !== 0
+  
+  
+        const description = effect.description === "" ? "No Description." : effect.description;
+        
+        if(effect.duration.remaining <= 0) {
+          statuses += `
+          <br>
+          <b>${effect.name} Ended!</b>
+          <div style="display:flex;">
+            <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${effect.icon}" alt="${effect.name}">
+            <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
+          </div>
+        `
+        combatant.actor.effects.get(effect.id).delete()
+        } else {
+          statuses += `
+          <br>
+          <b>${effect.name}</b>
+          <div style="display:flex;">
+            <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${effect.icon}" alt="${effect.name}">
+            <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
+          </div>
+        `
+        }
       }
-      if(effect.name.includes("Exhausted")){
-        exhausteds.push(effect);
-        return;
-      }
-      if(effect.name.includes("Ongoing")){
-        ongoings.push(effect);
-        return;
-      }
-      if(effect.name.includes("Paralyzed")){
-        paralyzeds.push(effect);
-        return;
-      }
-      if(effect.name.includes("Hampered")){
-        hampereds.push(effect);
-        return;
-      }
-
-      let isInjury;
-      const injuryLookup = TPO.injuries.filter(s => {
-        return game.i18n.format(s.label) === effect.name;
-      });
-      isInjury = injuryLookup.length !== 0
-
-
-      const description = effect.description === "" ? "No Description." : effect.description;
-      
-      statuses += `
-        <br>
-        <b>${effect.name}</b>
-        <div style="display:flex;">
-          <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${effect.icon}" alt="${effect.name}">
-          <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
-        </div>
-      `
     });
 
     if(bleedings.length > 0) statuses += UtilsTPO.formatRatingStatus(bleedings);

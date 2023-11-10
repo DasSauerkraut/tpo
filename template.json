@@ -30,6 +30,7 @@
             "value": 0,
             "max": 0,
             "armor": 0,
+            "mod": 0,
             "total": 0,
             "label": "Absorption"
           },

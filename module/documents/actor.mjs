@@ -127,7 +127,7 @@ export class tpoActor extends Actor {
         data.derived.absorption.value = data.derived.absorption.max;
     }
 
-    data.derived.absorption.total = data.derived.absorption.value + data.derived.absorption.armor;
+    data.derived.absorption.total = data.derived.absorption.value + data.derived.absorption.armor + data.derived.absorption.mod;
 
     //Bloodied
     if(data.autocalc.bloodied){
@@ -364,6 +364,11 @@ export class tpoActor extends Actor {
         actorData.derived.encumbrance.locations[i.system.location].value += i.system.enc;
       } else if(i.type === "wornItem" && this.type === "character"){
         const enc = i.system.worn ? i.system.encPerZone : i.system.enc
+        console.log(actorData)
+        console.log("worn item")
+        if(actorData.autocalc.absorption && i.system.worn)
+            actorData.derived.absorption.armor = i.system.absorption;
+
         if(i.system.worn && i.system.encPerZone > 0) {
           inventory.lHip.push(i)
           inventory.lThigh.push(i)
@@ -375,8 +380,6 @@ export class tpoActor extends Actor {
           actorData.derived.encumbrance.locations.chest.value += enc;
           actorData.derived.encumbrance.locations.rThigh.value += enc;
           actorData.derived.encumbrance.locations.rHip.value += enc;
-          if(actorData.autocalc.absorption)
-            actorData.derived.absorption.armor = i.system.absorption;
         } else {
           inventory[i.system.location].push(i)
           actorData.derived.encumbrance.locations[i.system.location].value += enc;
