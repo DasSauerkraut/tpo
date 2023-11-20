@@ -290,6 +290,7 @@ export class OpposedTPO {
   }
 
   static calculateDamage(result, defenderResistances, defenderSls) {
+    console.log(result)
     const raw = result.damage.raw;
     let elementDamage = result.damage.elementDamage;
     let element;

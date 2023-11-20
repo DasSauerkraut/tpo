@@ -357,9 +357,9 @@ export class DiceTPO {
         success: test.result.includes(game.i18n.localize("ROLL.Success")),
         damage: {
           hasDamage: testData.hasDamage,
-          raw: damage,
-          elementDamage: elementDamage,
-          element: testData.element
+          raw: testData.weakDamage ? testData.strB : damage,
+          elementDamage: testData.weakDamage ? 0 : elementDamage,
+          element: testData.element,
         }
       })
     })

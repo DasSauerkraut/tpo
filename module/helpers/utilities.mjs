@@ -998,4 +998,44 @@ export class UtilsTPO {
       expand.style.display = "none";
     }
   }
+
+  static async inflictEffectSend(uuid, effect) {
+    console.log("sent")
+    await game.socket.emit('system.tpo', {type: "inflictEffect", data: {
+      uuid: uuid,
+      effect: effect,
+      sender: game.user
+    }});
+  }
+
+  static async inflictEffectRecieve(data) {
+    if(!game.user.isGM) 
+      return;
+
+    const target = await fromUuid(data.uuid)
+
+    new Dialog({
+      title: `Inflict ${data.effect.name} on ${target.name}`,
+      content:`
+        <form>
+          <div class="form-group">
+            Allow ${data.sender.name} to inflict the following effect on ${target.name}?
+          </div>
+          <h2>${data.effect.name}</h2>
+          <div>${data.effect.description}</div>
+        </form>`,
+      buttons:{
+        yes: {
+          icon: "<i class='fas fa-check'></i>",
+          label: `Yes`,
+          callback: html => {
+            target.createEmbeddedDocuments("ActiveEffect", [data.effect])
+          }
+        },
+        no: {
+          icon: "<i class='fas fa-cancel'></i>",
+          label: `No`
+        }}, 
+    }).render(true);
+  }
 }
