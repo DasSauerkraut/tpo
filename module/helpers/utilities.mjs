@@ -31,11 +31,16 @@ export class UtilsTPO {
     await actor.updateEmbeddedDocuments("Item", [armament]);
   }
 
-  static formatRatingStatus(statuses){
+  static formatRatingStatus(statuses, combatant){
     let count = 0;
+    let isEnded = false;
     statuses.forEach(s => {
       let match = s.label.match(/\d+/);
       count += match ? Number(match[0]) : 0
+
+      if(s.isTemporary && (Number.isNumeric(s.duration.remaining) && (s.duration.remaining <= 0))) {
+        isEnded = true
+      }
     })
     
     let description = TPO.statuses.filter(s => {
@@ -44,12 +49,18 @@ export class UtilsTPO {
     description = description[0].description.replace(/REPLACE/g, count);
 
     let label = statuses[0].label.replace(/[0-9]/g, count);
+    const icon = statuses[0].icon
+
+    if(isEnded)
+      statuses.forEach(s => {
+        combatant.actor.effects.get(s.id).delete()
+      })
 
     return `
       <br>
-      <b>${label}</b>
+      <b>${label}${isEnded ? " Ended!" : ""}</b>
       <div style="display:flex;">
-        <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${statuses[0].icon}" alt="${label}">
+        <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${icon}" alt="${label}">
         <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
       </div>
     `
@@ -643,7 +654,9 @@ export class UtilsTPO {
   }
 
   static getMacrosByTrigger(trigger, macros) {
-    return macros.filter(macro => macro.trigger === trigger)
+    if(macros)
+      return macros.filter(macro => macro.trigger === trigger)
+    return []
   }
 
   static async fireMacro(name, type, script, args = {}) {
@@ -804,8 +817,7 @@ export class UtilsTPO {
   
   
         const description = effect.description === "" ? "No Description." : effect.description;
-        
-        if(effect.duration.remaining <= 0) {
+        if(effect.isTemporary && (Number.isNumeric(effect.duration.remaining) && (effect.duration.remaining <= 0))) {
           statuses += `
           <br>
           <b>${effect.name} Ended!</b>
@@ -813,8 +825,8 @@ export class UtilsTPO {
             <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${effect.icon}" alt="${effect.name}">
             <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
           </div>
-        `
-        combatant.actor.effects.get(effect.id).delete()
+          `
+          combatant.actor.effects.get(effect.id).delete()
         } else {
           statuses += `
           <br>
@@ -828,11 +840,11 @@ export class UtilsTPO {
       }
     });
 
-    if(bleedings.length > 0) statuses += UtilsTPO.formatRatingStatus(bleedings);
-    if(exhausteds.length > 0) statuses += UtilsTPO.formatRatingStatus(exhausteds);
-    if(ongoings.length > 0) statuses += UtilsTPO.formatRatingStatus(ongoings);
-    if(paralyzeds.length > 0) statuses += UtilsTPO.formatRatingStatus(paralyzeds);
-    if(hampereds.length > 0) statuses += UtilsTPO.formatRatingStatus(hampereds);
+    if(bleedings.length > 0) statuses += UtilsTPO.formatRatingStatus(bleedings, combatant);
+    if(exhausteds.length > 0) statuses += UtilsTPO.formatRatingStatus(exhausteds, combatant);
+    if(ongoings.length > 0) statuses += UtilsTPO.formatRatingStatus(ongoings, combatant);
+    if(paralyzeds.length > 0) statuses += UtilsTPO.formatRatingStatus(paralyzeds, combatant);
+    if(hampereds.length > 0) statuses += UtilsTPO.formatRatingStatus(hampereds, combatant);
 
     const overencumbered = combatant.actor.system.derived.encumbrance.overencumbered
     if(overencumbered > 0){

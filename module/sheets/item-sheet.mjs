@@ -112,10 +112,9 @@ export class tpoItemSheet extends ItemSheet {
   }
 
   _onMacroAdd(event) {
-    console.log(this.object.system)
     let newMacros;
     const newMacro = {
-      "type": "",
+      "type": "script",
       "trigger": "",
       "script": ""
     }

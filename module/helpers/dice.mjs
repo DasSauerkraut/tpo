@@ -432,13 +432,13 @@ export class DiceTPO {
 
   static handleOpposed(message, macro) {
     const context = message.getFlag('tpo', 'context')
-    if(game.user.targets.size > 0) {
-      OpposedTPO.startOpposedTest(message.id, macro)
-    } else if(context && 
+    if(context && 
       context?.actorId && 
       UtilsTPO.getActor(context.actorId).getFlag('tpo', 'opposed') &&
       UtilsTPO.getActor(context.actorId).getFlag('tpo', 'opposed').length > 0) {
       OpposedTPO.defenderRoll(message.id, context.actorId, macro)
+    } else if(game.user.targets.size > 0) {
+      OpposedTPO.startOpposedTest(message.id, macro)
     }
   }
 

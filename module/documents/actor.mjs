@@ -364,8 +364,6 @@ export class tpoActor extends Actor {
         actorData.derived.encumbrance.locations[i.system.location].value += i.system.enc;
       } else if(i.type === "wornItem" && this.type === "character"){
         const enc = i.system.worn ? i.system.encPerZone : i.system.enc
-        console.log(actorData)
-        console.log("worn item")
         if(actorData.autocalc.absorption && i.system.worn)
             actorData.derived.absorption.armor = i.system.absorption;
 

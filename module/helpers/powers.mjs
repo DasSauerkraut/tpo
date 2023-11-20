@@ -162,8 +162,6 @@ export class PowersTPO {
                   DiceTPO.prepareChatCard(result).then(context => {
                     DiceTPO.createChatCard(context.chatData, context.chatContext, macro)
                   });
-                  console.log("macro")
-                  console.log(macro)
                   if(macro){
                     const macrosToFire = UtilsTPO.getMacrosByTrigger("after", macro)
                     macrosToFire.forEach(macro => {
