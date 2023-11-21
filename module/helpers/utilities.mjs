@@ -545,8 +545,12 @@ export class UtilsTPO {
     })
   }
 
-  static applyDamage(actorId, damageArray, piercing, messageId = null, macro, result) {
-    const actor = UtilsTPO.getActor(actorId);
+  static async applyDamage(id, damageArray, piercing, messageId = null, macro = null, result = {}, usesUuid = false) {
+    let actor;
+    if(usesUuid)
+      actor = await fromUuid(id);
+    else
+      actor = UtilsTPO.getActor(id);
     const abs = actor.system.derived.absorption.total;
 
     let damageTaken = 0;
@@ -574,7 +578,7 @@ export class UtilsTPO {
     
     const tempHp = actor.system.derived.tempHp.value
     const hp = actor.system.derived.hp.value
-    let chatContent = `<br>Inflicted ${damageTaken} ${piercing ? "Piercing ": ""}Damage!`
+    let chatContent = `<br>Inflicted ${damageTaken} ${piercing ? "Piercing ": ""}Damage ${messageId === null ? ` to ${actor.name}`: ""}!`
     let newHp = hp;
     let newTempHp = tempHp;
     if(tempHp > 0){
@@ -1001,11 +1005,19 @@ export class UtilsTPO {
 
   static async inflictEffectSend(uuid, effect) {
     console.log("sent")
-    await game.socket.emit('system.tpo', {type: "inflictEffect", data: {
-      uuid: uuid,
-      effect: effect,
-      sender: game.user
-    }});
+    if(game.user.isGM){
+      UtilsTPO.inflictEffectRecieve({
+        uuid: uuid,
+        effect: effect,
+        sender: game.user
+      })
+    } else {
+      await game.socket.emit('system.tpo', {type: "inflictEffect", data: {
+        uuid: uuid,
+        effect: effect,
+        sender: game.user
+      }});
+    }
   }
 
   static async inflictEffectRecieve(data) {
@@ -1030,6 +1042,74 @@ export class UtilsTPO {
           label: `Yes`,
           callback: html => {
             target.createEmbeddedDocuments("ActiveEffect", [data.effect])
+          }
+        },
+        no: {
+          icon: "<i class='fas fa-cancel'></i>",
+          label: `No`
+        }}, 
+    }).render(true);
+  }
+
+  static async inflictDamageSend(uuid, rawDamage, elementalDamage, element, piercing) {
+    if(game.user.isGM){
+      UtilsTPO.inflictDamageRecieve({
+        uuid: uuid,
+        rawDamage: rawDamage,
+        elementalDamage: elementalDamage,
+        element: element,
+        piercing: piercing,
+        sender: game.user
+      })
+    } else {
+      await game.socket.emit('system.tpo', {type: "inflictDamage", data: {
+        uuid: uuid,
+        rawDamage: rawDamage,
+        elementalDamage: elementalDamage,
+        element: element,
+        piercing: piercing,
+        sender: game.user
+      }});
+    }
+  }
+
+  static async inflictDamageRecieve(data) {
+    if(!game.user.isGM) 
+      return;
+
+    const target = await fromUuid(data.uuid)
+
+    new Dialog({
+      title: `Inflict Damage to ${target.name}`,
+      content:`
+        <form>
+          <div class="form-group">
+            Allow ${data.sender.name} to inflict ${data.rawDamage} Raw, ${data.elementalDamage} ${data.element} ${data.piercing ? " <b>Piercing</b>" : ""} Damage to ${target.name}?
+          </div>
+        </form>`,
+      buttons:{
+        yes: {
+          icon: "<i class='fas fa-check'></i>",
+          label: `Yes`,
+          callback: () => {
+            let elementDamage = 0;
+            if(target.system.details.elementalResistances[data.element] == 'W'){
+              elementDamage = data.elementalDamage * 2;
+            } else if(target.system.details.elementalResistances[data.element] == 'S'){
+              elementDamage = Math.floor(data.elementalDamage * 0.5);
+            }
+
+            const totalDamage = data.rawDamage + elementDamage >= 0 ? data.rawDamage + elementDamage : 0
+        
+            UtilsTPO.applyDamage(
+              data.uuid,
+              [totalDamage],
+              data.piercing,
+              null,
+              null,
+              {},
+              true
+            )
           }
         },
         no: {

@@ -27,6 +27,7 @@ Hooks.once('init', async function() {
     rollItemMacro,
     getTpoActor: UtilsTPO.getActor,
     inflictEffect: UtilsTPO.inflictEffectSend,
+    inflictDamage: UtilsTPO.inflictDamageSend,
     constants: TPO,
   };
 
@@ -163,6 +164,9 @@ Hooks.once("ready", async function() {
         break;
       case "inflictEffect":
         UtilsTPO.inflictEffectRecieve(data.data)
+        break;
+      case "inflictDamage":
+        UtilsTPO.inflictDamageRecieve(data.data)
         break;
       default:
         break;

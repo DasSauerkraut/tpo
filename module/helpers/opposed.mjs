@@ -22,6 +22,7 @@ export class OpposedTPO {
       targetIds.push({
         isToken: !target.document.actorLink,
         id: target.document.actorLink ? target.document.actorId : target.document.id,
+        tokenId: target.document.uuid
       })
     })
 
@@ -159,6 +160,7 @@ export class OpposedTPO {
       damage: attackerWin ? [damage] : [],
       attackerId: attackerContext.actorId,
       defenderId: defenderId,
+      defenderTokenId: opposedContext.targets.filter(t => t.id === defenderId.id)[0].tokenId,
       attackerResult: attackerContext.result[resultKey],
       defenderResult: defenderContext.result[0],
     }
