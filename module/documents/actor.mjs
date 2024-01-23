@@ -21,6 +21,13 @@ export class tpoActor extends Actor {
   prepareBaseData() {
     // Data modifications in this step occur before processing embedded
     // documents or derived data.
+    const data = this.system;
+    Object.values(data.stats).forEach(stat => {
+      stat.value = stat.initial + stat.modifier + stat.improvements;
+      stat.bonus = Math.floor((stat.value) / 10)
+      stat.cost = 4 + Math.floor(stat.improvements / 5) * 5
+    });
+    this._prepareCharacterData(data);
   }
 
   /**@override */
@@ -65,22 +72,11 @@ export class tpoActor extends Actor {
    */
   prepareDerivedData() {
     const actorData = this.system;
-    const data = actorData;
-    const flags = this.flags.tpo || {};
-    const newXpCalc = game.settings.get("tpo", "Xp2");
-
-    Object.values(data.stats).forEach(stat => {
-      stat.value = stat.initial + stat.modifier + stat.improvements;
-      stat.bonus = Math.floor((stat.value) / 10)
-      stat.cost = newXpCalc ? 4 + Math.floor(stat.improvements / 5) * 5 : 4 + Math.floor(stat.improvements / 5) * 2
-    });
-
     //data["effects"] = prepareActiveEffectCategories(actorData.effects);
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
     this._prepareItems(actorData);
-    this._prepareCharacterData(actorData);
     this._prepareNpcData(actorData);
     console.log(this);
   }
@@ -149,14 +145,14 @@ export class tpoActor extends Actor {
     data.info.splendor.total = data.info.splendor.items + data.info.splendor.mod - data.info.splendor.spent;
     //AP
     if(data.autocalc.ap)
-      data.derived.ap.max = 4;
+      data.derived.ap.max = 8;
 
     //Movement
     if(data.autocalc.movement){
       if(data.stats.agi.value >= 50)
-        data.derived.movement.value = 5;
-      else
         data.derived.movement.value = 4;
+      else
+        data.derived.movement.value = 3;
     }
     //XP
     if(this.type === "character")
@@ -365,7 +361,7 @@ export class tpoActor extends Actor {
       } else if(i.type === "wornItem" && this.type === "character"){
         const enc = i.system.worn ? i.system.encPerZone : i.system.enc
         if(actorData.autocalc.absorption && i.system.worn)
-            actorData.derived.absorption.armor = i.system.absorption;
+            actorData.derived.absorption.armor += i.system.absorption;
 
         if(i.system.worn && i.system.encPerZone > 0) {
           inventory.lHip.push(i)

@@ -58,42 +58,6 @@
           <a title="{{localize 'SYS.Rest'}}" id="hp-heal" class="rest"><i class="fas fa-procedures"></i></a>
         </div>
 
-        <div class="resource flex-group-center" title="{{localize 'TIP.AP'}}">
-          <div class="resource-content flexrow flex-center flex-between">
-            <input class="two-value" type="text" name="system.derived.ap.value" value="{{system.derived.ap.value}}" data-dtype="Number"/>
-            {{#if system.autocalc.ap}}
-            <a title="{{localize 'SYS.ToggleAutocalc'}}" id="ap-max" class="field two-value">{{system.derived.ap.max}}</a>
-            {{else}}
-            <div class="two-value autocalc">
-              <input type="text" name="system.derived.ap.max" value="{{system.derived.ap.max}}" data-dtype="Number"/>
-              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="ap-max" class="reset"><i class="fas fa-reply"></i></a>
-            </div>
-            {{/if}}
-          </div>
-          <label for="system.derived.ap.value" class="resource-label">{{system.derived.ap.abrev}}</label>
-        </div>
-
-        <div class="resource flex-group-center" title="{{localize 'TIP.Resolve'}}">
-          <div class="resource-content flexrow flex-center flex-between">
-            {{#if system.info.resolve.resolve1}}
-              <input class="resolve" id="resolve1" type="checkbox" checked data-dtype="Boolean"/>
-            {{else}}
-              <input class="resolve" id="resolve1" type="checkbox" data-dtype="Boolean"/>
-            {{/if}}
-            {{#if system.info.resolve.resolve2}}
-              <input class="resolve" id="resolve2" type="checkbox" checked data-dtype="Boolean"/>
-            {{else}}
-              <input class="resolve" id="resolve2" type="checkbox" data-dtype="Boolean"/>
-            {{/if}}
-            {{#if system.info.resolve.resolve3}}
-              <input class="resolve" id="resolve3" type="checkbox" checked data-dtype="Boolean"/>
-            {{else}}
-              <input class="resolve" id="resolve3" type="checkbox" data-dtype="Boolean"/>
-            {{/if}}
-          </div>
-          <label for="system.info.resolve.value" class="resource-label">{{localize system.info.resolve.label}}</label>
-        </div>
-
         <div class="resource flex-group-center" title="{{localize 'TIP.TempHP'}}">
           <div class="resource-content flexrow flex-center flex-between">
             <input class="two-value" type="text" name="system.derived.tempHp.value" value="{{system.derived.tempHp.value}}" data-dtype="Number"/>
@@ -107,6 +71,52 @@
             {{/if}}
           </div>
           <label for="system.derived.tempHp.value" class="resource-label">{{system.derived.tempHp.abrev}}</label>
+        </div>
+
+
+        <div class="resource flex-group-center two-items">
+          <div class="container">
+            <div class="resource-content flexrow flex-center flex-between">
+              <input type="text" name="system.derived.wounds.value" value="{{system.derived.wounds.value}}" data-dtype="Number"/>
+            </div>
+            <label for="system.derived.wounds.value" class="resource-label">{{system.derived.wounds.label}}</label>
+          </div>
+          <div class="container" title="{{localize 'TIP.Movement'}}">
+              <div class="resource-content flexrow flex-center flex-between nowrap">
+                {{#if system.info.resolve.resolve1}}
+                  <input class="resolve" id="resolve1" type="checkbox" checked data-dtype="Boolean"/>
+                {{else}}
+                  <input class="resolve" id="resolve1" type="checkbox" data-dtype="Boolean"/>
+                {{/if}}
+                {{#if system.info.resolve.resolve2}}
+                  <input class="resolve" id="resolve2" type="checkbox" checked data-dtype="Boolean"/>
+                {{else}}
+                  <input class="resolve" id="resolve2" type="checkbox" data-dtype="Boolean"/>
+                {{/if}}
+                {{#if system.info.resolve.resolve3}}
+                  <input class="resolve" id="resolve3" type="checkbox" checked data-dtype="Boolean"/>
+                {{else}}
+                  <input class="resolve" id="resolve3" type="checkbox" data-dtype="Boolean"/>
+                {{/if}}
+              </div>
+              <label for="system.info.resolve.value" class="resource-label">{{localize system.info.resolve.label}}</label>
+          </div>
+        </div>
+
+        
+        <div class="resource flex-group-center" title="{{localize 'TIP.AP'}}">
+          <div class="resource-content flexrow flex-center flex-between">
+            <input class="two-value" type="text" name="system.derived.ap.value" value="{{system.derived.ap.value}}" data-dtype="Number"/>
+            {{#if system.autocalc.ap}}
+            <a title="{{localize 'SYS.ToggleAutocalc'}}" id="ap-max" class="field two-value">{{system.derived.ap.max}}</a>
+            {{else}}
+            <div class="two-value autocalc">
+              <input type="text" name="system.derived.ap.max" value="{{system.derived.ap.max}}" data-dtype="Number"/>
+              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="ap-max" class="reset"><i class="fas fa-reply"></i></a>
+            </div>
+            {{/if}}
+          </div>
+          <label for="system.derived.ap.value" class="resource-label">{{system.derived.ap.abrev}}</label>
         </div>
 
         {{!-- ABSORPTION --}}

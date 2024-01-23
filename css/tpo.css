@@ -272,6 +272,11 @@
   text-align: right;
 }
 
+.nowrap {
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+}
+
 .flexshrink {
   -webkit-box-flex: 0;
   -ms-flex: 0;
@@ -319,6 +324,9 @@
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 .two-items .container {
@@ -477,6 +485,13 @@
 
 .tpo .absorption-item .absorption-label {
   font-size: 10px;
+}
+
+.tpo .resolve {
+  -webkit-transform: scale(0.9);
+  -ms-transform: scale(0.9);
+  transform: scale(0.9);
+  margin: 2px !important;
 }
 
 .tpo .autocalc {
@@ -2055,7 +2070,7 @@
 .tpo .expand-popout .popout {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 999;
   top: 0;
   right: 0;
   width: 400px;

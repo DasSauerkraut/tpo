@@ -559,7 +559,7 @@ export class UtilsTPO {
       result["messageId"] = messageId
       const macrosToFire = UtilsTPO.getMacrosByTrigger("beforeDamage", macro)
       macrosToFire.forEach(m => {
-        UtilsTPO.fireMacro("before-applying-damage", m.type, m.script, result)
+        UtilsTPO.fireMacro("before-applying-damage", m.type, m.script, {result: result})
       })
     }
 
@@ -602,22 +602,27 @@ export class UtilsTPO {
       newHp -= damageTaken;
     }
     if(hp > actor.system.derived.bloodied?.value && newHp <= actor.system.derived.bloodied?.value){
-      //generate injury
       chatContent += `
         ${chatContent !== '' ? '<hr>': ''}<b>${actor.name} is Bloodied!</b><br>
         <div>
-          They must perform a Morale Test and gain the following injury:
+          They must perform a Morale Test, Roll on the Injury Table, and gain 2 Wounds.
         </div>
         <div>
-
-        </div>
-        `
+          <button class="injury-btn" data-actor-id="${actor.id}" data-injury-type="minor">Minor Injury</button>
+         </div>
+         `
+        
     }
     if(hp > 0 && newHp <= 0){
       chatContent += `
         ${chatContent !== '' ? '<hr>': ''}<b>${actor.name} is Downed!</b><br>
-        <div>They suffer a Major Injury and their allies must perform a Morale Test. Furthermore, any clothing they were wearing is ruined and must be repaired or it will have -1 Splendor!
+        <div>
+        They gain 3 Wounds and must roll on the Injury Table. Their allies must perform a Morale Test.
+        Furthermore, any clothing they were wearing is ruined and must be repaired or it will have -1 Splendor!
         </div>
+        <div>
+          <button class="injury-btn" data-actor-id="${actor.id}" data-injury-type="major">Major Injury</button>
+         </div>
         `
       if(newHp <= actor.system.derived.tempHp.max * -1){
         chatContent += `
@@ -643,9 +648,10 @@ export class UtilsTPO {
     })
     if(macro) {
       result["messageId"] = messageId
+      result["inflictedDamage"] = damageTaken
       const macrosToFire = UtilsTPO.getMacrosByTrigger("afterDamage", macro)
       macrosToFire.forEach(m => {
-        UtilsTPO.fireMacro("after-applying-damage", m.type, m.script, result)
+        UtilsTPO.fireMacro("after-applying-damage", m.type, m.script, {result: result})
       })
     }
   }
@@ -762,7 +768,7 @@ export class UtilsTPO {
     if(combatant.actor.effects.size !== 0){
       statuses = `
         <hr>
-        <div>${combatant.actor.system.name} is under the following effects!<div>
+        <div>${combatant.actor.name} is under the following effects!<div>
       `
     }
 
@@ -779,7 +785,7 @@ export class UtilsTPO {
         else
         statuses = `
         <hr>
-        <div>${combatant.actor.system.name} is under the following effects!<div>
+        <div>${combatant.actor.name} is under the following effects!<div>
         ${brokenEffects}
       `
       })

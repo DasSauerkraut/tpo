@@ -241,9 +241,9 @@ Hooks.on("preUpdateItem", (item, data, diff) => {
 Hooks.on('renderChatMessage', (chatMessage, html) => {
   html.find('.delayed-power-btn').click(ev => {
     const btn = $(ev.currentTarget);
-    const actorId = btn.data("actorId")
-    const powerId = btn.data("powerId")
-    const armamentId = btn.data("armamentId")
+    const actorId = btn.data("actor-id")
+    const powerId = btn.data("power-id")
+    const armamentId = btn.data("armament-id")
     const actor = game.actors.get(actorId)
     if(actor){
       const power = actor.items.get(powerId)
@@ -251,6 +251,29 @@ Hooks.on('renderChatMessage', (chatMessage, html) => {
       if(power && armament){
         PowersTPO.powerRollHelper(actor, power, armament)
       }
+    }
+  })
+  html.find('.injury-btn').click(async ev => {
+    const btn = $(ev.currentTarget);
+    const actorId = btn.data("actor-id")
+    const injuryType = btn.data("injury-type")
+    const actor = game.actors.get(actorId)
+    console.log(actorId)
+    console.log(injuryType)
+    console.log(actor)
+    if(actor){
+      if(injuryType === "major")
+        await actor.update({"system.derived.wounds.value": actor.system.derived.wounds.value + 3})
+
+        let roll = new Roll(`1d100 + ${actor.system.derived.wounds.value * 10}`);
+        const table= game.tables.getName('Injury Table')
+        if(table)
+          table.draw({roll: roll});
+        else
+          ui.notifications.error(game.i18n.format('ERROR.NoInjuryTable'));
+
+      if (injuryType === "minor")
+        await actor.update({"system.derived.wounds.value": actor.system.derived.wounds.value + 2})
     }
   })
   html.find('.opposed-tst').click(ev => {

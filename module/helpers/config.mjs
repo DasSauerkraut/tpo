@@ -270,7 +270,7 @@ TPO.statuses = [
     id: "downed",
     label: "STATUS.Downed",
     icon: "icons/svg/down.svg",
-    description: "You’ve been knocked below 0 hit points and are on death’s door. While you are Downed, you are drifting in and out of consciousness, trying to stay alive. You also have the Prone and Unconscious Statuses. These statuses cannot be removeduntil you gain at least 1 HP or have Stabilized.<br>To prevent yourself from dying, you must make either a <b>Difficult (-10) Endurance Test</b> or a <b>Demanding (+10) Heal Test</b> on your turn within 3 rounds of being downed. If you succeed in one of these tests before you run out of time, you Stabilize, no longer being at risk of dying. If 3 rounds pass before a successful test, your Character dies, bleeding out."
+    description: "You’ve been knocked below 0 hit points and are on death’s door. While you are Downed, you are drifting in and out of consciousness, trying to stay alive. You also have the Prone and Unconscious Statuses. These statuses cannot be removed until you gain at least 1 HP or have Stabilized. To prevent yourself from dying, you must perform an Extended Hard (-20) Endurance Test or Extended Difficult (-10) Heal Test with a target number equal to your Wounds. If ConB rounds pass before succeeding the Extended Test, your Character dies, succumbing to their wounds. You can make a Test for this on your turn during Combat."
   },
   {
     id: "stabilized",

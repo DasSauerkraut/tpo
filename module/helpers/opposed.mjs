@@ -167,7 +167,7 @@ export class OpposedTPO {
     if(opposedContext.macro) {
       const macrosToFire = UtilsTPO.getMacrosByTrigger("afterOpposed", opposedContext.macro)
       macrosToFire.forEach(macro => {
-        UtilsTPO.fireMacro("Post-OpposedMacro", macro.type, macro.script, result)
+        UtilsTPO.fireMacro("Post-OpposedMacro", macro.type, macro.script, {results: [result]})
       })
     }
 
@@ -232,6 +232,7 @@ export class OpposedTPO {
             damage: attackerWin ? [damage] : [],
             attackerId: attackerContext.actorId,
             defenderId: defenderId,
+            defenderTokenId: opposedContext.targets.filter(t => t.id === defenderId.id)[0].tokenId,
             attackerResult: attackerContext.result,
             defenderResult: "unopposed",
           })
@@ -274,7 +275,7 @@ export class OpposedTPO {
       if(opposedContext.macro) {
         const macrosToFire = UtilsTPO.getMacrosByTrigger("afterOpposed", opposedContext.macro)
         macrosToFire.forEach(macro => {
-          UtilsTPO.fireMacro("Post-OpposedMacro", macro.type, macro.script, results)
+          UtilsTPO.fireMacro("Post-OpposedMacro", macro.type, macro.script, {results: results})
         })
       }
     })

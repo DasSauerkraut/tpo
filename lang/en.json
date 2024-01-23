@@ -250,6 +250,8 @@
 
 
   "ERROR.AbilityNoXp": "TPO | Cannot Improve Ability, not enough XP!",
-  "ERROR.AbilityLessThanZero": "TPO | Cannot degrade Ability below 0 Improvements!"
+  "ERROR.AbilityLessThanZero": "TPO | Cannot degrade Ability below 0 Improvements!",
+
+  "ERROR.NoInjuryTable": "TPO | Could not find 'Injury Table' table. Please create one."
 
 }
