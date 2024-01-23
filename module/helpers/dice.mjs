@@ -328,6 +328,10 @@ export class DiceTPO {
           default:
             break;
         }
+        healString += `
+        <br>All Daily Powers refreshed.
+        <br>Healed 1 Wound.
+        `
       }
 
       let critFormat = ''

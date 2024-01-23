@@ -628,9 +628,11 @@ export class tpoActorSheet extends ActorSheet {
                   }
                 })
               })
+              const newWounds = this.actor.system.derived.wounds.value - 1 > 0 ? this.actor.system.derived.wounds.value - 1 : 0
               this.actor.update({
                 [`system.derived.hp.value`]: currentHp + heal > maxHp ? maxHp : currentHp + heal, 
-                ['system.info.splendor.spent']: 0
+                ['system.info.splendor.spent']: 0,
+                ['system.derived.wounds.value']: newWounds,
               })
             }
           },

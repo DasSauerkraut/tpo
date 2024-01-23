@@ -127,11 +127,7 @@ export class tpoActor extends Actor {
 
     //Bloodied
     if(data.autocalc.bloodied){
-      if(data.details.species.value === game.i18n.format("SPECIES.Narvid")){
-        data.derived.bloodied.value = Math.ceil(data.derived.hp.max / 2);
-      } else {
-        data.derived.bloodied.value = data.stats.con.bonus * 2;
-      }
+        data.derived.bloodied.value = Math.floor(data.derived.hp.max / 2);
     }
     //Enc Bonus
     data.derived.encumbrance.locations.chest.max = data.stats.str.bonus + 1;

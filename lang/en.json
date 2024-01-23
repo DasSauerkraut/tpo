@@ -213,6 +213,7 @@
   "KEYWORD.Launch": "Targets hit by this Power are launched NUM squares away from their initial position.<br>They cannot take Opportunity attacks while sailing through the air.\rLarge targets are launched ½ NUM sq.\rTargets must make an Average (+20) Athletics Test or take ½ NUM Damage, rounding up, and a prone status as they topple to the ground. Succeeding the test means they successfully recover and stay on their feet.\rIf they are launched into another creature, both creatures immediately take ½ NUM Damage, rounding up, and must succeed a Demanding (+10) Athletics Test to remain standing.",
   "KEYWORD.Weak": "Damage dealt is only StrB [NUM] raw damage, with no elemental damage on top. Furthermore, SLs are not included in damage calculations.",
   "KEYWORD.Recharge": "Recharge Powers are variants of Special Powers, where the Trigger is up to chance.\rAt the end of the creature's turn, roll 1d100. If the result is lower than NUM, this Power becomes usable and may be used at anypoint afterwards.\rOnce a charged power is used, it cannot be used until it has Recharged again. Only one power can recharge at the start of a turn.",
+  "KEYWORD.Mobile": "You may take a Move Action as a Free Action prior to performing this Power.",
 
   "TIP.Species": "Your species determines various stats bonuses and provide other effects.",
   "TIP.HP": "Your HP determines how much physical and mental punishment you can take before being Downed.",
