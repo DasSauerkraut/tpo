@@ -219,34 +219,64 @@ TPO.statuses = [
     description: "For the duration of this status, treat your Absorption as if it were 0 when determining damage.<br><br>This status lasts until you succeed a <b>Difficult (-10)Endurance Test</b> at the end of your turn."
   },
   {
+    id: "halfsinged",
+    label: "BURN.HalfSinged",
+    icon: "systems/tpo/module/assets/halfsinged.png",
+    description: "No effect... yet"
+  },
+  {
     id: "singed",
     label: "BURN.Singed",
     icon: "systems/tpo/module/assets/singed.png",
     description: "At the start of this creatures turn, it takes its 3 Piercing Damage. If the creature is Large, it takes 5 Piercing Damage instead."
   },
   {
+    id: "halfshocked",
+    label: "BURN.HalfShocked",
+    icon: "systems/tpo/module/assets/halfshocked.png",
+    description: "No effect... yet."
+  },
+  {
     id: "shocked",
     label: "BURN.Shocked",
     icon: "systems/tpo/module/assets/shocked.png",
-    description: "The next attack this creature makes has Disadvantage."
+    description: "The next attack you perform has its Difficulty increased by one step."
+  },
+  {
+    id: "halfharrowed",
+    label: "BURN.HalfHarrowed",
+    icon: "systems/tpo/module/assets/halfharrowed.png",
+    description: "No effect... yet."
   },
   {
     id: "harrowed",
     label: "BURN.Harrowed",
     icon: "systems/tpo/module/assets/harrowed.png",
-    description: "+1 Movement. The next instance of damage this creature suffers ignores Absorption."
+    description: "Until the end of your next turn, -2 Absorption."
+  },
+  {
+    id: "halffrozen",
+    label: "BURN.HalfFrozen",
+    icon: "systems/tpo/module/assets/halffrozen.png",
+    description: "No effect... yet."
   },
   {
     id: "frozen",
     label: "BURN.Frozen",
     icon: "systems/tpo/module/assets/frozen.png",
-    description: "The next Defend action this creature takes has Disadvantage."
+    description: "The next Defend action you perform has its Difficulty increased by one step."
+  },
+  {
+    id: "halfdrenched",
+    label: "BURN.HalfDrenched",
+    icon: "systems/tpo/module/assets/halfdrenched.png",
+    description: "No effect... yet."
   },
   {
     id: "drenched",
     label: "BURN.Drenched",
     icon: "systems/tpo/module/assets/drenched.png",
-    description: "-1 Movement. This creature becomes Vulnerable to Electric and Ice."
+    description: "Until the end of your next turn, -1 Movement and you become Vulnerable to Electric and Ice."
   },
   {
     id: "marked",
