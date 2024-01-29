@@ -123,8 +123,6 @@ export class tpoActor extends Actor {
         data.derived.absorption.value = data.derived.absorption.max;
     }
 
-    data.derived.absorption.total = data.derived.absorption.value + data.derived.absorption.armor + data.derived.absorption.mod;
-
     //Bloodied
     if(data.autocalc.bloodied){
         data.derived.bloodied.value = Math.floor(data.derived.hp.max / 2);
@@ -135,10 +133,7 @@ export class tpoActor extends Actor {
     data.derived.encumbrance.money.total = (data.derived.encumbrance.money.l + data.derived.encumbrance.money.s/20 + data.derived.encumbrance.money.c/200).toFixed(2)
     //Splendor
     data.info.splendor.cap = data.stats.cha.bonus*2;
-    if(data.info.splendor.items > data.info.splendor.cap)
-      data.info.splendor.items = data.info.splendor.cap;
-
-    data.info.splendor.total = data.info.splendor.items + data.info.splendor.mod - data.info.splendor.spent;
+    
     //AP
     if(data.autocalc.ap)
       data.derived.ap.max = 8;
@@ -444,6 +439,13 @@ export class tpoActor extends Actor {
     actorData.activeAbilities = activeAbilities;
     actorData.inactiveAbilities = inactiveAbilities;
     actorData.mundaneWeapons = mundaneWeapons;
+    actorData.derived.absorption.total = actorData.derived.absorption.value + actorData.derived.absorption.armor + actorData.derived.absorption.mod;
+
+    if(actorData.info.splendor.items > actorData.info.splendor.cap)
+      actorData.info.splendor.items = actorData.info.splendor.cap;
+
+    actorData.info.splendor.total = actorData.info.splendor.items + actorData.info.splendor.mod - actorData.info.splendor.spent;
+
     if(this.type === "character")
       actorData.inventory = inventory;
     else if(this.type === "largenpc"){

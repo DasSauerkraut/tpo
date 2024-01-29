@@ -145,6 +145,8 @@ export class DiceTPO {
       if(didCrit)
         result = game.i18n.localize("ROLL.Crit") + ' ' + (didTestSucceed ? game.i18n.localize("ROLL.Success") : game.i18n.localize("ROLL.Failure"));
 
+      if(autoSuccess)
+        result = game.i18n.localize("ROLL.Auto") + ' ' + result;
       //output
       results.push({
         selectedRoll: selectedRoll,

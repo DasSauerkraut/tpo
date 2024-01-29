@@ -132,6 +132,7 @@
   "ROLL.Crit": "Critical",
   "ROLL.Success": "Success",
   "ROLL.Failure": "Failure",
+  "ROLL.Auto": "Automatic",
 
   "STATUS.HalfAblaze": "Half-Ablaze",
   "STATUS.Ablaze": "Ablaze",

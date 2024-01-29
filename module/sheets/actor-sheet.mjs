@@ -797,9 +797,9 @@ export class tpoActorSheet extends ActorSheet {
           }
           testData.disadvantage = 1;
         }
-        if(1 > this.actor.system.derived.ap.value)
+        if(2 > this.actor.system.derived.ap.value)
           ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
-        this.actor.update({[`system.derived.ap.value`]: this.actor.system.derived.ap.value - 1 })
+        this.actor.update({[`system.derived.ap.value`]: this.actor.system.derived.ap.value - 2 })
         testData.testInfo.description = "Attempting to disengage with Dodge."
         PowersTPO.performTest(this.actor, skill, testData, 0, 0, "Disengaging");
         break;
@@ -833,9 +833,9 @@ export class tpoActorSheet extends ActorSheet {
       case "grapple":
         skill = this.actor.items.getName("Grapple");
 
-        if(2 > this.actor.system.derived.ap.value)
+        if(4 > this.actor.system.derived.ap.value)
           ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
-        this.actor.update({[`system.derived.ap.value`]: this.actor.system.derived.ap.value - 2 })
+        this.actor.update({[`system.derived.ap.value`]: this.actor.system.derived.ap.value - 4 })
 
         if(skill === undefined){
           skill = {
@@ -901,6 +901,7 @@ export class tpoActorSheet extends ActorSheet {
   }
 
   async _onPowerCheck(event){
+    event.stopPropagation();
     let li = $(event.currentTarget).parents(".expand-container-nested");
     if(!li.data("itemId"))
       li = $(event.currentTarget).parents(".expand-popout");
