@@ -132,6 +132,7 @@ export class PowersTPO {
       }
   
       testData.actorName = actor.name;
+      testData.actorId = actor._id
 
       if(!testData.testInfo?.isPower && skill.system.description && testData.testInfo.description === null){
         testData.testInfo.description = skill.system.description;

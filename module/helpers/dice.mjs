@@ -214,7 +214,7 @@ export class DiceTPO {
     let testSymbol = '';
     let contextResults = [];
 
-    testData.results.forEach((test) => {
+    testData.results.forEach( async (test) => {
       let damage = testData.damage + test.SLs
       if(testData.hasDamage && !testData.weakDamage){
         switch (testData.element) {
@@ -294,45 +294,62 @@ export class DiceTPO {
         `
       }
       if(testData.testData.resting){
+        const actor = UtilsTPO.getActor(testData.actorId)
+        let healAmount;
         testSymbol = '<i class="fas fa-heartbeat"></i>'
         const assisting = testData.testData.resting.assisting
         switch (testData.testData.resting.supply) {
           case "No Supplies (SL HP)":
+            healAmount = test.SLs < 1 ? 1 + assisting : test.SLs + assisting;
             healString = `
               <b>Resting with no Supplies:</b><br>
-              ${testData.actorName} healed ${test.SLs < 1 ? 1 + assisting : test.SLs + assisting} HP.
+              ${testData.actorName} healed ${healAmount} HP.
             `
             break;
           case "Poor Supplies (SL + 2 HP)":
+            healAmount = test.SLs < 1 ? 1 + assisting + 2: test.SLs + 2 + assisting
             healString = `
               <b>Resting with Poor Supplies:</b><br>
-              ${testData.actorName} healed ${test.SLs < 1 ? 1 + assisting + 2: test.SLs + 2 + assisting} HP.
+              ${testData.actorName} healed ${healAmount} HP.
             `
             break;
           case "Common Supplies (SL * 2 HP)":
+            healAmount = test.SLs < 1 ? 1 + assisting : test.SLs * 2 + assisting
             healString = `
               <b>Resting with Common Supplies:</b><br>
-              ${testData.actorName} healed ${test.SLs < 1 ? 1 + assisting : test.SLs * 2 + assisting} HP.
+              ${testData.actorName} healed ${healAmount} HP.
             `
             break;
           case "Fine Supplies (SL * 3 HP, Advantage)":
+            healAmount = test.SLs < 1 ? 1+ assisting : test.SLs * 3 + assisting
             healString = `
               <b>Resting with Fine Supplies:</b><br>
-              ${testData.actorName} healed ${test.SLs < 1 ? 1+ assisting : test.SLs * 3 + assisting} HP.
+              ${testData.actorName} healed ${healAmount} HP.
             `
             break;
           case "Safe Location (SL * 2 HP)":
+            healAmount = test.SLs < 1 ? 1 + assisting : test.SLs * 2 + assisting
             healString = `
               <b>Resting in a safe location:</b><br>
-              ${testData.actorName} healed ${test.SLs < 1 ? 1 + assisting : test.SLs * 2 + assisting} HP.
+              ${testData.actorName} healed ${healAmount} HP.
             `
             break;
           default:
             break;
         }
+        let actorNewHp;
+        let remainingWounds;
+        if(actor) {
+          const currentHp = actor.system.derived.hp.value;
+          const maxHp = actor.system.derived.hp.max
+          actorNewHp = currentHp + healAmount > maxHp ? maxHp : currentHp + healAmount 
+
+          remainingWounds = actor.system.derived.wounds.value;
+        }
         healString += `
+        ${actorNewHp ? `New HP: ${actorNewHp}|${actor.system.derived.hp.max}` : ''}
+        ${remainingWounds ? `<br>Healed 1 Wound.<br>Remaining Wounds: ${remainingWounds}` : ''}
         <br>All Daily Powers refreshed.
-        <br>Healed 1 Wound.
         `
       }
 

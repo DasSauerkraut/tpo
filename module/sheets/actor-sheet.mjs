@@ -846,7 +846,7 @@ export class tpoActorSheet extends ActorSheet {
           }
           testData.disadvantage = 1;
         }
-        testData.testInfo.description = "Fighting is a demanding process, both physically and mentally. Sometimes things don’t go the way they’re supposed to, and sometimes the jaws of panic grip you and you run despite everything."
+        testData.testInfo.description = "Your ability to wrestle with an opponent. Grappling is frequently used to immobilize and restrain enemies during combat, or resist such efforts."
         PowersTPO.performTest(this.actor, skill, testData, 0, 0, "Grappling");
         break;
       case "mounted":
