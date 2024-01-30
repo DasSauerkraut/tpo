@@ -34,12 +34,16 @@ export class UtilsTPO {
   static formatRatingStatus(statuses, combatant){
     let count = 0;
     let isEnded = false;
+    let duration = -1;
     statuses.forEach(s => {
       let match = s.label.match(/\d+/);
       count += match ? Number(match[0]) : 0
 
-      if(s.isTemporary && (Number.isNumeric(s.duration.remaining) && (s.duration.remaining <= 0))) {
-        isEnded = true
+      if(s.isTemporary && (Number.isNumeric(s.duration.remaining))) {
+        if(s.duration.remaining <= 0)
+          isEnded = true
+        else
+          duration = s.duration.remaining
       }
     })
     
@@ -49,7 +53,17 @@ export class UtilsTPO {
     description = description[0].description.replace(/REPLACE/g, count);
 
     let label = statuses[0].label.replace(/[0-9]/g, count);
-    const icon = statuses[0].icon
+    let icon = statuses[0].icon
+    if(label.includes("Bleeding"))
+      icon = 'icons/svg/blood.svg';
+    else if(label.includes("Ongoing"))
+      icon = 'icons/svg/radiation.svg';
+    else if(label.includes("Exhausted"))
+      icon = 'icons/svg/wall-direction.svg';
+    else if(label.includes("Hampered"))
+      icon = 'icons/svg/net.svg';
+    else if(label.includes("Paralyzed"))
+      icon = 'icons/svg/lightning.svg';
 
     if(isEnded)
       statuses.forEach(s => {
@@ -57,11 +71,16 @@ export class UtilsTPO {
       })
 
     return `
-      <br>
-      <b>${label}${isEnded ? " Ended!" : ""}</b>
-      <div style="display:flex;">
-        <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${icon}" alt="${label}">
-        <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
+      <div style="position: relative;display:flex;flex-direction: column;width: 45px;height: 45px;box-shadow: 0 0 0 1px silver, 0 0 0 2px grey, inset 0 0 4px rgb(0 0 0 / 50%);align-items: center;justify-content: center;margin: 2px;" 
+      data-tooltip="<h3>${label}${isEnded ? " Ended!" : ""}</h3>${duration > 0 ? `<b>${duration} Rounds Remaining</b>` : ''}<div style='text-align: left'>${description}</div>">
+        <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);cursor: pointer;" src="${icon}" alt="${label}">
+        ${duration > 0 ? `<b style="position: absolute;bottom: -2px;left: -3px;color: #642422;display: flex;align-items: center;">
+        ${duration}
+        <i class="fas fa-stopwatch" style="font-size: 10px;padding-left: 1px;"></i>
+        </b>` : ""}
+        <div style="position: absolute;top: -5px;right: 0;font-weight: bold;font-size: 22px;color: white;-webkit-text-stroke-width: 2px;-webkit-text-stroke-color: black;">
+        ${count}
+      </div>
       </div>
     `
   }
@@ -700,6 +719,7 @@ export class UtilsTPO {
     if(!game.user.isGM)
       return;
 
+    let actorUpdate = {}
     if(canvas.scene.tokens.get(combat.previous.tokenId)){
       const prevCombatant = canvas.scene.tokens.get(combat.previous.tokenId)
 
@@ -733,7 +753,7 @@ export class UtilsTPO {
       
     let combatant = canvas.scene.tokens.get(combat.current.tokenId);
     
-    combatant.actor.update({"system.derived.ap.value": combatant.actor.system.derived.ap.max})
+    actorUpdate = {...actorUpdate, "system.derived.ap.value": combatant.actor.system.derived.ap.max}
     let apMessage = `AP refreshed to ${combatant.actor.system.derived.ap.max}.`
     let delayedPowers = ``
     if(combatant.actor.system.delayedPowers && combatant.actor.system?.delayedPowers.length > 0){
@@ -759,18 +779,11 @@ export class UtilsTPO {
           })
         }
       })
-      combatant.actor.update({
-        [`system.delayedPowers`]: newDelayedPowers
-      })
+      actorUpdate = {...actorUpdate, "system.delayedPowers": newDelayedPowers}
     }
 
     let statuses = ``;
-    if(combatant.actor.effects.size !== 0){
-      statuses = `
-        <hr>
-        <div>${combatant.actor.name} is under the following effects!<div>
-      `
-    }
+    let passives = ``;
 
     if(combatant.actor.type === "largenpc"){
       combatant.actor.system.zones.forEach(zone => {
@@ -819,31 +832,33 @@ export class UtilsTPO {
           return;
         }
   
-        let isInjury;
-        const injuryLookup = TPO.injuries.filter(s => {
-          return game.i18n.format(s.label) === effect.name;
-        });
-        isInjury = injuryLookup.length !== 0
-  
   
         const description = effect.description === "" ? "No Description." : effect.description;
         if(effect.isTemporary && (Number.isNumeric(effect.duration.remaining) && (effect.duration.remaining <= 0))) {
           statuses += `
-          <br>
-          <b>${effect.name} Ended!</b>
-          <div style="display:flex;">
-            <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${effect.icon}" alt="${effect.name}">
-            <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
+          <div style="position: relative;display:flex;flex-direction: column;width: 45px;height: 45px;box-shadow: 0 0 0 1px silver, 0 0 0 2px grey, inset 0 0 4px rgb(0 0 0 / 50%);align-items: center;justify-content: center;margin: 2px;" 
+          data-tooltip="<h3>${effect.name} Ended!</h3><div style='text-align: left'>${description}</div>">
+            <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);cursor: pointer;" src="${effect.icon}" alt="${effect.name}">
+            <i style="position: absolute;font-size: 48px;color: #ab000091;" class="fas fa-times"></i>
           </div>
-          `
+        `
           combatant.actor.effects.get(effect.id).delete()
-        } else {
+        } else if (effect.isTemporary) {
           statuses += `
-          <br>
-          <b>${effect.name}</b>
-          <div style="display:flex;">
-            <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="${effect.icon}" alt="${effect.name}">
-            <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
+          <div style="position: relative;display:flex;flex-direction: column;width: 45px;height: 45px;box-shadow: 0 0 0 1px silver, 0 0 0 2px grey, inset 0 0 4px rgb(0 0 0 / 50%);align-items: center;justify-content: center;margin: 2px;" 
+          data-tooltip="<h3>${effect.name}</h3>${effect.isTemporary && (Number.isNumeric(effect.duration.remaining)) ? `<b>${effect.duration.remaining} Rounds Remaining</b>` : ''}<div style='text-align: left'>${description}</div>">
+            <img style="${effect.name.includes("Half") ? 'opacity: 0.25; ': ''}width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);cursor: pointer;" src="${effect.icon}" alt="${effect.name}">
+            ${effect.isTemporary && (Number.isNumeric(effect.duration.remaining)) ? `<b style="position: absolute;bottom: -2px;left: -3px;color: #642422;display: flex;align-items: center;">
+            ${effect.duration.remaining}
+            <i class="fas fa-stopwatch" style="font-size: 10px;padding-left: 1px;"></i>
+            </b>` : ""}
+          </div>
+        `
+        } else {
+          passives += `
+          <div style="position: relative;display:flex;flex-direction: column;width: 45px;height: 45px;box-shadow: 0 0 0 1px silver, 0 0 0 2px grey, inset 0 0 4px rgb(0 0 0 / 50%);align-items: center;justify-content: center;margin: 2px;" 
+          data-tooltip="<h3>${effect.name}</h3><div style='text-align: left'>${description}</div>">
+            <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);cursor: pointer;" src="${effect.icon}" alt="${effect.name}">
           </div>
         `
         }
@@ -873,6 +888,43 @@ export class UtilsTPO {
         </div>
       `
     }
+    if(statuses !== ``)
+      statuses = `
+          <hr>
+          <b>Temporary Effects: <b>
+          <div class="grid grid-5col">
+            ${statuses}
+          </div>
+        `
+    if(passives !== ``)
+      passives = `
+          <hr>
+          <b>Passive Effects: <b>
+          <div class="grid grid-5col">
+            ${passives}
+          </div>
+        `
+
+    let overtimeDamage = ``
+    if(bleedings.length > 0 || ongoings.length > 0){
+      let bleedingRating = 0;
+      let ongoingRating = 0;
+      bleedings.forEach(s => {
+        let match = s.label.match(/\d+/);
+        bleedingRating += match ? Number(match[0]) : 0
+      })
+      ongoings.forEach(s => {
+        let match = s.label.match(/\d+/);
+        ongoingRating += match ? Number(match[0]) : 0
+      })
+      //get rating for each
+      const label = `Inflict ${bleedingRating ? `Bleeding ${bleedingRating}` : ''}${bleedingRating && ongoingRating ? ', ': ''}${ongoingRating ? `Ongoing Damage ${ongoingRating}` : ''}`
+      overtimeDamage = `
+      <div>
+        <button class="overtime-damage-btn" data-actor-id="${combatant.actor.id}" data-bleeding="${bleedingRating}" data-ongoing="${ongoingRating}">${label}</button>
+      </div>
+      `
+    }
 
     let abilities = ``
     if((combatant.actor.system.details.species.value === game.i18n.format("SPECIES.Thulanjos") || 
@@ -884,7 +936,8 @@ export class UtilsTPO {
       `
       const currentTempHp = combatant.actor.system.derived.tempHp.value
       const maxTempHp = combatant.actor.system.derived.tempHp.max
-      combatant.actor.update({"data.derived.tempHp.value": currentTempHp + 2 > maxTempHp ? maxTempHp : currentTempHp + 2})
+      actorUpdate = {...actorUpdate, "data.derived.tempHp.value": currentTempHp + 2 > maxTempHp ? maxTempHp : currentTempHp + 2}
+
     }
 
     if(combatant.actor.system.details.species.value === game.i18n.format("SPECIES.Raivoaa") &&
@@ -908,13 +961,13 @@ export class UtilsTPO {
         <br><b>${game.i18n.format("SPECIES.Auldlonder")} - Persistence</b><br>
         <div>${game.i18n.format("ABILITY.Persistance2")}</div>
         `
-        combatant.actor.update({"data.derived.movement.value": combatant.actor.system.derived.movement.value + 1})
+        actorUpdate = {...actorUpdate, "data.derived.movement.value": combatant.actor.system.derived.movement.value + 1}
       }else if (auldlonder.system.level > 0 && combat.current.round > 2){
         abilities += `
         <br><b>${game.i18n.format("SPECIES.Auldlonder")} - Persistence</b><br>
         <div>${game.i18n.format("ABILITY.Persistance1")}</div>
         `
-        combatant.actor.update({"data.derived.movement.value": combatant.actor.system.derived.movement.value + 1})
+        actorUpdate = {...actorUpdate, "data.derived.movement.value": combatant.actor.system.derived.movement.value + 1}
       }
     }
     
@@ -925,24 +978,29 @@ export class UtilsTPO {
         <br><b>Momentous - Level 2</b><br>
         <div>${game.i18n.format("ABILITY.Momentous2")}</div>
         `
-        combatant.actor.update({"data.derived.ap.value": combatant.actor.system.derived.ap.max + 1})
+        actorUpdate = {...actorUpdate, "data.derived.ap.value": combatant.actor.system.derived.ap.max + 1}
         apMessage = `AP refreshed to ${combatant.actor.system.derived.ap.max + 1}.`
       }else if (momentous.system.level > 0 && combat.current.round > 3){
         abilities += `
         <br><b>Momentous  - Level 1</b><br>
         <div>${game.i18n.format("ABILITY.Momentous1")}</div>
         `
-        combatant.actor.update({"data.derived.ap.value": combatant.actor.system.derived.ap.max + 1})
+        actorUpdate = {...actorUpdate, "data.derived.ap.value": combatant.actor.system.derived.ap.max + 1}
         apMessage = `AP refreshed to ${combatant.actor.system.derived.ap.max + 1}.`
       }
     }
+
+    combatant.actor.update(actorUpdate)
 
     let chatContent = `
         <h3>${combatant.actor.name}'s turn!</h3>
         ${apMessage}
         ${delayedPowers}
         ${abilities}
-        ${statuses}`
+        ${statuses}
+        ${overtimeDamage}
+        ${passives}
+      `
       let chatData = {
         content: chatContent,
         user: game.user._id,

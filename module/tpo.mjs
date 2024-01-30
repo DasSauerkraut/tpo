@@ -258,9 +258,6 @@ Hooks.on('renderChatMessage', (chatMessage, html) => {
     const actorId = btn.data("actor-id")
     const injuryType = btn.data("injury-type")
     const actor = game.actors.get(actorId)
-    console.log(actorId)
-    console.log(injuryType)
-    console.log(actor)
     if(actor){
       if(injuryType === "major")
         await actor.update({"system.derived.wounds.value": actor.system.derived.wounds.value + 3})
@@ -275,6 +272,16 @@ Hooks.on('renderChatMessage', (chatMessage, html) => {
       if (injuryType === "minor")
         await actor.update({"system.derived.wounds.value": actor.system.derived.wounds.value + 2})
     }
+  })
+  html.find('.overtime-damage-btn').click(async ev => {
+    const btn = $(ev.currentTarget);
+    const li = $(ev.currentTarget).parents(".chat-message")
+    const messageId = li.data("message-id")
+    const actorId = btn.data("actor-id")
+    const ongoing = btn.data("ongoing")
+    const bleeding = btn.data("bleeding")
+    const actor = game.actors.get(actorId)
+    UtilsTPO.applyDamage(actor.uuid, [ongoing, bleeding], false, messageId, null, {}, true)
   })
   html.find('.opposed-tst').click(ev => {
     const li = $(ev.currentTarget).parents(".chat-message")
