@@ -313,7 +313,7 @@
     }
   },
   "Item": {
-    "types": ["item", "skill", "armament", "power", "ability", "zone", "mundaneWeapon", "wornItem"],
+    "types": ["item", "skill", "armament", "power", "ability", "zone", "mundaneWeapon", "wornItem", "effect"],
     "templates": {
       "base": {
         "description": "",
@@ -453,6 +453,18 @@
         "display": ""
       },
       "powers": []
+    },
+    "effect": {
+      "tint": "",
+      "description": "",
+      "isSuspended": false,
+      "duration": {
+        "duration": null,
+        "rounds": null,
+        "seconds": null,
+        "turns": null
+      },
+      "changes": []
     }
   }
 }

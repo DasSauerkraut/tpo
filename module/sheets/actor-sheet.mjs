@@ -945,6 +945,18 @@ export class tpoActorSheet extends ActorSheet {
             await this._onZoneDrop(event, duplicate(i))
           else
             await this._onPowerUnequip(event, duplicate(i))
+        } else if (i.type === "effect") {
+          const effectData = {
+            label: i.name,
+            icon: i.img,
+            tint: i.system.tint,
+            disabled: i.system.isSuspended,
+            changes: i.system.changes,
+            duration: i.system.duration,
+            description: i.system.descriptionDisplay,
+          };
+          this.actor.createEmbeddedDocuments("ActiveEffect", [effectData])
+          i.delete();
         }
       })
     } else {

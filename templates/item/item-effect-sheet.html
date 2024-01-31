@@ -1,0 +1,98 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <!-- Effect Header -->
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+    <h1 class="effect-title">
+      <input name="name" type="text" value="{{item.name}}" placeholder="Name">
+    </h1>
+  </header>
+  <!-- Effect Configuration Tabs -->
+  <nav class="sheet-tabs tabs" aria-role="Form Tab Navigation">
+    <a class="item" data-tab="details"><i class="fas fa-book"></i> Details</a>
+    <a class="item" data-tab="duration"><i class="fas fa-clock"></i> Duration</a>
+    <a class="item" data-tab="effects"><i class="fas fa-cogs"></i> Effects</a>
+  </nav>
+  <!-- Details Tab -->
+  <section class="sheet-body">
+    <section class="tab" data-tab="details">
+      <div class="form-group">
+        <label>Icon Tint Color</label>
+        <div class="form-fields">
+          <input type="color" value="{{item.system.tint}}" data-edit="tint" name="system.tint">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Effect Suspended</label>
+        {{#if item.system.isSuspended}}
+        <input id="isSuspended-toggle" type="checkbox" checked data-dtype="Boolean"/>
+        {{else}}
+        <input id="isSuspended-toggle" type="checkbox"  data-dtype="Boolean"/>
+        {{/if}}
+      </div>
+      <div class="form-group stacked" style="height: 300px;">
+        <label>Effect Description</label>
+        {{editor item.system.description target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
+      </div>
+    </section>
+    <!-- Duration Tab -->
+    <section class="tab" data-tab="duration">
+      <div class="form-group">
+        <label>Effect Duration (Seconds)</label>
+        <div class="form-fields">
+          <input type="number" name="system.duration.seconds" value="{{item.system.duration.seconds}}">
+        </div>
+      </div>
+      <hr>
+      <div class="form-group">
+        <label>Effect Duration (Turns)</label>
+        <div class="form-fields">
+          <label>Rounds</label>
+          <input type="number" name="system.duration.rounds" value="{{item.system.duration.rounds}}">
+          <label>Turns</label>
+          <input type="number" name="system.duration.turns" value="{{item.system.duration.turns}}">
+        </div>
+      </div>
+    </section>
+    <!-- Effects Tab -->
+    <section class="tab" data-tab="effects">
+      <header class="effect-change effects-header grid grid-8col">
+        <div class="key grid-span-3">Attribute Key</div>
+        <div class="mode grid-span-2">Change Mode</div>
+        <div class="value grid-span-2">Effect Value</div>
+        <div class="effect-controls">
+          <a class="effect-control add-effect" data-action="add"><i class="far fa-plus-square"></i></a>
+        </div>
+      </header>
+      <div class="changes-list">
+        {{#each item.system.changes as |change id|}}
+        <li class="effect-change grid grid-8col" data-index="{{id}}">
+          <div class="key grid-span-3">
+            <input class="change-key" type="text" name="changes.{{id}}.key" value="{{change.key}}">
+          </div>
+          <div class="mode grid-span-2">
+            <select class="change-mode" name="changes.{{id}}.mode" data-dtype="Number">
+              {{#select change.mode}}
+              <option value="0">Custom</option>
+              <option value="1">Multiply</option>
+              <option value="2">Add</option>
+              <option value="3">Downgrade</option>
+              <option value="4">Upgrade</option>
+              <option value="5">Override</option>
+              {{/select}}
+            </select>
+          </div>
+          <div class="value grid-span-2">
+            <input class="change-value" type="text" name="changes.{{id}}.value" value="{{change.value}}">
+          </div>
+          <div class="effect-controls">
+            <a class="effect-control delete-effect" data-action="delete" data-change-id="{{id}}"><i class="fas fa-trash"></i></a>
+          </div>
+        </li>
+        {{/each}}
+      </div>
+    </section>
+  </section>
+  <footer class="sheet-footer">
+    <button type="submit"><i class="fas fa-save"></i> Submit Changes</button>
+  </footer>
+</form>

@@ -1,4 +1,3 @@
-import { UtilsTPO } from "../helpers/utilities.mjs";
 
 /**
  * Extend the basic ItemSheet with some very simple modifications
@@ -79,6 +78,13 @@ export class tpoItemSheet extends ItemSheet {
     html.find('.macro-script').focusout(this._onMacroFocusOut.bind(this));
     html.find('.macro-select').change(this._onMacroChange.bind(this));
 
+    html.find('#isSuspended-toggle').click(this._onIsSuspendedToggle.bind(this));
+    html.find('.add-effect').click(this._onChangeAdd.bind(this));
+    html.find('.delete-effect').click(this._onChangeDelete.bind(this));
+    html.find('.change-mode').change(this._onChangeSelect.bind(this));
+    html.find('.change-key').focusout(this._onChangeInput.bind(this));
+    html.find('.change-value').focusout(this._onChangeInput.bind(this));
+
     $("input[type=text]").focusin(function() {
       $(this).select();
     });
@@ -155,5 +161,54 @@ export class tpoItemSheet extends ItemSheet {
     if(this.object.system.selectedElement.water)
       displayStr+='<i class="fas fa-tint" data-tooltip="Water"></i> '
     await this.object.update({[`system.selectedElement.display`]: displayStr });
+  }
+
+  _onIsSuspendedToggle(event){
+    this.object.update({[`system.isSuspended`]: !this.object.system.isSuspended })
+  }
+
+  _onChangeAdd(event) {
+    let newChanges;
+    const newChange = {
+      "key": "",
+      "mode": "2",
+      "value": ""
+    }
+    if(this.object.system.changes?.length > 0)
+      newChanges = [...this.object.system.changes, newChange]
+    else
+      newChanges = [newChange]
+    this.object.update({[`system.changes`]: newChanges})
+  }
+
+  _onChangeDelete(event) {
+    event.preventDefault();
+    const changeIndex = $(event.target).parents(".delete-effect").data("change-id")
+    const changes = this.object.system.changes;
+    changes.splice(changeIndex, 1);
+    this.object.update({[`system.changes`]: changes})
+  }
+
+  _onChangeSelect(event) {
+    event.preventDefault();
+    console.log('chengin')
+    let index = $(event.target).parents(".effect-change").data("index");
+    const changes = this.object.system.changes;
+    changes[index].mode = event.target.value
+
+    this.object.update({[`system.changes`]: changes})
+  }
+
+  _onChangeInput(event) {
+    event.preventDefault();
+    let index = $(event.target).parents(".effect-change").data("index");
+    const changes = this.object.system.changes;
+    if($(event.target).hasClass("change-key"))
+      changes[index].key = event.target.value;
+    else if($(event.target).hasClass("change-value"))
+      changes[index].value = event.target.value;
+    else return;
+
+    this.object.update({[`system.changes`]: changes})
   }
 }
