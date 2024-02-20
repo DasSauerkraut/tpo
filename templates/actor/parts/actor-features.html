@@ -1,67 +1,24 @@
 <div>
-  <div class="grid grid-9col stats">
-    <div class="stat-container">
-      <div class="stat-header-row">
-        {{#if isGm}}
-        <a title="Randomize Character Stats" id="char-roll" class="rest"><i class="fas fa-dice"></i></a>
-        {{/if}}
-        &nbsp
-      </div>
-      <div title="{{localize 'TIP.StatInit'}}" class="stat-header-row">Initial</div>
-      <div title="{{localize 'TIP.StatImp'}}" class="stat-header-row">Imp.</div>
-      <div title="{{localize 'TIP.StatMod'}}" class="stat-header-row">Mod.</div>
-      <div title="{{localize 'TIP.StatValue'}}" class="stat-header-row">Value</div>
-    </div>
+  <div class="flex flexrow stat-row">
     {{#each system.stats as |stat s|}}
     <div class="stat-container">
-      <div class="stat-header" data-stat="{{s}}">{{localize stat.abrev}}
+      <div class="input-container">
+        <span class="stat-item" data-tooltip="Improvements"><input class="input" type="text" name="system.stats.{{s}}.improvements" value="{{stat.improvements}}" data-dtype="Number" maxlength="3" /></span>
+        <span class="stat-item" data-tooltip="Modifiers"><input class="input" type="text" name="system.stats.{{s}}.modifier" value="{{stat.modifier}}" data-dtype="Number" maxlength="3" /></span>
+        <span class="stat-item" data-tooltip="Initial"><input class="input" type="text" name="system.stats.{{s}}.initial" value="{{stat.initial}}" data-dtype="Number" maxlength="3" /></span>
+        <div class="stat-item stat-header" title="Improve Stat | Cost: {{stat.cost}} XP" data-improve="{{s}}">
+          <span class="input">{{localize stat.abrev}}</span>
+          <span class="stat-improvement">+</span>
+        </div>
       </div>
-      <input class="stat-item" type="text" name="system.stats.{{s}}.initial" value="{{stat.initial}}" data-dtype="Number"/>
-      <input class="stat-item" type="text" name="system.stats.{{s}}.improvements" value="{{stat.improvements}}" data-dtype="Number"/>
-      <input class="stat-item" type="text" name="system.stats.{{s}}.modifier" value="{{stat.modifier}}" data-dtype="Number"/>
-      <div class="stat-total rollable" title="Improve Stat | Cost: {{stat.cost}} XP" data-improve="{{s}}">{{stat.value}}<span class="stat-improvement">+</span></div>
+      <div class="total-container" data-stat="{{s}}">
+        <span class="roll" title="Perform Test">
+          <i class="fas fa-dice-d20 dice"></i>
+        </span>
+        <span class="total">{{stat.value}}</span>
+      </div>
     </div>
     {{/each}}
-  </div>
-  <div class="grid grid-4col fate-xp">
-    <div class="fate">
-      <input type="text" name="system.info.fates.fate1.value" value="{{system.info.fates.fate1.value}}" placeholder="Fate"/>
-      <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate1.type" type="text" value="{{system.info.fates.fate1.type}}">
-        {{#select system.info.fates.fate1.type}}
-        <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
-        <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
-        {{/select}}
-      </select>
-    </div>
-    <div class="fate">
-      <input type="text" name="system.info.fates.fate2.value" value="{{system.info.fates.fate2.value}}" placeholder="Fate"/>
-      <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate2.type" type="text" value="{{system.info.fates.fate2.type}}">
-        {{#select system.info.fates.fate2.type}}
-        <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
-        <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
-        {{/select}}
-      </select>
-    </div>
-    <div class="fate">
-      <input type="text" name="system.info.fates.fate3.value" value="{{system.info.fates.fate3.value}}" placeholder="Fate"/>
-      <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate3.type" type="text" value="{{system.info.fates.fate3.type}}">
-        {{#select system.info.fates.fate3.type}}
-        <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
-        <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
-        {{/select}}
-      </select>
-    </div>
-    <div>
-      <div class="grid grid-3col xp">
-        <input class="xp-item" type="text" name="system.info.xp.earned" value="{{system.info.xp.earned}}" placeholder="Earned" data-dtype="Number"/>
-        <input class="xp-item" type="text" name="system.info.xp.spent" value="{{system.info.xp.spent}}" placeholder="Spent" data-dtype="Number"/>
-        <div class="xp-item">{{system.info.xp.value}}</div>
-        <div class="xp-header">Earned</div>
-        <div class="xp-header">Spent</div>
-        <div class="xp-header">Left</div>
-        <div class="grid-span-3" title="{{localize 'TIP.XP'}}">{{localize system.info.xp.label}}</div>
-      </div>
-    </div>
   </div>
   <div class="grid grid-2col">
     <ol class="items-list">

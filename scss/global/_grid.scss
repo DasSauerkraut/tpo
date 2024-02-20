@@ -46,59 +46,6 @@
 .grid-9col {
   grid-column: span 9 / span 9;
   grid-template-columns: repeat(9, minmax(0, 1fr));
-  .stat-container{
-    text-align: center;
-
-    .stat-header{
-      font-weight: bold;
-      margin: auto;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      font-family: $font-primary;
-    }
-    .stat-header:hover{
-      text-shadow: 0 0 10px red;
-      cursor: pointer;
-      color: var(--color-underline-active);
-    }
-
-    .stat-header-row{
-      font-family: $font-primary;
-      font-weight: bold;
-      padding-block: 5px;
-    }
-    
-    .stat-item {
-      border-radius: 0px;
-      border-bottom: 0px;
-      font-family: $font-secondary;
-      width: 100%;
-      font-size: 16px;
-    }
-
-    .stat-total{
-      font-weight: bold;
-      font-family: $font-secondary;
-      border: 1px solid var(--color-border-light-tertiary);
-      font-size: 18px;
-      color: var(--color-underline-active);
-      .stat-improvement{
-        padding: 1px;
-        padding-left: 4px;
-        font-weight: bold;
-        color: var(--color-underline-active);
-        display: none;
-      }
-    }
-    .stat-total:hover{
-      text-shadow: 0 0 10px red;
-      cursor: pointer;
-      color: var(--color-underline-active);
-      .stat-improvement{
-        display: contents;
-      }
-    }
-  }
 }
 
 .grid-10col {

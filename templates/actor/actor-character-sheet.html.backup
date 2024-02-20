@@ -1,0 +1,300 @@
+<form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
+
+  {{!-- Sheet Header --}}
+  <header class="sheet-header-char">
+    <div class="top-header">
+      <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
+      <h1 class="charspecies">
+        <select title="{{localize 'TIP.Species'}}" name="system.details.species.value" type="text" value="{{system.details.species.value}}">
+          {{#select system.details.species.value}}
+          <optgroup label="{{localize 'SPECIES.Human'}}">
+            <option value="{{localize 'SPECIES.Ri'}}">{{localize 'SPECIES.Ri'}}</option>
+            <option value="{{localize 'SPECIES.Hielan'}}">{{localize 'SPECIES.Hielan'}}</option>
+            <option value="{{localize 'SPECIES.Daoine'}}">{{localize 'SPECIES.Daoine'}}</option>
+            <option value="{{localize 'SPECIES.Auldlonder'}}">{{localize 'SPECIES.Auldlonder'}}</option>
+          </optgroup>
+          <optgroup label="{{localize 'SPECIES.Lide'}}">
+            <option value="{{localize 'SPECIES.Slepilide'}}">{{localize 'SPECIES.Slepilide'}}</option>
+            <option value="{{localize 'SPECIES.Ocnilide'}}">{{localize 'SPECIES.Ocnilide'}}</option>
+          </optgroup>
+          <optgroup label="{{localize 'SPECIES.Rahvas'}}">
+            <option value="{{localize 'SPECIES.Raivoaa'}}">{{localize 'SPECIES.Raivoaa'}}</option>
+            <option value="{{localize 'SPECIES.Narvid'}}">{{localize 'SPECIES.Narvid'}}</option>
+          </optgroup>
+          <optgroup label="{{localize 'SPECIES.Thuskos'}}">
+            <option value="{{localize 'SPECIES.Thulanjos'}}">{{localize 'SPECIES.Thulanjos'}}</option>
+            <option value="{{localize 'SPECIES.Ildere'}}">{{localize 'SPECIES.Ildere'}}</option>
+          </optgroup>
+          {{/select}}
+        </select>
+      </h1>
+      <h1 class="chargender"><input name="system.details.gender.value" type="text" value="{{system.details.gender.value}}" placeholder="{{localize system.details.gender.label}}"/></h1>
+    </div>
+    <div class="header-fields">
+      <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
+      {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
+      use both the "grid" and "grid-Ncol" class where "N" can be any number
+      from 1 to 12 and will create that number of columns.  --}}
+      <div class="resources grid grid-3col charsheet">
+
+        {{!-- "flex-group-center" is also defined in the _grid.scss file
+        and it will add a small amount of padding, a border, and will
+        center all of its child elements content and text. --}}
+        <div class="resource flex-group-center" title="{{localize 'TIP.HP'}}">
+          <div class="resource-content flexrow flex-center flex-between">
+            <input class="two-value" type="text" name="system.derived.hp.value" value="{{system.derived.hp.value}}" data-dtype="Number"/>
+            {{#if system.autocalc.hp}}
+            <a title="{{localize 'SYS.ToggleAutocalc'}}" id="hp-max" class="field two-value">{{system.derived.hp.max}}</a>
+            {{else}}
+            <div class="two-value autocalc">
+              <input type="text" name="system.derived.hp.max" value="{{system.derived.hp.max}}" data-dtype="Number"/>
+              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="hp-max" class="reset"><i class="fas fa-reply"></i></a>
+            </div>
+            {{/if}}
+          </div>
+          <label for="system.derived.hp.value" class="resource-label">
+            {{system.derived.hp.abrev}}
+          </label>
+          <a title="{{localize 'SYS.Rest'}}" id="hp-heal" class="rest"><i class="fas fa-procedures"></i></a>
+        </div>
+
+        <div class="resource flex-group-center" title="{{localize 'TIP.TempHP'}}">
+          <div class="resource-content flexrow flex-center flex-between">
+            <input class="two-value" type="text" name="system.derived.tempHp.value" value="{{system.derived.tempHp.value}}" data-dtype="Number"/>
+            {{#if system.autocalc.thp}}
+            <a title="{{localize 'SYS.ToggleAutocalc'}}" id="thp-max" class="field two-value">{{system.derived.tempHp.max}}</a>
+            {{else}}
+            <div class="two-value autocalc">
+              <input type="text" name="system.derived.tempHp.max" value="{{system.derived.tempHp.max}}" data-dtype="Number"/>
+              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="thp-max" class="reset"><i class="fas fa-reply"></i></a>
+            </div>
+            {{/if}}
+          </div>
+          <label for="system.derived.tempHp.value" class="resource-label">{{system.derived.tempHp.abrev}}</label>
+        </div>
+
+
+        <div class="resource flex-group-center two-items">
+          <div class="container">
+            <div class="resource-content flexrow flex-center flex-between">
+              <input type="text" name="system.derived.wounds.value" value="{{system.derived.wounds.value}}" data-dtype="Number"/>
+            </div>
+            <label for="system.derived.wounds.value" class="resource-label">{{system.derived.wounds.label}}</label>
+          </div>
+          <div class="container" title="{{localize 'TIP.Movement'}}">
+              <div class="resource-content flexrow flex-center flex-between nowrap">
+                {{#if system.info.resolve.resolve1}}
+                  <input class="resolve" id="resolve1" type="checkbox" checked data-dtype="Boolean"/>
+                {{else}}
+                  <input class="resolve" id="resolve1" type="checkbox" data-dtype="Boolean"/>
+                {{/if}}
+                {{#if system.info.resolve.resolve2}}
+                  <input class="resolve" id="resolve2" type="checkbox" checked data-dtype="Boolean"/>
+                {{else}}
+                  <input class="resolve" id="resolve2" type="checkbox" data-dtype="Boolean"/>
+                {{/if}}
+                {{#if system.info.resolve.resolve3}}
+                  <input class="resolve" id="resolve3" type="checkbox" checked data-dtype="Boolean"/>
+                {{else}}
+                  <input class="resolve" id="resolve3" type="checkbox" data-dtype="Boolean"/>
+                {{/if}}
+              </div>
+              <label for="system.info.resolve.value" class="resource-label">{{localize system.info.resolve.label}}</label>
+          </div>
+        </div>
+
+        
+        <div class="resource flex-group-center" title="{{localize 'TIP.AP'}}">
+          <div class="resource-content flexrow flex-center flex-between">
+            <input class="two-value" type="text" name="system.derived.ap.value" value="{{system.derived.ap.value}}" data-dtype="Number"/>
+            {{#if system.autocalc.ap}}
+            <a title="{{localize 'SYS.ToggleAutocalc'}}" id="ap-max" class="field two-value">{{system.derived.ap.max}}</a>
+            {{else}}
+            <div class="two-value autocalc">
+              <input type="text" name="system.derived.ap.max" value="{{system.derived.ap.max}}" data-dtype="Number"/>
+              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="ap-max" class="reset"><i class="fas fa-reply"></i></a>
+            </div>
+            {{/if}}
+          </div>
+          <label for="system.derived.ap.value" class="resource-label">{{system.derived.ap.abrev}}</label>
+        </div>
+
+        {{!-- ABSORPTION --}}
+        <div class="resource flex-group-center" title="{{localize 'TIP.Absorption'}}">
+          <div class="resource-content flexrow flex-center flex-between">
+            <span class="absorption-item">
+              {{#if system.autocalc.absorption}}
+              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="absorption" class="field two-value">{{system.derived.absorption.value}}</a>
+              {{else}}
+              <div class="two-value autocalc">
+                <input type="text" name="system.derived.absorption.value" value="{{system.derived.absorption.value}}" data-dtype="Number"/>
+                <a title="{{localize 'SYS.ToggleAutocalc'}}" id="absorption" class="reset"><i class="fas fa-reply"></i></a>
+              </div>
+              {{/if}}
+              <span class="absorption-label">Base</span>
+            </span>
+            <span class="absorption-item">
+              {{#if system.autocalc.absorption}}
+              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="armor-absorption" class="field two-value">{{system.derived.absorption.armor}}</a>
+              {{else}}
+              <div class="two-value autocalc">
+                <input type="text" name="system.derived.absorption.armor" value="{{system.derived.absorption.armor}}" data-dtype="Number"/>
+                <a title="{{localize 'SYS.ToggleAutocalc'}}" id="armor-absorption" class="reset"><i class="fas fa-reply"></i></a>
+              </div>
+              {{/if}}
+              <span class="absorption-label">Armor</span>
+            </span>
+            <span class="absorption-item">
+              <span class="field">{{system.derived.absorption.total}}</span>
+              <span class="absorption-label">Total</span>
+            </span>
+          </div>
+          <label for="system.derived.absorption.value" class="resource-label">{{system.derived.absorption.label}}</label>
+        </div>
+
+        <div class="resource flex-group-center two-items" title="{{localize 'TIP.Bloodied'}}">
+          <div class="container">
+            <div class="resource-content flexrow flex-center flex-between">
+              {{#if system.autocalc.bloodied}}
+              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="bloodied" class="field">{{system.derived.bloodied.value}}</a>
+              {{else}}
+              <div class="autocalc">
+                <input type="text" name="system.derived.bloodied.value" value="{{system.derived.bloodied.value}}" data-dtype="Number"/>
+                <a title="{{localize 'SYS.ToggleAutocalc'}}" id="bloodied" class="reset"><i class="fas fa-reply"></i></a>
+              </div>
+              {{/if}}
+            </div>
+            <label for="system.derived.bloodied.value" class="resource-label">{{system.derived.bloodied.label}}</label>
+          </div>
+          <div class="container" title="{{localize 'TIP.Movement'}}">
+            <div class="resource-content flexrow flex-center flex-between">
+              {{#if system.autocalc.movement}}
+              <a title="{{localize 'SYS.ToggleAutocalc'}}" id="movement" class="field">{{system.derived.movement.value}}</a>
+              {{else}}
+              <div class="autocalc">
+                <input type="text" name="system.derived.movement.value" value="{{system.derived.movement.value}}" data-dtype="Number"/>
+                <a title="{{localize 'SYS.ToggleAutocalc'}}" id="movement" class="reset"><i class="fas fa-reply"></i></a>
+              </div>
+              {{/if}}
+            </div>
+            <label for="system.derived.movement.value" class="resource-label">{{system.derived.movement.label}}</label>  
+          </div>
+        </div>
+      </div>
+      <div class="elemental-resistances">
+        <div class="grid grid-2col elemental">
+          <div class="element-resist">
+            <span class="resource-label left">Fire</span>
+            <select class="element-picker {{system.details.elementalResistances.fire}}" name="system.details.elementalResistances.fire" type="text" value="{{system.details.elementalResistances.fire}}">
+              {{#select system.details.elementalResistances.fire}}
+                <option value="-">-</option>
+                <option value="W">V</option>
+                <option value="S">R</option>
+              {{/select}}
+            </select>
+          </div>
+          <div class="element-resist">
+            <select class="element-picker {{system.details.elementalResistances.water}}" name="system.details.elementalResistances.water" type="text" value="{{system.details.elementalResistances.water}}">
+              {{#select system.details.elementalResistances.water}}
+                <option value="-">-</option>
+                <option value="W">V</option>
+                <option value="S">R</option>
+              {{/select}}
+            </select>
+            <span class="resource-label right">Water</span>
+          </div>
+          <div class="element-resist">
+            <span class="resource-label left">Elec.</span>
+            <select class="element-picker {{system.details.elementalResistances.elec}}" name="system.details.elementalResistances.elec" type="text" value="{{system.details.elementalResistances.elec}}">
+              {{#select system.details.elementalResistances.elec}}
+                <option value="-">-</option>
+                <option value="W">V</option>
+                <option value="S">R</option>
+              {{/select}}
+            </select>
+          </div>
+          <div class="element-resist">
+            <select class="element-picker {{system.details.elementalResistances.ice}}" name="system.details.elementalResistances.ice" type="text" value="{{system.details.elementalResistances.ice}}">
+              {{#select system.details.elementalResistances.ice}}
+                <option value="-">-</option>
+                <option value="W">V</option>
+                <option value="S">R</option>
+              {{/select}}
+            </select>
+            <span class="resource-label right">Ice</span>
+          </div>
+        </div>
+        <div class="element-resist dragon">
+          <span class="resource-label left">Dragon</span>
+          <select class="element-picker {{system.details.elementalResistances.dragon}}" name="system.details.elementalResistances.dragon" type="text" value="{{system.details.elementalResistances.dragon}}">
+            {{#select system.details.elementalResistances.dragon}}
+              <option value="-">-</option>
+              <option value="W">V</option>
+              <option value="S">R</option>
+            {{/select}}
+          </select>
+        </div>
+        <label for="system.details.elementalResistances.dragon" class="resource-label">Elemental Resistances</label>
+      </div>
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    {{!-- Default tab is specified in actor-sheet.mjs --}}
+    <a class="item" data-tab="features">Main</a>
+    <a class="item" data-tab="combat">Combat</a>
+    <a class="item" data-tab="abilities">Abilities</a>
+    <a class="item" data-tab="items">Inventory</a>
+    <a class="item" data-tab="description">Notes</a>
+    <a class="item" data-tab="effects">Effects</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body body-override">
+
+    {{!-- Owned Features Tab --}}
+    <div class="tab features" data-group="primary" data-tab="features">
+      <section class="grid grid-3col">
+          {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
+          use both the "grid" and "grid-Ncol" class where "N" can be any number
+          from 1 to 12 and will create that number of columns.  --}}
+
+        {{!-- For the main features list, span the right two columns --}}
+        <section class="main grid-span-3">
+          {{!-- This is a Handlebars partial. They're stored in the `/parts` folder next to this sheet, and defined in module/helpers/templates.mjs --}}
+          {{> "systems/tpo/templates/actor/parts/actor-features.html"}}
+        </section>
+
+      </section>
+    </div>
+
+    {{!-- Combat Tab --}}
+    <div class="tab items" data-group="primary" data-tab="combat">
+       {{> "systems/tpo/templates/actor/parts/actor-combat.html"}}
+    </div>
+
+    {{!-- Abilities Tab --}}
+    <div class="tab items" data-group="primary" data-tab="abilities">
+      {{> "systems/tpo/templates/actor/parts/actor-abilities.html"}}
+    </div>
+
+    {{!-- Owned Items Tab --}}
+    <div class="tab items" data-group="primary" data-tab="items">
+       {{> "systems/tpo/templates/actor/parts/actor-items.html"}}
+    </div>
+
+    {{!-- Biography Tab --}}
+    <div class="tab biography" data-group="primary" data-tab="description">
+      {{!-- If you want TinyMCE editors to output inline rolls when rendered, you need to pass the actor's roll data to the rollData property. --}}
+      {{> "systems/tpo/templates/actor/parts/actor-notes.html"}}
+    </div>
+
+    {{!-- Active Effects Tab --}}
+    <div class="tab effects flexcol" data-group="primary" data-tab="effects">
+      {{> "systems/tpo/templates/actor/parts/actor-effects.html"}}
+    </div>
+
+  </section>
+</form>
+

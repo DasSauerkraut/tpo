@@ -1,5 +1,5 @@
 .inventory-col{
-  height: 400px;
+  height: 625px;
   overflow-y: auto;
   scrollbar-width: thin;
   h2 {
@@ -84,6 +84,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        font-size: 13px;
       }
       .expandable {
         position: relative;

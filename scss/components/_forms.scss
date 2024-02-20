@@ -17,11 +17,6 @@
   .header-fields {
     flex: 1;
     display: flex;
-    .profile-img {
-      flex: 0 0 100px;
-      height: 100px;
-      margin-right: 10px;
-    }
 
     .field {
       font-family: $font-secondary;
@@ -55,6 +50,7 @@
     margin-right: 5px;
     margin-top: .2em;
     margin-left: .2em;
+    margin-bottom: 0;
     input {
       width: 100%;
       height: 100%;
@@ -72,6 +68,7 @@
     border-bottom: 0;
     margin-right: 5px;
     margin-top: .2em;
+    margin-bottom: 0;
     select {
       width: 100%;
       height: 100%;
@@ -91,6 +88,7 @@
     border-bottom: 0;
     margin-right: .2em;
     margin-top: .2em;
+    margin-bottom: 0;
     input {
       width: 100%;
       height: 100%;
@@ -101,20 +99,6 @@
       font-family: $font-secondary;
     }
   }
-}
-
-.absorption-item{
-  input {
-    width: 100%;
-  }
-  .absorption-label {
-    font-size: 10px;
-  }
-}
-
-.resolve {
-  transform: scale(0.9);
-  margin: 2px !important;
 }
 
 
@@ -185,13 +169,35 @@
 }
 
 .sheet-tabs {
+  background: url('../module/assets/link banner.png');
+  height: 35px;
+  filter: drop-shadow(5px 5px 5px #000);
+  width: 575px;
+  z-index: 5;
+  position: relative;
   flex: 0;
+  margin: 0 0 5px -10px !important;
+  border: none !important;
+  align-items: center;
+  .tab-item {
+    text-align: center;
+    padding-inline: 7px;
+  }
+  .tab-item.active {
+    background: url(../module/assets/bracket-sm.png);
+    background-repeat: no-repeat;
+    background-size: 100% 170%;
+    background-position-y: bottom;
+  }
 }
 
 .sheet-body,
 .sheet-body .tab,
 .sheet-body .tab .editor {
-  height: 100%;
+  // height: 100%;
+  height: 690px;
+  overflow-y: auto;
+  overflow-x: clip;
 }
 
 .tab-scroll {
@@ -207,11 +213,6 @@
   .tox-edit-area {
     padding: 0 8px;
   }
-}
-
-.elemental-resistances{
-  width: 55%;
-  text-align: center;
 }
 
 .elemental{

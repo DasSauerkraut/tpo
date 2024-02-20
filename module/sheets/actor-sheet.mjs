@@ -14,8 +14,8 @@ export class tpoActorSheet extends ActorSheet {
     return mergeObject(super.defaultOptions, {
       classes: ["tpo", "sheet", "actor"],
       template: "systems/tpo/templates/actor/actor-sheet.html",
-      width: 650,
-      height: 710,
+      width: 765,
+      height: 820,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }],
       scrollY: [".window-content", ".skill-container", ".combat-container", "armament-section", ".inventory-col", ".zone-list"],
     });
@@ -148,7 +148,7 @@ export class tpoActorSheet extends ActorSheet {
     html.find(".shell-input").change(this._onShellChange.bind(this));
     html.find(".stamina-checkbox").change(this._onStaminaChange.bind(this));
     html.find(".ability-display").click(this._onAbilityDisplay.bind(this));
-    html.find(".element-select").click(this._onElementSelect.bind(this));
+    html.find(".element-select").click(this._onArmamentElementSelect.bind(this));
     html.find(".add-order").click(this._addOrder.bind(this))
     html.find(".order-input").change(this._changeOrder.bind(this))
     html.find(".order-input").mousedown(this._deleteOrder.bind(this))
@@ -156,10 +156,12 @@ export class tpoActorSheet extends ActorSheet {
     // Active Effect management
     html.find(".effect-control").click(ev => onManageActiveEffect(ev, this.actor));
 
-    html.find('.stat-header').click(this._onStatRoll.bind(this))
-    html.find('.stat-total').mousedown(this._onStatImprove.bind(this))
+    html.find('.total-container').click(this._onStatRoll.bind(this))
+    html.find('.stat-header').mousedown(this._onStatImprove.bind(this))
 
     html.find('.resolve').click(this._onResolveToggle.bind(this));
+    
+    html.find('.element-resist').mousedown(this._onElementResistClick.bind(this));
 
     html.find('.expand-controller').click(this._onArmamentExpand.bind(this));
     html.find('.expand-controller-nested').click(this._onArmamentExpandNested.bind(this));
@@ -372,7 +374,7 @@ export class tpoActorSheet extends ActorSheet {
     console.log(await item.getFlag('tpo', `combatDisplay`))
   }
 
-  async _onElementSelect(event) {
+  async _onArmamentElementSelect(event) {
     const li = $(event.currentTarget).parents(".armament-container");
     const select = $(event.currentTarget).attr('class');
     const item = this.actor.items.get(li.data("itemId"));
@@ -1607,6 +1609,25 @@ export class tpoActorSheet extends ActorSheet {
   async _onResolveToggle(event){
     const element = event.currentTarget;
     await this.actor.update({[`system.info.resolve.${element.id}`]: !this.actor.system.info.resolve[element.id] })
+  }
+
+  async _onElementResistClick(event){
+    const element = event.currentTarget;
+    const currentResist = this.actor.system.details.elementalResistances[element.id]
+    let newResist = '-'
+    if(event.button !== 0) {
+      if (currentResist === '-')
+        newResist = 'S'
+      else if (currentResist === 'S')
+        newResist = 'W'
+    } else {
+      if (currentResist === '-')
+        newResist = 'W'
+      else if (currentResist === 'W')
+        newResist = 'S'
+    }
+    
+    await this.actor.update({[`system.details.elementalResistances.${element.id}`]: newResist })
   }
 
   async _onWearItemToggle(event){
