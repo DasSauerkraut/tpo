@@ -102,13 +102,6 @@
               }
             }
           },
-          "elementalResistances": {
-            "fire": "",
-            "elec": "",
-            "water": "",
-            "ice": "",
-            "dragon": ""
-          },
           "wounds": {
             "value": 0,
             "label": "Wounds",
@@ -205,6 +198,13 @@
           "biography": {
             "label": "CHAR.Biography",
             "value": ""
+          },
+          "elementalResistances": {
+            "fire": "",
+            "elec": "",
+            "water": "",
+            "ice": "",
+            "dragon": ""
           }
         }
       },
