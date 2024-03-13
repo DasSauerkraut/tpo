@@ -112,15 +112,16 @@ export class PowersTPO {
       testData.actor = actor
   
       if(name) testData.name = name;
-      console.log(skill)
       testData.target = skill.system.total;
   
-      //Narvid Racial Bonus
+      //Narvid Racial Bonus - is attack
       if((actor.system.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
-      (skill.system.stat === 'ws' || skill.system.stat === 'agi' || skill.system.stat === 'will') &&
-      actor.system.derived.hp.value > actor.system.derived.bloodied.value){
-        if(UtilsTPO.isInCombat(actor._id))
-          testData.modifier += 10;
+        testData.hasDamage && 
+        UtilsTPO.isInCombat(actor._id)){
+        if( actor.system.derived.hp.value === actor.system.derived.hp.max)
+          testData.difficulty = DiceTPO.changeTestDifficulty(testData.difficulty, 1);
+        else if (actor.system.derived.hp.value <= actor.system.derived.bloodied.value)
+          testData.difficulty = DiceTPO.changeTestDifficulty(testData.difficulty, -1);
       }
   
       //Raivo Racial Bonus

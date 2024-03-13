@@ -2,6 +2,7 @@ import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/ef
 import { UtilsTPO } from "../helpers/utilities.mjs";
 import { PowersTPO } from "../helpers/powers.mjs";
 import { TPO } from "../helpers/config.mjs";
+import { DiceTPO } from "../helpers/dice.mjs";
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -756,6 +757,14 @@ export class tpoActorSheet extends ActorSheet {
           ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
         this.actor.update({[`system.derived.ap.value`]: this.actor.system.derived.ap.value - 1 })
 
+        //Narvid Ability - Defend
+        if((this.actor.system.details.species.value === game.i18n.format("SPECIES.Narvid")) && UtilsTPO.isInCombat(this.actor._id)) {
+          if (this.actor.system.derived.hp.value === this.actor.system.derived.hp.max)
+            testData.difficulty = DiceTPO.changeTestDifficulty(testData.difficulty, 1);
+          else if (this.actor.system.derived.hp.value <= this.actor.system.derived.bloodied.value)
+            testData.difficulty = DiceTPO.changeTestDifficulty(testData.difficulty, -1);
+        }
+
         renderTemplate('systems/tpo/templates/dialog/combatActionPicker.html', skillOptions).then(dlg => {
           new Dialog({
             title: game.i18n.localize("SYS.Defend"),
@@ -811,7 +820,7 @@ export class tpoActorSheet extends ActorSheet {
 
         if((this.actor.system.details.species.value === game.i18n.format("SPECIES.Narvid")) && 
         (this.actor.system.derived.hp.value <= this.actor.system.derived.bloodied.value)){
-          testData.disadvantage += 1;
+          testData.difficulty = DiceTPO.changeTestDifficulty(testData.difficulty, -1);
         }
 
         //Check if Hardened ability

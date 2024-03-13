@@ -465,6 +465,15 @@ export class DiceTPO {
     }
   }
 
+  // steps is negative to make harder, positive to make easier
+  static changeTestDifficulty(difficulty, steps) {
+    let modifier = Math.abs(difficulty)
+    if((difficulty === 20 && steps === -1) || (difficulty === -20  && steps === 1) || difficulty === 0)
+      modifier = 10;
+    return difficulty + (modifier * steps);
+  }
+
+
   static async showDiceSoNice(roll) {
     if (game.modules.get("dice-so-nice") && game.modules.get("dice-so-nice").active) {
       await game.dice3d.showForRoll(roll, game.user, true);

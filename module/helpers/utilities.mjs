@@ -675,13 +675,6 @@ export class UtilsTPO {
     }
   }
 
-  static generateInjury(isMinorInjury){
-    //Roll 1d100, -40 mod if minor injury
-    //look up value on contants array
-    //use result to build effect
-    //return effect
-  }
-
   static getMacrosByTrigger(trigger, macros) {
     if(macros)
       return macros.filter(macro => macro.trigger === trigger)
