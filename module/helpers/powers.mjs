@@ -124,13 +124,13 @@ export class PowersTPO {
           testData.difficulty = DiceTPO.changeTestDifficulty(testData.difficulty, -1);
       }
   
-      //Raivo Racial Bonus
-      if((actor.system.details.species.value === game.i18n.format("SPECIES.Raivoaa")) && 
-      (skill.system.stat === 'ws' || skill.system.stat === 'agi' || skill.system.stat === 'will') &&
-      actor.system.derived.hp.value <= actor.system.derived.bloodied.value){
-        if(UtilsTPO.isInCombat(actor._id))
-          testData.advantage += 1;
-      }
+      //Raivo Racial Bonus - Automation disabled due to berserking being a choice now.
+      // if((actor.system.details.species.value === game.i18n.format("SPECIES.Raivoaa")) && 
+      // (skill.system.stat === 'ws' || skill.system.stat === 'agi' || skill.system.stat === 'will') &&
+      // actor.system.derived.hp.value <= actor.system.derived.bloodied.value){
+      //   if(UtilsTPO.isInCombat(actor._id))
+      //     testData.advantage += 1;
+      // }
   
       testData.actorName = actor.name;
       testData.actorId = actor._id

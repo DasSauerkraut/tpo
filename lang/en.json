@@ -65,8 +65,8 @@
   "SPECIES.Thulanjos": "Thulanjos",
   "SPECIES.Ildere": "Ildere",
 
-  "ABILITY.Berserk": "When in combat and Bloodied, you have Advantage on all Tests that key off of Agi, WS, or Will, however, you  cannot Disengage or Shift without a successful Challenging (+0) Cool Test. This takes effect before performing the Bloodied Morale Test.",
-  "ABILITY.Wavering": "When in combat and not Bloodied, you have a +10 modifier to WS, Agi, and Will. While Bloodied, you have Disadvantage on Morale Tests. Furthermore, you are bloodied at ½ your Max HP, rounding down.",
+  "ABILITY.Berserk": " While Bloodied, you may spend 2 AP to Berserk for the next WillB rounds. While Berserking, the Difficulty of Weapon and Grapple Tests is reduced by 1 step and the Difficulty of Defend and Disengage Actions is increased by 1 step. Deal an additional +StrB / 2 Damage on Hit. Before you can Shift or Disengage, you must first succeed a Challenging (+0) Cool Test. After Berserk ends, gain an Exhausted Half-Status.",
+  "ABILITY.Wavering": "While in Combat and at Max HP, the Difficulty of Attack and Defend actions is reduced by 1 step. When you are Bloodied, the Difficulty of Attack, Defend, and Morale Tests is increased by 1 step.",
   "ABILITY.Momentous1": "After 3 rounds of combat, gain an additional 1 AP on your turn.",
   "ABILITY.Momentous2": "After 2 rounds of combat, gain an additional 1 AP on your turn.",
   "ABILITY.Persistance1": "After 2 rounds of combat, gain +1 Movement.",
