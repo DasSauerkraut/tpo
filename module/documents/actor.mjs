@@ -141,9 +141,9 @@ export class tpoActor extends Actor {
     //Movement
     if(data.autocalc.movement){
       if(data.stats.agi.value >= 50)
-        data.derived.movement.value = 4;
-      else
         data.derived.movement.value = 3;
+      else
+        data.derived.movement.value = 2;
     }
     //XP
     if(this.type === "character")
