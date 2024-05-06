@@ -304,13 +304,20 @@
   -webkit-box-pack: start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  margin-bottom: 10px;
 }
 
 .tpo .sheet-header-char .top-header {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+}
+
+.tpo .sheet-header-char .top-header-fates {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
 }
 
 .tpo .sheet-header-char .header-fields {

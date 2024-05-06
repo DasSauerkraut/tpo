@@ -50,9 +50,12 @@ export class UtilsTPO {
     let description = TPO.statuses.filter(s => {
       return game.i18n.format(s.label) === statuses[0].label;
     });
-    description = description[0].description.replace(/REPLACE/g, count);
+
+    console.log(statuses)
+    console.log(description)
 
     let label = statuses[0].label.replace(/[0-9]/g, count);
+
     let icon = statuses[0].icon
     if(label.includes("Bleeding"))
       icon = 'icons/svg/blood.svg';
@@ -570,7 +573,8 @@ export class UtilsTPO {
       actor = await fromUuid(id);
     else
       actor = UtilsTPO.getActor(id);
-    const abs = actor.system.derived.absorption.total;
+
+      const abs = actor.system.derived.absorption.total;
 
     let damageTaken = 0;
 
@@ -708,7 +712,7 @@ export class UtilsTPO {
     }
   }
 
-  static onRoundChange(combat){
+  static async onRoundChange(combat){
     if(!game.user.isGM)
       return;
 
@@ -797,35 +801,11 @@ export class UtilsTPO {
       })
     }
 
-    let bleedings = [];
-    let exhausteds = [];
-    let ongoings = [];
-    let paralyzeds = [];
-    let hampereds = [];
+    let bleedingRating = 0;
+    let ongoingRating = 0;
+    let ablazeRating = 0;
     combatant.actor.effects.forEach(effect => {
       if(!effect.disabled){
-        if(effect.name.includes("Bleeding")){
-          bleedings.push(effect);
-          return;
-        }
-        if(effect.name.includes("Exhausted")){
-          exhausteds.push(effect);
-          return;
-        }
-        if(effect.name.includes("Ongoing")){
-          ongoings.push(effect);
-          return;
-        }
-        if(effect.name.includes("Paralyzed")){
-          paralyzeds.push(effect);
-          return;
-        }
-        if(effect.name.includes("Hampered")){
-          hampereds.push(effect);
-          return;
-        }
-  
-  
         const description = effect.description === "" ? "No Description." : effect.description;
         if(effect.isTemporary && (Number.isNumeric(effect.duration.remaining) && (effect.duration.remaining <= 0))) {
           statuses += `
@@ -837,16 +817,40 @@ export class UtilsTPO {
         `
           combatant.actor.effects.get(effect.id).delete()
         } else if (effect.isTemporary) {
-          statuses += `
-          <div style="position: relative;display:flex;flex-direction: column;width: 45px;height: 45px;box-shadow: 0 0 0 1px silver, 0 0 0 2px grey, inset 0 0 4px rgb(0 0 0 / 50%);align-items: center;justify-content: center;margin: 2px;" 
-          data-tooltip="<h3>${effect.name}</h3>${effect.isTemporary && (Number.isNumeric(effect.duration.remaining)) ? `<b>${effect.duration.remaining} Rounds Remaining</b>` : ''}<div style='text-align: left'>${description}</div>">
-            <img style="${effect.name.includes("Half") ? 'opacity: 0.25; ': ''}width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);cursor: pointer;" src="${effect.icon}" alt="${effect.name}">
-            ${effect.isTemporary && (Number.isNumeric(effect.duration.remaining)) ? `<b style="position: absolute;bottom: -2px;left: -3px;color: #642422;display: flex;align-items: center;">
-            ${effect.duration.remaining}
-            <i class="fas fa-stopwatch" style="font-size: 10px;padding-left: 1px;"></i>
-            </b>` : ""}
-          </div>
-        `
+          if(Number.isNumeric(getProperty(effect, "flags.tpo.rating"))){
+            const rating = getProperty(effect, "flags.tpo.rating")
+            if (effect.name.toLowerCase().includes("bleeding")){
+              bleedingRating = rating;
+            } else if (effect.name.toLowerCase().includes("ongoing")){
+              ongoingRating = rating
+            } else if (effect.name.toLowerCase().includes("ablaze")){
+              ablazeRating = rating
+            }
+            statuses += `
+              <div style="position: relative;display:flex;flex-direction: column;width: 45px;height: 45px;box-shadow: 0 0 0 1px silver, 0 0 0 2px grey, inset 0 0 4px rgb(0 0 0 / 50%);align-items: center;justify-content: center;margin: 2px;" 
+              data-tooltip="<h3>${effect.name}</h3>${effect.isTemporary && (Number.isNumeric(effect.duration.remaining)) ? `<b>${effect.duration.remaining} Rounds Remaining</b>` : ''}<div style='text-align: left'>${description}</div>">
+                <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);cursor: pointer;" src="${effect.icon}" alt="${effect.name}">
+                ${effect.isTemporary && (Number.isNumeric(effect.duration.remaining)) ? `<b style="position: absolute;bottom: -2px;left: -3px;color: #642422;display: flex;align-items: center;">
+                ${effect.duration.remaining}
+                <i class="fas fa-stopwatch" style="font-size: 10px;padding-left: 1px;"></i>
+                </b>` : ""}
+                <div style="position: absolute;top: -5px;left: 0;font-weight: bold;font-size: 22px;color: red;-webkit-text-stroke-width: 2px;-webkit-text-stroke-color: black;">
+                ${rating}
+              </div>
+              </div>
+          `
+          } else {
+            statuses += `
+              <div style="position: relative;display:flex;flex-direction: column;width: 45px;height: 45px;box-shadow: 0 0 0 1px silver, 0 0 0 2px grey, inset 0 0 4px rgb(0 0 0 / 50%);align-items: center;justify-content: center;margin: 2px;" 
+              data-tooltip="<h3>${effect.name}</h3>${effect.isTemporary && (Number.isNumeric(effect.duration.remaining)) ? `<b>${effect.duration.remaining} Rounds Remaining</b>` : ''}<div style='text-align: left'>${description}</div>">
+                <img style="${effect.name.includes("Half") ? 'opacity: 0.25; ': ''}width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);cursor: pointer;" src="${effect.icon}" alt="${effect.name}">
+                ${effect.isTemporary && (Number.isNumeric(effect.duration.remaining)) ? `<b style="position: absolute;bottom: -2px;left: -3px;color: #642422;display: flex;align-items: center;">
+                ${effect.duration.remaining}
+                <i class="fas fa-stopwatch" style="font-size: 10px;padding-left: 1px;"></i>
+                </b>` : ""}
+              </div>
+            `
+          }
         } else {
           passives += `
           <div style="position: relative;display:flex;flex-direction: column;width: 45px;height: 45px;box-shadow: 0 0 0 1px silver, 0 0 0 2px grey, inset 0 0 4px rgb(0 0 0 / 50%);align-items: center;justify-content: center;margin: 2px;" 
@@ -857,12 +861,6 @@ export class UtilsTPO {
         }
       }
     });
-
-    if(bleedings.length > 0) statuses += UtilsTPO.formatRatingStatus(bleedings, combatant);
-    if(exhausteds.length > 0) statuses += UtilsTPO.formatRatingStatus(exhausteds, combatant);
-    if(ongoings.length > 0) statuses += UtilsTPO.formatRatingStatus(ongoings, combatant);
-    if(paralyzeds.length > 0) statuses += UtilsTPO.formatRatingStatus(paralyzeds, combatant);
-    if(hampereds.length > 0) statuses += UtilsTPO.formatRatingStatus(hampereds, combatant);
 
     const overencumbered = combatant.actor.system.derived.encumbrance.overencumbered
     if(overencumbered > 0){
@@ -899,22 +897,35 @@ export class UtilsTPO {
         `
 
     let overtimeDamage = ``
-    if(bleedings.length > 0 || ongoings.length > 0){
-      let bleedingRating = 0;
-      let ongoingRating = 0;
-      bleedings.forEach(s => {
-        let match = s.label.match(/\d+/);
-        bleedingRating += match ? Number(match[0]) : 0
-      })
-      ongoings.forEach(s => {
-        let match = s.label.match(/\d+/);
-        ongoingRating += match ? Number(match[0]) : 0
-      })
-      //get rating for each
-      const label = `Inflict ${bleedingRating ? `Bleeding ${bleedingRating}` : ''}${bleedingRating && ongoingRating ? ', ': ''}${ongoingRating ? `Ongoing Damage ${ongoingRating}` : ''}`
+    if(ablazeRating > 0 || ongoingRating > 0 || bleedingRating > 0){
+      let bleedingBtn = ``
+      let ongoingBtn = ``
+      let ablazeBtn = ``
+      if(bleedingRating > 0)
+        bleedingBtn = `<button class="overtime-damage-btn" data-actor-id="${combatant.actor.uuid}" data-damage="${bleedingRating}">Inflict Bleeding ${bleedingRating}</button>`
+      if(ongoingRating > 0)
+        ongoingBtn = `<button class="overtime-damage-btn" data-actor-id="${combatant.actor.uuid}" data-damage="${ongoingRating}">Inflict Ongoing Damage ${ongoingRating}</button>`
+      if(ablazeRating > 0){
+        let roll = await new Roll(`${ablazeRating}d10`).roll({async: true})
+        let damage = 0
+        let style = ''
+        if(combatant.actor.system.details.elementalResistances.fire === 'W'){
+          damage = roll.total * 2
+          style = "color:#51632C; font-weight:bold"
+        } else if (combatant.actor.system.details.elementalResistances.fire === 'S'){
+          damage = Math.floor(roll.total * 0.5)
+          style = "color:#642422; font-weight:bold"
+        } else
+          damage = roll.total
+        ablazeBtn = `<button class="overtime-damage-btn" data-actor-id="${combatant.actor.uuid}" data-damage="${damage}">
+          Inflict Ablaze ${ablazeRating}d10 [<span style="${style}">${damage}</span>] Fire Damage
+        </button>`
+      }
       overtimeDamage = `
       <div>
-        <button class="overtime-damage-btn" data-actor-id="${combatant.actor.id}" data-bleeding="${bleedingRating}" data-ongoing="${ongoingRating}">${label}</button>
+        ${bleedingBtn}
+        ${ongoingBtn}
+        ${ablazeBtn}
       </div>
       `
     }

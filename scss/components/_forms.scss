@@ -9,9 +9,14 @@
   flex-direction: column;
   flex-wrap: wrap;
   justify-content: flex-start;
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
   .top-header {
     display: flex;
+  }
+  .top-header-fates {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
   }
 
   .header-fields {

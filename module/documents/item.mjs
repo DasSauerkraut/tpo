@@ -161,6 +161,9 @@ export class tpoItem extends Item {
     description = description.replaceAll("Piercing", `<a class='rollable' title="${game.i18n.format("KEYWORD.Piercing")}"><b>Piercing</b></a>`)
     //Reactive
     description = description.replaceAll("Reactive", `<a class='rollable' title="${game.i18n.format("KEYWORD.Reactive")}"><b>Reactive</b></a>`)
+    //Chromatic
+    description = description.replaceAll("Chromatic", `<a class='rollable' title="${game.i18n.format("KEYWORD.Chromatic")}"><b>Chromatic</b></a>`)
+
     // Mobile
     const mobileRegExp = /(Mobile )(\d+)/g
     const mobileMatches = [...description.matchAll(mobileRegExp)]

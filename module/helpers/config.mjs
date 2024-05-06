@@ -3,280 +3,166 @@ export const TPO = {};
 // Define constants here, such as:
 TPO.statuses = [
   {
-    id: "halfbleeding",
-    label: "STATUS.HalfBleeding",
-    icon: "systems/tpo/module/assets/halfbleeding.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "bleeding1",
-    label: "STATUS.Bleeding1",
-    icon: "systems/tpo/module/assets/bleeding1.png",
-    description: "You are bleeding quite badly. You take REPLACE damage at the end of your turn and take REPLACE points of damage for every square moved on your turn. <br><br>This status lasts until you succeed a <b>Challenging (+0) Heal Test</b> at the end of your turn or use a bandage."
-  },
-  {
-    id: "bleeding2",
-    label: "STATUS.Bleeding2",
-    icon: "systems/tpo/module/assets/bleeding2.png",
-    description: "You are bleeding quite badly. You take REPLACE damage at the end of your turn and take REPLACE points of damage for every square moved on your turn. <br><br>This status lasts until you succeed a <b>Challenging (+0) Heal Test</b> at the end of your turn or use a bandage."
-  },
-  {
-    id: "bleeding3",
-    label: "STATUS.Bleeding3",
-    icon: "systems/tpo/module/assets/bleeding3.png",
-    description: "You are bleeding quite badly. You take REPLACE damage at the end of your turn and take REPLACE points of damage for every square moved on your turn. <br><br>This status lasts until you succeed a <b>Challenging (+0) Heal Test</b> at the end of your turn or use a bandage."
-  },
-  {
-    id: "halfexhausted",
-    label: "STATUS.HalfExhausted",
-    icon: "systems/tpo/module/assets/halfexhausted.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "exhausted1",
-    label: "STATUS.Exhausted1",
-    icon: "systems/tpo/module/assets/exhausted1.png",
-    description: "You are extremely tired. It is hard to effectively think and move. While you are exhausted, you suffer REPLACE Disadvantage(s) on all Tests. After you get an Exhausted Status, each subsequent Exhausted half-status you acquire increases the Rating by 1. If the Rating reaches 10, you die.<br><br>A full day’s rest in a safe location with food and drink subtracts 1 from its rating."
-  },
-  {
-    id: "exhausted2",
-    label: "STATUS.Exhausted2",
-    icon: "systems/tpo/module/assets/exhausted2.png",
-    description: "You are extremely tired. It is hard to effectively think and move. While you are exhausted, you suffer REPLACE Disadvantage(s) on all Tests. After you get an Exhausted Status, each subsequent Exhausted half-status you acquire increases the Rating by 1. If the Rating reaches 10, you die.<br><br>A full day’s rest in a safe location with food and drink subtracts 1 from its rating."
-  },
-  {
-    id: "exhausted3",
-    label: "STATUS.Exhausted3",
-    icon: "systems/tpo/module/assets/exhausted3.png",
-    description: "You are extremely tired. It is hard to effectively think and move. While you are exhausted, you suffer REPLACE Disadvantage(s) on all Tests. After you get an Exhausted Status, each subsequent Exhausted half-status you acquire increases the Rating by 1. If the Rating reaches 10, you die.<br><br>A full day’s rest in a safe location with food and drink subtracts 1 from its rating."
-  },
-  {
-    id: "halfongoing",
-    label: "STATUS.HalfOngoingDamage",
-    icon: "systems/tpo/module/assets/halfongoing.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "ongoing1",
-    label: "STATUS.OngoingDamage1",
-    icon: "systems/tpo/module/assets/ongoing1.png",
-    description: "Something is steadily harming you, be it poison, an open wound, or something else. Take REPLACE damage at the end of your turn. <br><br>After you take the damage, you may attempt a <b>Challenging (+0) Endurance Test</b>, reducing the Rating by SLs scored, to a minimum of 0. Once the Rating is reduced to 0, the status ends. Unless otherwise specified, the test is an Endurance Test"
-  },
-  {
-    id: "ongoing2",
-    label: "STATUS.OngoingDamage2",
-    icon: "systems/tpo/module/assets/ongoing2.png",
-    description: "Something is steadily harming you, be it poison, an open wound, or something else. Take REPLACE damage at the end of your turn. <br><br>After you take the damage, you may attempt a <b>Challenging (+0) Endurance Test</b>, reducing the Rating by SLs scored, to a minimum of 0. Once the Rating is reduced to 0, the status ends. Unless otherwise specified, the test is an Endurance Test"
-  },
-  {
-    id: "ongoing3",
-    label: "STATUS.OngoingDamage3",
-    icon: "systems/tpo/module/assets/ongoing3.png",
-    description: "Something is steadily harming you, be it poison, an open wound, or something else. Take REPLACE damage at the end of your turn. <br><br>After you take the damage, you may attempt a <b>Challenging (+0) Endurance Test</b>, reducing the Rating by SLs scored, to a minimum of 0. Once the Rating is reduced to 0, the status ends. Unless otherwise specified, the test is an Endurance Test"
-  },
-  {
-    id: "halfparalyzed",
-    label: "STATUS.HalfParalyzed",
-    icon: "systems/tpo/module/assets/halfparalyzed.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "paralyzed1",
-    label: "STATUS.Paralyzed1",
-    icon: "systems/tpo/module/assets/paralyzed1.png",
-    description: "Your limbs are getting heavier and heavier, and you are finding it increasingly hard to move. Reduce your AP by REPLACE, if the REPLACE exceeds your AP, gain a Prone Status as you fall to the floor, completely rigid."
-  },
-  {
-    id: "paralyzed2",
-    label: "STATUS.Paralyzed2",
-    icon: "systems/tpo/module/assets/paralyzed2.png",
-    description: "Your limbs are getting heavier and heavier, and you are finding it increasingly hard to move. Reduce your AP by REPLACE, if the REPLACE exceeds your AP, gain a Prone Status as you fall to the floor, completely rigid."
-  },
-  {
-    id: "paralyzed3",
-    label: "STATUS.Paralyzed3",
-    icon: "systems/tpo/module/assets/paralyzed3.png",
-    description: "Your limbs are getting heavier and heavier, and you are finding it increasingly hard to move. Reduce your AP by REPLACE, if the REPLACE exceeds your AP, gain a Prone Status as you fall to the floor, completely rigid."
-  },
-  {
-    id: "halfhampered",
-    label: "STATUS.HalfHampered",
-    icon: "systems/tpo/module/assets/halfhampered.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "hampered1",
-    label: "STATUS.Hampered1",
-    icon: "systems/tpo/module/assets/hampered1.png",
-    description: "Something is preventing you from properly using your weapon. Reduce all Damage you deal by REPLACE. At the end of your turn, you may attempt a Challenging (+0) Endurance Test, reducing the Rating by SLs scored, to a minimum of 0. Once the Rating is reduced to 0, the status ends. Unless otherwise specified, the test is an Endurance Test."
-  },
-  {
-    id: "hampered2",
-    label: "STATUS.Hampered2",
-    icon: "systems/tpo/module/assets/hampered2.png",
-    description: "Something is preventing you from properly using your weapon. Reduce all Damage you deal by REPLACE. At the end of your turn, you may attempt a Challenging (+0) Endurance Test, reducing the Rating by SLs scored, to a minimum of 0. Once the Rating is reduced to 0, the status ends. Unless otherwise specified, the test is an Endurance Test."
-  },
-  {
-    id: "hampered3",
-    label: "STATUS.Hampered3",
-    icon: "systems/tpo/module/assets/hampered3.png",
-    description: "Something is preventing you from properly using your weapon. Reduce all Damage you deal by REPLACE. At the end of your turn, you may attempt a Challenging (+0) Endurance Test, reducing the Rating by SLs scored, to a minimum of 0. Once the Rating is reduced to 0, the status ends. Unless otherwise specified, the test is an Endurance Test."
-  },
-  {
-    id: "halfablaze",
-    label: "STATUS.HalfAblaze",
-    icon: "systems/tpo/module/assets/halfablaze.png",
-    description: "No effect... yet."
-  },
-  {
     id: "ablaze",
     label: "STATUS.Ablaze",
     icon: "icons/svg/fire.svg",
-    description: "You have been set on fire, which is quite unpleasant.<br>At the start of your turn, you must make a Morale Test, and then take 1d10 damage.<br><br>This status lasts until you succeed a<b>Difficult (-10) Athletics Test</b> at the end of your turn."
+    description: "You have been set on fire, which is quite unpleasant.<br>At the start of your turn, you must make a Morale Test, and then take REPLACEd10 Fire damage.<hr>Recovery - On your turn, spend 3 AP to perform <b>Difficulty (-10) Athletics Test</b>.",
+    flags: {
+      tpo: {
+        rating: 1
+      }
+    }
   },
   {
-    id: "halfblinded",
-    label: "STATUS.HalfBlinded",
-    icon: "systems/tpo/module/assets/halfblinded.png",
-    description: "No effect... yet."
+    id: "bleeding",
+    label: "STATUS.Bleeding",
+    icon: "icons/svg/blood.svg",
+    description: "You are bleeding quite badly.<br>You take REPLACE damage at the end of your turn and take REPLACE points of damage for every square moved on your turn.<hr>Recovery - Use a Bandage or perform a <b>Challenging (+0) Heal Test</b> at the end of your turn.",
+    flags: {
+      tpo: {
+        rating: 1
+      }
+    }
   },
   {
-    id: "blinded",
-    label: "STATUS.Blinded",
-    icon: "icons/svg/blind.svg",
-    description: "You cannot see, being blinded by some means.<br>You have Disadvantage when defending against attacks, and when making Melee Attacks. If you’re performing a ranged attack, you have 2 Disadvantages.<br><br>This status will last until what is obscuring your vision is removed, or if it is some irritant in your eye, until you succeed a <b>Challenging (+0) Endurance Test</b>."
+    id: "ongoing",
+    label: "STATUS.OngoingDamage",
+    icon: "icons/svg/radiation.svg",
+    description: "Something is steadily harming you, be it poison, an open wound, or something else.<br>Take REPLACE damage at the end of your turn.<hr>Recovery - Perform a <b>Challenging (+0) Heal Test</b> at the end of your turn.",
+    flags: {
+      tpo: {
+        rating: 1
+      }
+    }
   },
   {
-    id: "halfpanicking",
-    label: "STATUS.HalfPanicking",
-    icon: "systems/tpo/module/assets/halfpanicking.png",
-    description: "The Difficulty of all Dodge, Weapon, and Cool Tests in increased by one step. If you fail a Morale Test while you have a Wavering Status, gain a Panicking Status. <br>An ally can remove this status from you by spending 1 AP and succeeding a <b>Challenging (+0) Leadership Test</b>."
+    id: "sundered",
+    label: "STATUS.Sundered",
+    icon: "icons/svg/hazard.svg",
+    description: "Your armor has been compromised.<br>Reduce your Absorption by REPLACE.<hr>Recovery - Perform a <b>Challenging (+0) Endurance Test</b> at the end of your turn.",
+    flags: {
+      tpo: {
+        rating: 1
+      }
+    },
+    changes: [
+      {
+        "key": "system.derived.absorption.mod",
+        "value": 0,
+        "mode": 2,
+      }
+    ]
   },
   {
-    id: "panicking",
-    label: "STATUS.Panicking",
-    icon: "icons/svg/terror.svg",
-    description: "You are panicking, unable to think straight, and convinced that death has come a-knocking. You must use your AP to get yourself as far away from danger as you can on your turn, fleeing without taking any time to Disengage. You suffer Disadvantage on all Tests not related to running and hiding.<br><br>This status lasts until you can either spend a round out of sight from any danger or you succeed a <b>Challenging (+0) Cool Test</b> at the end of your turn, provided you were not engaged at the start of your turn.<br>An ally can remove this status from you by spending 1 AP and succeeding a <b>Challenging (+0) Leadership Test</b>."
-  },
-  {
-    id: "halfrattled",
-    label: "STATUS.HalfRattled",
-    icon: "systems/tpo/module/assets/halfrattled.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "rattled",
-    label: "STATUS.Rattled",
-    icon: "icons/svg/explosion.svg",
-    description: "You have been struck asides the head with heavy blow. The Difficulty of all tests is increased by one step. This status lasts until you succeed a <b>Challenging (+0) Endurance Test</b> at the end of your turn."
-  },
-  {
-    id: "halfslowed",
-    label: "STATUS.HalfSlowed",
-    icon: "systems/tpo/module/assets/halfslowed.png",
-    description: "No effect... yet."
+    id: "paralyzed",
+    label: "STATUS.Paralyzed",
+    icon: "icons/svg/lightning.svg",
+    description: "Your limbs are getting heavier and heavier, and you are finding it increasingly hard to move.<br>Reduce your AP by REPLACE, if the rating exceeds your  Maximum AP, gain a Prone Status as you fall to the floor, completely rigid.<hr>Recovery - Perform a <b>Challenging (+0) Endurance Test</b> at the end of your turn.",
+    flags: {
+      tpo: {
+        rating: 1
+      }
+    },
+    changes: [
+      {
+        "key": "system.derived.ap.max",
+        "value": 0,
+        "mode": 2,
+      }
+    ]
   },
   {
     id: "slowed",
     label: "STATUS.Slowed",
     icon: "icons/svg/anchor.svg",
-    description: "The AP cost of taking the Move Action is increased by 1 AP. <br><br>This status lasts until you succeed a <b>Hard (-20) Might Test</b> at the end of your turn."
+    description: "The cost of taking the Move Action is increased by REPLACE AP.<hr>Recovery - Perform a <b>Challenging (+0) Might Test</b> at the end of your turn.",
+    flags: {
+      tpo: {
+        rating: 1
+      }
+    }
   },
   {
-    id: "halfstunned",
-    label: "STATUS.HalfStunned",
-    icon: "systems/tpo/module/assets/halfstunned.png",
-    description: "No effect... yet."
+    id: "hampered",
+    label: "STATUS.Hampered",
+    icon: "icons/svg/bones.svg",
+    description: "Your strength is being eroded away.<br>Reduce your Strength by REPLACE.<hr>Recovery - Perform a <b>Challenging (+0) Endurance Test</b> at the end of your turn.",
+    flags: {
+      tpo: {
+        rating: 1
+      }
+    },
+    changes: [
+      {
+        "key": "system.stats.str.value",
+        "value": 0,
+        "mode": 2,
+      }
+    ]
   },
+  {
+    id: "torpor",
+    label: "STATUS.Torpor",
+    icon: "icons/svg/net.svg",
+    description: "Your agility is being eroded away.<br>Reduce your Agility by REPLACE.<hr>Recovery - Perform a <b>Challenging (+0) Endurance Test</b> at the end of your turn.",
+    flags: {
+      tpo: {
+        rating: 1
+      }
+    },
+    changes: [
+      {
+        "key": "system.stats.agi.value",
+        "value": 0,
+        "mode": 2,
+      }
+    ]
+  },
+  {
+    id: "exhausted",
+    label: "STATUS.Exhausted",
+    icon: "icons/svg/downgrade.svg",
+    description: "You are extremely tired. It is hard to effectively think and move.<br>While you are exhausted, you suffer REPLACE Disadvantage(s) on all Tests. If this Status’s Rating reaches 5, you die.<hr>Recovery - A full day’s rest in a safe location with food and drink subtracts 1 from its Rating.",
+    flags: {
+      tpo: {
+        rating: 1
+      }
+    }
+  },
+  {
+    id: "rattled",
+    label: "STATUS.Rattled",
+    icon: "icons/svg/stoned.svg",
+    description: "You have been struck asides the head with heavy blow.<br>The Difficulty of all tests is increased by REPLACE steps.<hr>Recovery - Perform a <b>Challenging (+0) Endurance Test</b> at the end of your turn.",
+    flags: {
+      tpo: {
+        rating: 1
+      }
+    }
+  },  
   {
     id: "stunned",
     label: "STATUS.Stunned",
     icon: "icons/svg/daze.svg",
-    description: "A heavy blow has disoriented you or you are otherwise dazed and confused. The AP cost of taking the Move Action is increased by 1 AP. You have Disadvantage on all rolls.<br><br>This status lasts until you succeed a <b>Challenging (+0) Endurance Test</b> at the end of your turn."
+    description: "A heavy blow has disoriented you or you are otherwise dazed and confused.<br>The AP cost of taking the Move Action is increased by 1 AP. You have Disadvantage on all rolls.<hr>Recovery - Perform a <b>Challenging (+0) Endurance Test</b> at the end of your turn."
   },
   {
-    id: "halfunconcious",
-    label: "STATUS.HalfUnconcious",
-    icon: "systems/tpo/module/assets/halfunconcious.png",
-    description: "No effect... yet."
+    id: "blinded",
+    label: "STATUS.Blinded",
+    icon: "icons/svg/blind.svg",
+    description: "You cannot see, being blinded by some means.<br>You have Disadvantage when defending against attacks, and when making Melee Attacks. If you’re performing a ranged attack, you have 2 Disadvantages.<hr>Recovery - This status will last until what is obscuring your vision is removed, or if it is some irritant in your eye, until you succeed a <b>Challenging (+0) Endurance Test</b> at the end of your turn. "
   },
   {
-    id: "unconcious",
-    label: "STATUS.Unconcious",
-    icon: "icons/svg/sleep.svg",
-    description: "You cannot move, perform any action, and you cannot oppose any roll. If you are Downed, you can still make tests to Stabilize, however. The first attack made against you automatically crits and deals 2x damage.<br><br>You will wake up after succeeding 2 <b>Challenging (+0) Endurance Tests</b> or upon taking damage, provided you are not Downed."
+    id: "wavering",
+    label: "STATUS.Wavering",
+    icon: "systems/tpo/module/assets/halfpanicking.png",
+    description: "The Difficulty of all Dodge, Weapon, and Cool Tests in increased by one step. If you fail a Morale Test while you have a Wavering Status, gain a Panicking Status.<hr>Recovery - An ally spends 1 AP on their turn and succeeds a <b>Challenging (+0) Leadership Test.</b>"
   },
   {
-    id: "halfweakened",
-    label: "STATUS.HalfWeakened",
-    icon: "systems/tpo/module/assets/halfweakened.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "weakened",
-    label: "STATUS.Weakened",
-    icon: "icons/svg/downgrade.svg",
-    description: "For the duration of this status, treat your Absorption as if it were 0 when determining damage.<br><br>This status lasts until you succeed a <b>Difficult (-10)Endurance Test</b> at the end of your turn."
-  },
-  {
-    id: "halfsinged",
-    label: "BURN.HalfSinged",
-    icon: "systems/tpo/module/assets/halfsinged.png",
-    description: "No effect... yet"
-  },
-  {
-    id: "singed",
-    label: "BURN.Singed",
-    icon: "systems/tpo/module/assets/singed.png",
-    description: "At the start of this creatures turn, it takes its 3 Piercing Damage. If the creature is Large, it takes 5 Piercing Damage instead."
-  },
-  {
-    id: "halfshocked",
-    label: "BURN.HalfShocked",
-    icon: "systems/tpo/module/assets/halfshocked.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "shocked",
-    label: "BURN.Shocked",
-    icon: "systems/tpo/module/assets/shocked.png",
-    description: "The next attack you perform has its Difficulty increased by one step."
-  },
-  {
-    id: "halfharrowed",
-    label: "BURN.HalfHarrowed",
-    icon: "systems/tpo/module/assets/halfharrowed.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "harrowed",
-    label: "BURN.Harrowed",
-    icon: "systems/tpo/module/assets/harrowed.png",
-    description: "Until the end of your next turn, -2 Absorption."
-  },
-  {
-    id: "halffrozen",
-    label: "BURN.HalfFrozen",
-    icon: "systems/tpo/module/assets/halffrozen.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "frozen",
-    label: "BURN.Frozen",
-    icon: "systems/tpo/module/assets/frozen.png",
-    description: "The next Defend action you perform has its Difficulty increased by one step."
-  },
-  {
-    id: "halfdrenched",
-    label: "BURN.HalfDrenched",
-    icon: "systems/tpo/module/assets/halfdrenched.png",
-    description: "No effect... yet."
-  },
-  {
-    id: "drenched",
-    label: "BURN.Drenched",
-    icon: "systems/tpo/module/assets/drenched.png",
-    description: "Until the end of your next turn, -1 Movement and you become Vulnerable to Electric and Ice."
+    id: "panicking",
+    label: "STATUS.Panicking",
+    icon: "icons/svg/terror.svg",
+    description: "You are panicking, unable to think straight, and convinced that death has come a-knocking.<br>You must use your AP to get yourself as far away from danger as you can on your turn, fleeing without taking any time to Disengage. You suffer Disadvantage on all Tests not related to running and hiding.<hr>Removal - Spend a round out of sight from any danger or you succeed a <b>Challenging (+0) Cool Test</b> at the end of your turn, provided you were not engaged at the start of your turn. An ally can remove this status from you by spending 1 AP and succeeding a <b>Challenging (+0) Leadership Test</b>."
   },
   {
     id: "marked",
@@ -288,19 +174,25 @@ TPO.statuses = [
     id: "hidden",
     label: "STATUS.Hidden",
     icon: "icons/svg/invisible.svg",
-    description: "You are hidden from the sight of your enemies. You have Advantage on all attacks and Grapple Tests, though the first attack or grapple you perform makes you no longer hidden. While Hidden, perform a Challenging (+0) Stealth Test at the start of your turn. Any time you cross in front of an enemy’s line of sight, or move within 2sq. of an enemy, they must perform a Challenging (+0) Perception Test. If your Stealth Test’s SLs are higher than their perception test’s, you remain Hidden, otherwise you are spotted and are no longer Hidden."
+    description: "You are hidden from the sight of your enemies.<br<You have Advantage on all attacks and Grapple Tests, though the first attack or grapple you perform makes you no longer hidden.<br>While Hidden, perform a <b>Challenging (+0) Stealth Test</b> at the start of your turn. Any time you cross in front of an enemy’s line of sight, or move within 2sq. of an enemy, they must perform a <b>Challenging (+0) Perception Test</b>. If your Stealth Test’s SLs are higher than their perception test’s, you remain Hidden, otherwise you are spotted and are no longer Hidden."
   },
   {
     id: "prone",
     label: "STATUS.Prone",
     icon: "icons/svg/falling.svg",
-    description: "You’ve either laid down intentionally or been knocked to the ground. Melee attacks targeting you have Advantage. Any melee attack you make has Disadvantage. Ranged attacks targeting you have Disadvantage. Movement Costs are doubled.<br><br>You can stand with 1 AP."
+    description: "You’ve either laid down intentionally or been knocked to the ground.<br>Melee attacks targeting you have Advantage. Any melee attack you make has Disadvantage. Ranged attacks targeting you have Disadvantage. Movement Costs are doubled.<hr>Recovery - Stand up with 2 AP on your turn."
+  },
+  {
+    id: "unconcious",
+    label: "STATUS.Unconcious",
+    icon: "icons/svg/sleep.svg",
+    description: "You cannot move, perform any action, or oppose any roll. If you are Downed, you can still make tests to Stabilize, however. The first attack made against you automatically crits and deals 2x damage.<hr>Recovery: You will wake up after succeeding 2 <b>Challenging (+0) Endurance Tests</b> or upon taking damage, provided you are not Downed."
   },
   {
     id: "downed",
     label: "STATUS.Downed",
     icon: "icons/svg/down.svg",
-    description: "You’ve been knocked below 0 hit points and are on death’s door. While you are Downed, you are drifting in and out of consciousness, trying to stay alive. You also have the Prone and Unconscious Statuses. These statuses cannot be removed until you gain at least 1 HP or have Stabilized. To prevent yourself from dying, you must perform an Extended Hard (-20) Endurance Test or Extended Difficult (-10) Heal Test with a target number equal to your Wounds. If ConB rounds pass before succeeding the Extended Test, your Character dies, succumbing to their wounds. You can make a Test for this on your turn during Combat."
+    description: "You’ve been knocked below 0 hit points and are on death’s door. While you are Downed, you are drifting in and out of consciousness, trying to stay alive.<br>You also have the Prone and Unconscious Statuses. These statuses cannot be removed until you gain at least 1 HP or have Stabilized. To prevent yourself from dying, you must perform an <b>Extended Hard (-20) Endurance Test</b> or <b>Extended Difficult (-10) Heal Test</b> with a target number equal to your Wounds. If ConB rounds pass before succeeding the Extended Test, your Character dies, succumbing to their wounds. You can make a Test for this on your turn during Combat."
   },
   {
     id: "stabilized",
@@ -532,3 +424,9 @@ TPO.statDescriptions = {
   "will": "Will is a measure of your character’s levelheadedness and willpower. It helps with keeping a steady head during combat.",
   "cha": "Charisma is your character's personableness. It will help with convincing people to do things, deception, bribery, and all manner of other social skills",
 }
+
+TPO.effectTextStyle = CONFIG.canvasTextStyle.clone();
+TPO.effectTextStyle.fontFamily = "EBGaramond";
+TPO.effectTextStyle.strokeThickness = 5;
+TPO.effectTextStyle.fill = "#ff0000";
+TPO.effectTextStyle.fontWeight = 'bold'

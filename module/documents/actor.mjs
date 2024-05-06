@@ -22,6 +22,7 @@ export class tpoActor extends Actor {
     // Data modifications in this step occur before processing embedded
     // documents or derived data.
     const data = this.system;
+    this.processStatusEffects();
     Object.values(data.stats).forEach(stat => {
       stat.value = stat.initial + stat.modifier + stat.improvements;
       stat.bonus = Math.floor((stat.value) / 10)
@@ -81,6 +82,30 @@ export class tpoActor extends Actor {
     console.log(this);
   }
 
+  /**@override */
+  processStatusEffects() {
+    // super.prepareEmbeddedDocuments();
+
+    this.effects.forEach(effect => {
+      if(Number.isNumeric(getProperty(effect, "flags.tpo.rating"))){
+        //process effect
+        const rating = getProperty(effect, "flags.tpo.rating")
+        if(rating){
+          console.log(effect)
+          if(effect.name.toLowerCase().includes("torpor") || effect.name.toLowerCase().includes("hampered")){
+            effect.changes[0].value = rating * -10
+            effect.description = effect.description.replace(/REPLACE/g, rating * 10);
+          } else {
+            if(effect.name.toLowerCase().includes("paralyzed") || effect.name.toLowerCase().includes("sundered")) {
+              effect.changes[0].value = -1 * rating
+            }
+            effect.description = effect.description.replace(/REPLACE/g, rating);
+          }
+          effect.name = `${game.i18n.localize(effect.label)} ${rating}`
+        }
+      }
+    })
+  }
   /**
    * Prepare Character type specific data
    */
@@ -571,6 +596,56 @@ export class tpoActor extends Actor {
     if (this.type !== 'npc') return;
 
     // Process additional NPC data here.
+  }
+
+  async addStatus(status, rating = 1) {
+    if(typeof status == 'string'){
+      status = duplicate(game.tpo.constants.statuses.find(s => s.id == status))
+    }
+
+    let existing = this.effects.find(e => [...e.statuses][0] == status.id)
+
+    //has Rating
+    if(existing && Number.isNumeric(getProperty(existing, "flags.tpo.rating"))) {
+
+      existing._displayScrollingStatus(true)
+      return existing.setFlag("tpo", "rating", existing.flags.tpo.rating + rating)
+    } else if (existing){
+      //fallback if an existing status is trying to be added
+      return existing
+    } else {
+      //Set rating
+      status.name = game.i18n.localize(status.label);
+      if(Number.isNumeric(getProperty(status, "flags.tpo.rating"))){
+        status.flags.tpo.rating = rating
+      }
+
+      status["statuses"] = [status.id];
+
+      delete status.id
+      return this.createEmbeddedDocuments("ActiveEffect", [status], {condition: true})
+    }
+  }
+
+  async removeStatus(status) {
+    if(typeof status == 'string'){
+      status = duplicate(game.tpo.constants.statuses.find(s => s.id == status))
+    }
+
+    let existing = this.effects.find(e => [...e.statuses][0] == status.id)
+
+    //has Rating
+    if(existing && Number.isNumeric(getProperty(existing, "flags.tpo.rating"))) {
+      console.log('decrement')
+      await existing.setFlag("tpo", "rating", existing.flags.tpo.rating - 1)
+      if(existing.flags.tpo.rating <= 0)
+        return existing.delete()
+      else
+        existing._displayScrollingStatus(false)
+    } else if (existing){
+      //fallback if an existing status is trying to be added
+      return existing.delete()
+    }
   }
 
 }

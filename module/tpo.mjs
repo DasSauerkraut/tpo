@@ -12,6 +12,7 @@ import { PowersTPO } from "./helpers/powers.mjs";
 import { DiceTPO } from "./helpers/dice.mjs";
 import { OpposedTPO } from "./helpers/opposed.mjs";
 
+import FoundryOverrides from "./helpers/overrides.mjs"
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -172,7 +173,12 @@ Hooks.once("ready", async function() {
         break;
     }
   });
+  FoundryOverrides();
 });
+
+Hooks.on("ready", async () => {
+  canvas.tokens.placeables.forEach(t => t.drawEffects())
+})
 
 Hooks.on("updateCombat", (combat) => {
   UtilsTPO.onRoundChange(combat);
@@ -278,10 +284,8 @@ Hooks.on('renderChatMessage', (chatMessage, html) => {
     const li = $(ev.currentTarget).parents(".chat-message")
     const messageId = li.data("message-id")
     const actorId = btn.data("actor-id")
-    const ongoing = btn.data("ongoing")
-    const bleeding = btn.data("bleeding")
-    const actor = game.actors.get(actorId)
-    UtilsTPO.applyDamage(actor.uuid, [ongoing, bleeding], false, messageId, null, {}, true)
+    const damage = btn.data("damage")
+    UtilsTPO.applyDamage(actorId, [damage], false, messageId, null, {}, true)
   })
   html.find('.opposed-tst').click(ev => {
     const li = $(ev.currentTarget).parents(".chat-message")

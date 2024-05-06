@@ -172,33 +172,6 @@
         <div class="xp-header">Left</div>
         <div class="grid-span-3" title="{{localize 'TIP.XP'}}">{{localize system.info.xp.label}}</div>
       </div>
-    <div class="fate">
-      <input type="text" name="system.info.fates.fate1.value" value="{{system.info.fates.fate1.value}}" placeholder="Fate"/>
-      <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate1.type" type="text" value="{{system.info.fates.fate1.type}}">
-        {{#select system.info.fates.fate1.type}}
-        <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
-        <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
-        {{/select}}
-      </select>
-    </div>
-    <div class="fate">
-      <input type="text" name="system.info.fates.fate2.value" value="{{system.info.fates.fate2.value}}" placeholder="Fate"/>
-      <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate2.type" type="text" value="{{system.info.fates.fate2.type}}">
-        {{#select system.info.fates.fate2.type}}
-        <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
-        <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
-        {{/select}}
-      </select>
-    </div>
-    <div class="fate">
-      <input type="text" name="system.info.fates.fate3.value" value="{{system.info.fates.fate3.value}}" placeholder="Fate"/>
-      <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate3.type" type="text" value="{{system.info.fates.fate3.type}}">
-        {{#select system.info.fates.fate3.type}}
-        <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
-        <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
-        {{/select}}
-      </select>
-    </div>
   </div>
   <div>
     {{!-- Sheet Header --}}
@@ -230,6 +203,35 @@
           </select>
         </h1>
         <h1 class="chargender"><input name="system.details.gender.value" type="text" value="{{system.details.gender.value}}" placeholder="{{localize system.details.gender.label}}"/></h1>
+      </div>
+      <div class="top-header-fates">
+        <div class="fate">
+          <input type="text" name="system.info.fates.fate1.value" value="{{system.info.fates.fate1.value}}" placeholder="Fate"/>
+          <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate1.type" type="text" value="{{system.info.fates.fate1.type}}">
+            {{#select system.info.fates.fate1.type}}
+            <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
+            <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
+            {{/select}}
+          </select>
+        </div>
+        <div class="fate">
+          <input type="text" name="system.info.fates.fate2.value" value="{{system.info.fates.fate2.value}}" placeholder="Fate"/>
+          <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate2.type" type="text" value="{{system.info.fates.fate2.type}}">
+            {{#select system.info.fates.fate2.type}}
+            <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
+            <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
+            {{/select}}
+          </select>
+        </div>
+        <div class="fate">
+          <input type="text" name="system.info.fates.fate3.value" value="{{system.info.fates.fate3.value}}" placeholder="Fate"/>
+          <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate3.type" type="text" value="{{system.info.fates.fate3.type}}">
+            {{#select system.info.fates.fate3.type}}
+            <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
+            <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
+            {{/select}}
+          </select>
+        </div>
       </div>
     </header>
     {{!-- Sheet Tab Navigation --}}
