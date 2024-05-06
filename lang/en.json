@@ -188,6 +188,11 @@
   "KEYWORD.Recharge": "Recharge Powers are variants of Special Powers, where the Trigger is up to chance.\rAt the end of the creature's turn, roll 1d100. If the result is lower than NUM, this Power becomes usable and may be used at anypoint afterwards.\rOnce a charged power is used, it cannot be used until it has Recharged again. Only one power can recharge at the start of a turn.",
   "KEYWORD.Mobile": "You may move NUM squares before performing this Power.",
   "KEYWORD.Chromatic": "You can choose the type of Elemental damage you deal when this Power is used.",
+  "KEYWORD.GL.Charge": "Charge NUM Phials, up to your current Phial Maximum.",
+  "KEYWORD.GL.Burn": "Spend NUM Phials to perform the listed effect. If the Rating is All, you spend all currently charged Phials to perform the listed effect.",
+  "KEYWORD.GL.Phialsprite": "Phialsprites are small, autonamous, translucent manifestations of phials.\rWhen a Phialsprite is created, it occupies the same sq. as you. You may only have as many Phialsprites active as your Max Phial Capacity.\rAt the end of your turn, you may move any number of your Phialsprites your Movement, ignoring Terrain. If they end their movement in the same sq. as an enemy, or an enemy enters the sq. they occupy, they explode, destroying the Phialsprite and dealing Weak damage to the enemy.\rAll Phialsprites dissipate at the end of the Encounter.",
+  "KEYWORD.CS.Combo": "This power is considered to be a NUM Combo for the sake of Combination Strike.",
+  "KEYWORD.CS.Cursed": "The next time this target suffers Damage, that damage is increased by NUM.\rIf the Power does not apply Cursed, Cursed is removed from this target. Otherwise, they stack, adding their Ratings together.",
 
   "TIP.Species": "Your species determines various stats bonuses and provide other effects.",
   "TIP.HP": "Your HP determines how much physical and mental punishment you can take before being Downed.",

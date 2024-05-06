@@ -190,9 +190,61 @@ export class tpoItem extends Item {
         game.i18n.format("KEYWORD.Launch")
         .replaceAll("½ NUM", match[2] * 0.5)
         .replaceAll("NUM", match[2])
-      }"><b>Launched ${match[2]}</b></a>`)    })
+      }"><b>Launched ${match[2]}</b></a>`)
+    })
+
+    // GL Charge
+    const chargeRegExp = /(Charge )(\d+|All)/g
+    const chargeMatches = [...description.matchAll(chargeRegExp)]
+    chargeMatches.forEach(match => {
+      description = description.replace(match[0], `
+      <a class='rollable' title="${
+        game.i18n.format("KEYWORD.GL.Charge")
+        .replaceAll("½ NUM", match[2] * 0.5)
+        .replaceAll("NUM", match[2])
+      }"><b>Charge ${match[2]}</b></a>`)
+    })
+    // GL Burn
+    const burnRegExp = /(Burn )(\d+|All)/g
+    const burnMatches = [...description.matchAll(burnRegExp)]
+    burnMatches.forEach(match => {
+      description = description.replace(match[0], `
+      <a class='rollable' title="${
+        game.i18n.format("KEYWORD.GL.Burn")
+        .replaceAll("½ NUM", match[2] * 0.5)
+        .replaceAll("NUM", match[2])
+      }"><b>Burn ${match[2]}</b></a>`)
+    })
+
+    // CS Combo
+    const comboRegExp = /(Continuing|Initial|Finishing)( Combo)/g
+    const comboMatches = [...description.matchAll(comboRegExp)]
+    comboMatches.forEach(match => {
+      description = description.replace(match[0], `
+      <a class='rollable' title="${
+        game.i18n.format("KEYWORD.CS.Combo")
+        .replaceAll("NUM", match[1])
+      }"><b>${match[1]} Combo</b></a>`)
+    })
+
+    // CS Cursed
+    const cursedRegExp = /(Cursed )(\d+)/g
+    const cursedMatches = [...description.matchAll(cursedRegExp)]
+    cursedMatches.forEach(match => {
+      description = description.replace(match[0], `
+      <a class='rollable' title="${
+        game.i18n.format("KEYWORD.CS.Cursed")
+        .replaceAll("NUM", match[2])
+      }"><b>Cursed ${match[2]}</b></a>`)
+    })
+    
+    
+    
     // Weak
     description = description.replaceAll("Weak", `<a class='rollable' title="${game.i18n.format("KEYWORD.Weak").replaceAll("NUM", this.actor.system.stats.str.bonus)}"><b>Weak</b></a>`)
+
+    //Phialsprite
+    description = description.replaceAll("Phialsprite", `<a class='rollable' title="${game.i18n.format("KEYWORD.GL.Phialsprite")}"><b>Phialsprite</b></a>`)
 
     const rechargeRegExp = /(Recharge )(\d+)/g
     const rechargeMatches = [...description.matchAll(rechargeRegExp)]
