@@ -45,7 +45,6 @@ export default function () {
 
   Token.prototype.drawEffects = async function() 
   {
-    console.log('drawingeffect')
     const wasVisible = this.effects.visible;
     this.effects.visible = false;
     this.effects.removeChildren().forEach(c => c.destroy());

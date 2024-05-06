@@ -91,7 +91,6 @@ export class tpoActor extends Actor {
         //process effect
         const rating = getProperty(effect, "flags.tpo.rating")
         if(rating){
-          console.log(effect)
           if(effect.name.toLowerCase().includes("torpor") || effect.name.toLowerCase().includes("hampered")){
             effect.changes[0].value = rating * -10
             effect.description = effect.description.replace(/REPLACE/g, rating * 10);
@@ -263,7 +262,7 @@ export class tpoActor extends Actor {
 
         i.system.miscPowers = UtilsTPO.sortAlphabetically(i.system.miscPowers);
 
-        i.system.capacity.misc === 0 && i.system.miscPowers.length === 0 ? i.system.capacity.hasMisc = false : i.system.capacity.hasMisc = true;
+        i.system.capacity.hasMisc = i.system.capacity.misc === 0 && i.system.miscPowers.length === 0
         i.system.capacity.currentMisc = i.system.miscPowers.length;
 
         //------------------UPGRADES--------------------------//
