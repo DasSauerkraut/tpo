@@ -206,32 +206,81 @@
       </div>
       <div class="top-header-fates">
         <div class="fate">
+          {{#if system.info.fates.fate1.used}}
+          <input type="text" name="system.info.fates.fate1.value" value="{{system.info.fates.fate1.value}}" disabled placeholder="Fate"/>
+          <div class="fate-footer">
+            <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate1.type" type="text" disabled value="{{system.info.fates.fate1.type}}">
+              {{#select system.info.fates.fate1.type}}
+              <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
+              <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
+              {{/select}}
+            </select>
+            <input class="fate-checkbox" id="fate1" type="checkbox" data-dtype="Boolean"/>
+          </div>
+          {{else}}
           <input type="text" name="system.info.fates.fate1.value" value="{{system.info.fates.fate1.value}}" placeholder="Fate"/>
-          <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate1.type" type="text" value="{{system.info.fates.fate1.type}}">
-            {{#select system.info.fates.fate1.type}}
-            <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
-            <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
-            {{/select}}
-          </select>
+          <div class="fate-footer">
+            <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate1.type" type="text" value="{{system.info.fates.fate1.type}}">
+              {{#select system.info.fates.fate1.type}}
+              <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
+              <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
+              {{/select}}
+            </select>
+            <input class="fate-checkbox" id="fate1" type="checkbox" checked data-dtype="Boolean"/>
+          </div>
+          {{/if}}
         </div>
         <div class="fate">
+          {{#if system.info.fates.fate2.used}}
+          <input type="text" name="system.info.fates.fate2.value" value="{{system.info.fates.fate2.value}}" disabled placeholder="Fate"/>
+          <div class="fate-footer">
+            <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate2.type" type="text" disabled value="{{system.info.fates.fate2.type}}">
+              {{#select system.info.fates.fate2.type}}
+              <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
+              <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
+              {{/select}}
+            </select>
+            <input class="fate-checkbox" id="fate2" type="checkbox" data-dtype="Boolean"/>
+          </div>
+          {{else}}
           <input type="text" name="system.info.fates.fate2.value" value="{{system.info.fates.fate2.value}}" placeholder="Fate"/>
-          <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate2.type" type="text" value="{{system.info.fates.fate2.type}}">
-            {{#select system.info.fates.fate2.type}}
-            <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
-            <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
-            {{/select}}
-          </select>
+          <div class="fate-footer">
+            <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate2.type" type="text" value="{{system.info.fates.fate2.type}}">
+              {{#select system.info.fates.fate2.type}}
+              <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
+              <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
+              {{/select}}
+            </select>
+            <input class="fate-checkbox" id="fate2" type="checkbox" checked data-dtype="Boolean"/>
+          </div>
+          {{/if}}
         </div>
         <div class="fate">
-          <input type="text" name="system.info.fates.fate3.value" value="{{system.info.fates.fate3.value}}" placeholder="Fate"/>
-          <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate3.type" type="text" value="{{system.info.fates.fate3.type}}">
-            {{#select system.info.fates.fate3.type}}
-            <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
-            <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
-            {{/select}}
-          </select>
+          {{#if system.info.fates.fate3.used}}
+          <input type="text" name="system.info.fates.fate3.value" value="{{system.info.fates.fate3.value}}" disabled placeholder="Fate"/>
+          <div class="fate-footer">
+            <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate3.type" type="text" disabled value="{{system.info.fates.fate3.type}}">
+              {{#select system.info.fates.fate3.type}}
+              <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
+              <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
+              {{/select}}
+            </select>
+            <input class="fate-checkbox" id="fate3" type="checkbox" data-dtype="Boolean"/>
+          </div>
         </div>
+          {{else}}
+          <input type="text" name="system.info.fates.fate3.value" value="{{system.info.fates.fate3.value}}" placeholder="Fate"/>
+          <div class="fate-footer">
+            <select title="{{localize 'TIP.Fate'}}" name="system.info.fates.fate3.type" type="text" value="{{system.info.fates.fate3.type}}">
+              {{#select system.info.fates.fate3.type}}
+              <option value="{{localize 'CHAR.NobleFate'}}">{{localize 'CHAR.NobleFate'}}</option>
+              <option value="{{localize 'CHAR.IgnobleFate'}}">{{localize 'CHAR.IgnobleFate'}}</option>
+              {{/select}}
+            </select>
+            <input class="fate-checkbox" id="fate3" type="checkbox" checked data-dtype="Boolean"/>
+          </div>
+        </div>
+          {{/if}}
       </div>
     </header>
     {{!-- Sheet Tab Navigation --}}

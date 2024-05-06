@@ -16,7 +16,7 @@ export class tpoActorSheet extends ActorSheet {
       classes: ["tpo", "sheet", "actor"],
       template: "systems/tpo/templates/actor/actor-sheet.html",
       width: 765,
-      height: 820,
+      height: 700,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features" }],
       scrollY: [".window-content", ".skill-container", ".combat-container", "armament-section", ".inventory-col", ".zone-list"],
     });
@@ -161,6 +161,7 @@ export class tpoActorSheet extends ActorSheet {
     html.find('.stat-header').mousedown(this._onStatImprove.bind(this))
 
     html.find('.resolve').click(this._onResolveToggle.bind(this));
+    html.find('.fate-checkbox').click(this._onFateToggle.bind(this));
     
     html.find('.element-resist').mousedown(this._onElementResistClick.bind(this));
 
@@ -1618,6 +1619,11 @@ export class tpoActorSheet extends ActorSheet {
   async _onResolveToggle(event){
     const element = event.currentTarget;
     await this.actor.update({[`system.info.resolve.${element.id}`]: !this.actor.system.info.resolve[element.id] })
+  }
+
+  async _onFateToggle(event){
+    const element = event.currentTarget;
+    await this.actor.update({[`system.info.fates.${element.id}.used`]: !this.actor.system.info.fates[element.id].used })
   }
 
   async _onElementResistClick(event){

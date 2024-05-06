@@ -134,10 +134,20 @@
     border: 0px;
     font-family: $font-primary;
     font-size: 12px;
-    width: -webkit-fill-available;
+    // width: -webkit-fill-available;
     height: auto;
     text-align: end;
     background-color: unset;
+  }
+  .fate-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    .fate-checkbox {
+      padding: 0;
+      height: 12px;
+      margin: 0;
+    }
   }
 }
 
@@ -200,7 +210,7 @@
 .sheet-body .tab,
 .sheet-body .tab .editor {
   // height: 100%;
-  height: 690px;
+  height: 540px;
   overflow-y: auto;
   overflow-x: clip;
 }

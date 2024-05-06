@@ -233,15 +233,17 @@
           "fate1": {
             "type": "",
             "value": "",
-            "invoked": false
+            "used": false
           },
           "fate2": {
             "type": "",
-            "value": ""
+            "value": "",
+            "used": false
           },
           "fate3": {
             "type": "",
-            "value": ""
+            "value": "",
+            "used": false
           }
         },
         "xp": {

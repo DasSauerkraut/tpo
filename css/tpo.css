@@ -452,10 +452,27 @@
   border: 0px;
   font-family: "EBGaramond";
   font-size: 12px;
-  width: -webkit-fill-available;
   height: auto;
   text-align: end;
   background-color: unset;
+}
+
+.tpo .fate .fate-footer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.tpo .fate .fate-footer .fate-checkbox {
+  padding: 0;
+  height: 12px;
+  margin: 0;
 }
 
 .tpo .stats {
@@ -529,7 +546,7 @@
 .tpo .sheet-body,
 .tpo .sheet-body .tab,
 .tpo .sheet-body .tab .editor {
-  height: 690px;
+  height: 540px;
   overflow-y: auto;
   overflow-x: clip;
 }
@@ -785,7 +802,7 @@
 }
 
 .tpo .skill-container {
-  max-height: 510px;
+  max-height: 370px;
   border-bottom: 1px solid var(--color-border-light-primary);
   border-left: 1px solid var(--color-border-light-primary);
   border-right: 1px solid var(--color-border-light-primary);
@@ -909,7 +926,7 @@
 
 .tpo .combat-container {
   scrollbar-width: thin;
-  height: 450px;
+  height: 510px;
 }
 
 .tpo .combat-container .armament-section {
