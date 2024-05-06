@@ -861,6 +861,128 @@ export class tpoActorSheet extends ActorSheet {
         testData.testInfo.description = "Your ability to wrestle with an opponent. Grappling is frequently used to immobilize and restrain enemies during combat, or resist such efforts."
         PowersTPO.performTest(this.actor, skill, testData, 0, 0, "Grappling");
         break;
+      case "item":
+        //Get all consumables
+
+        const locations = {
+          hips: [],
+          thighs: [],
+          chest: [],
+          scabbards: []
+        }
+        const consumables = this.actor.items.filter(i => {
+          return i.type === "consumable"
+        })
+        
+        //get all consumable locations
+        consumables.forEach(i => {
+          const item = {
+            name: i.name,
+            apCost: i.system.apCost,
+            id: i.id,
+            description: i.system.descriptionDisplay,
+            amount: i.system.stack.stackable ? i.system.stack.current : 1
+          }
+          const location = i.system.location.toLowerCase();
+          if(location.includes('pouch') || location.includes('hip'))
+            locations.hips.push(item)
+          if(location.includes('thigh'))
+            locations.thighs.push(item)
+          if(location.includes('chest') || location.includes('backpack'))
+            locations.chest.push(item)
+          if(location.includes('scabbard'))
+            locations.scabbards.push(item)
+        })
+
+        console.log(locations)
+
+        //list by location
+        renderTemplate('systems/tpo/templates/dialog/useItemPicker.html', locations).then(dlg => {
+          new Dialog({
+            title: game.i18n.localize("SYS.useItemHeader"),
+            content: dlg,
+            buttons: {
+              rollButton: {
+                label: game.i18n.localize("SYS.useItem"),
+                callback: async html => {
+                  const htmlItem = html.find('input[type = radio]:checked');
+                  if(htmlItem === null)
+                    return;
+
+                  const itemId = htmlItem.val();
+                  const item = await this.actor.items.get(itemId)
+                  const apCost = item.system.apCost + Number(htmlItem.data("ap"))
+
+                  const useItem = async () => {
+                    //Subtract AP Cost
+                    this.actor.update({[`system.derived.ap.value`]: this.actor.system.derived.ap.value - apCost })
+                    //Remove Item
+                    if(item.system.isConsumed){
+                      if(item.system.stack.stackable && item.system.stack.current > 1){
+                        //reduce stack
+                        let itemToEdit = duplicate(item)
+                        itemToEdit.system.stack.current -= 1;
+                        await this.actor.updateEmbeddedDocuments("Item", [itemToEdit]);
+                      } else {
+                        //delete item
+                        item.delete();
+                      }
+                    }
+
+                    const chatMsg = `
+                      <b>${this.actor.name} used ${item.name} [${apCost} AP].</b><hr>
+                      <div style="display:flex;">
+                        <div style="position: relative;display:flex;flex-direction: column;min-width: 45px;height: 45px;box-shadow: 0 0 0 1px silver, 0 0 0 2px grey, inset 0 0 4px rgb(0 0 0 / 50%);align-items: center;justify-content: center;margin: 2px;">
+                          <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);cursor: pointer;" src="${item.img}" alt="${item.name}">
+                        </div>
+                        <div>
+                          ${item.system.descriptionDisplay}
+                        </div>
+                      </div>
+                      
+                    `
+                    let chatData = {
+                      content: chatMsg,
+                      user: game.user._id,
+                    };
+                    const msg = await ChatMessage.create(chatData, {});
+                    console.log(msg)
+                    //Fire Macro
+                    if(item.system.macros){
+                      const macrosToFire = UtilsTPO.getMacrosByTrigger("use", item.system.macros)
+                      macrosToFire.forEach(macro => {
+                        UtilsTPO.fireMacro("Use", macro.type, macro.script, {msgId: msg.id, actorUuid: this.actor.uuid})
+                      })
+                    }
+                  }
+
+                    // Use Anyway dialog?
+                  if(this.actor.system.derived.ap.value - apCost < 0){
+                    new Dialog({
+                      title: game.i18n.localize("SYS.useAnyway"),
+                      content: "Using this item exceeds your available AP. Use anyway?",
+                      buttons: {
+                        yes: {
+                          label: "Yes",
+                          callback: html => {useItem()}
+                        },
+                        no: {
+                          label: "No",
+                          callback: html => {}
+                        },
+                      },
+                      default: "no"
+                    }).render(true);
+                  } else {
+                    useItem()
+                  }
+                }
+              },
+            },
+            default: "rollButton"
+          }).render(true);
+        });
+        break;
       case "mounted":
         selectedSkill;
         skillOptions = [];
@@ -948,7 +1070,7 @@ export class tpoActorSheet extends ActorSheet {
         //   UtilsTPO.payForItem(i.system, this.actor.data._id)
         // }
 
-        if(i.type === "item" || i.type === "armament" || i.type === "mundaneWeapon" || i.type === "wornItem")
+        if(i.type === "item" || i.type === "consumable" || i.type === "armament" || i.type === "mundaneWeapon" || i.type === "wornItem")
           await this._onItemDrop(event, duplicate(i))
         else if (i.type === "power"){
           if($(event.target).parents(".armament-container").length)

@@ -125,6 +125,9 @@
   "SYS.LocationItems": "Please remove all items from this container before removing it.",
   "SYS.ApplyDamage": "Inflict Damage",
   "SYS.ApplyPiercingDamage": "Inflict Piercing Damage",
+  "SYS.useItemHeader": "Select Item to Use",
+  "SYS.useItem": "Use Item",
+  "SYS.useAnyway": "Use Item Anyway",
 
   "ROLL.Marginal": "Marginal",
   "ROLL.Impressive": "Impressive",

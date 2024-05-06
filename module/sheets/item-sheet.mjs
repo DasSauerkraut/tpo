@@ -72,6 +72,7 @@ export class tpoItemSheet extends ItemSheet {
     html.find('#weak-toggle').click(event => {this._onWeakToggle(event)});
 
     html.find('#stackable').click(event => {this._onStackableToggle(event)});
+    html.find('#isConsumed').click(event => {this._onConsumedToggle(event)});
 
     html.find('.add-macro').click(this._onMacroAdd.bind(this));
     html.find('.macro-delete').click(this._onMacroDelete.bind(this));
@@ -145,6 +146,10 @@ export class tpoItemSheet extends ItemSheet {
 
   _onStackableToggle(event){
     this.object.update({[`system.stack.stackable`]: !this.object.system.stack.stackable })
+  }
+
+  _onConsumedToggle(event){
+    this.object.update({[`system.isConsumed`]: !this.object.system.isConsumed })
   }
 
   async _onElementToggle(event, element){

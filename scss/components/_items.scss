@@ -191,3 +191,13 @@
 .macro-script {
   height: 130px;
 }
+
+#scabbard-use-item.use-item {
+  background-color: #aaa89c;
+  border-radius: 3px;
+  margin-bottom: 3px;
+  padding: 1px;
+}
+.use-item:nth-child(2n){
+  background-color: #c8c6b8;
+}

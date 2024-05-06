@@ -340,7 +340,11 @@ export class tpoActor extends Actor {
           activeAbilities.push(i);
         else
           inactiveAbilities.push(i);
-      } else if(i.type === "item" && this.type === "character"){
+      } else if((i.type === "item" || i.type === "consumable") && this.type === "character"){
+
+        if(i.type === "consumable")
+          console.log(i)
+
         if(i.name === "Pouch"){
           if(actorData.derived.encumbrance.locations.lPouch.owned){
             actorData.derived.encumbrance.locations.rPouch.owned = true;

@@ -1,0 +1,108 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+      <div class="grid grid-2col">
+        <div class="money-header">
+          <div class="money-grid grid grid-4col">
+            <span class="money"><input class="money-field" type="text" name="system.value.l" value="{{system.system.value.l}}" data-dtype="Number"/>ℓ</span>
+            <span class="money"><input class="money-field" type="text" name="system.value.s" value="{{system.system.value.s}}" data-dtype="Number"/>s</span>
+            <span class="money"><input class="money-field" type="text" name="system.value.c" value="{{system.system.value.c}}" data-dtype="Number"/>c = </span>
+            <div class="money-total">{{system.system.value.total}}ℓ</div>
+          </div>
+          <span class="money-label">Value</span>
+          </div>
+          <div class="resource">
+            <label class="resource-label">AP Cost to Use</label>
+            <input type="text" name="system.apCost" value="{{system.system.apCost}}" data-dtype="Number"/>
+          </div>
+          <div class="resource">
+            <label class="resource-label">Encumberence</label>
+            <input type="text" name="system.enc" value="{{system.system.enc}}" data-dtype="Number"/>
+          </div>
+          <div class="resource">
+            <label class="resource-label">Stackable</label>
+            {{#if system.system.stack.stackable}}
+            <input class="advanced" id="stackable" type="checkbox" checked data-dtype="Boolean"/>
+            {{else}}
+            <input class="advanced" id="stackable" type="checkbox" data-dtype="Boolean"/>
+            {{/if}}
+          </div>
+          <div class="resource">
+            <label class="resource-label">Current Stack</label>
+            <input type="text" name="system.stack.current" value="{{system.system.stack.current}}" data-dtype="Number"/>
+          </div>
+          <div class="resource">
+            <label class="resource-label">Max Stack</label>
+            <input type="text" name="system.stack.max" value="{{system.system.stack.max}}" data-dtype="Number"/>
+          </div>
+          <div class="resource">
+            <label class="resource-label">Rarity</label>
+            <select name="system.rarity" type="text" value="{{system.system.rarity}}">
+              {{#select system.system.rarity}}
+                <option value="{{localize 'RARITY.Common'}}">{{localize 'RARITY.Common'}}</option>
+                <option value="{{localize 'RARITY.Uncommon'}}">{{localize 'RARITY.Uncommon'}}</option>
+                <option value="{{localize 'RARITY.Scarce'}}">{{localize 'RARITY.Scarce'}}</option>
+                <option value="{{localize 'RARITY.Exotic'}}">{{localize 'RARITY.Exotic'}}</option>
+              {{/select}}
+            </select>
+          </div>
+          <div class="resource">
+            <label class="resource-label">Is Consumed on Use</label>
+            {{#if system.system.isConsumed}}
+            <input class="advanced" id="isConsumed" type="checkbox" checked data-dtype="Boolean"/>
+            {{else}}
+            <input class="advanced" id="isConsumed" type="checkbox" data-dtype="Boolean"/>
+            {{/if}}
+          </div>
+      </div>
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="description">Description</a>
+    <a class="item" data-tab="macro">Macro</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="description">
+      {{!-- To render inline rolls in a TinyMCE editor, you need to pass the parent actor's (if any) roll data to the rollData prop. --}}
+      {{editor system.system.description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
+    {{!-- Macro Tab --}}
+    <div class="tab tab-scroll" data-group="primary" data-tab="macro" style="height: 200px;">
+      <a class="add-macro">+ Add Macro</a>
+      <hr>
+      {{#each system.system.macros as |macro id|}}
+        <div class="resource" data-macro-id="{{id}}">
+          <label class="resource-label">Trigger: </label>
+          <select class="macro-select trigger" name="macro.trigger" type="text" value="{{macro.trigger}}">
+            {{#select macro.trigger}}
+              <option value="disabled">Disabled</option>
+              <option value="use">On Use</option>
+            {{/select}}
+          </select>
+          <label class="resource-label">Type: </label>
+          <select class="macro-select type" name="macro.type" type="text" value="{{macro.type}}">
+            {{#select macro.type}}
+              <option value="script">Script</option>
+              <option value="chat">Chat</option>
+            {{/select}}
+          </select>
+          <a class="item-control macro-delete rollable" title="Delete Macro" data-macro-id="{{id}}"
+            ><i class="fas fa-trash"></i
+          ></a>
+        </div>
+        <div class="resource" data-macro-id="{{id}}">
+          <textarea class="macro-script" name="macro.script">{{macro.script}}</textarea>
+        </div>
+        <hr>
+      {{/each}}
+    </div>
+  </section>
+</form>

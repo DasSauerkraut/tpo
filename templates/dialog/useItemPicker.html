@@ -1,0 +1,52 @@
+<div class="grid grid-2col">
+  {{#ifNotEqual scabbards.length 0}}
+  <div>
+      <h2>Scabbards </h2>
+      <div>0 AP to Retrieve</div>
+      {{#each scabbards as |item id|}}
+      <div data-tooltip="{{item.description}}">
+          <input type="radio" id="{{item.id}}" name="use-item" value="{{item.id}}" data-ap="0"/>
+          <label for="{{item.name}}">[{{item.amount}}] {{item.name}} - {{item.apCost}} AP</label>
+      </div>
+      {{/each}}
+  </div>
+  {{/ifNotEqual}}
+  {{#ifNotEqual thighs.length 0}}
+  <div>
+      <h2>Thigh</h2>
+      <div>1 AP to Retrieve</div>
+      {{#each thighs as |item id|}}
+      <div data-tooltip="{{item.description}}">
+          <input type="radio" id="{{item.id}}" name="use-item" value="{{item.id}}" data-ap="1"/>
+          <label for="{{item.name}}">[{{item.amount}}] {{item.name}} - {{item.apCost}} AP</label>
+      </div>
+      {{/each}}
+  </div>
+  {{/ifNotEqual}}
+  {{#ifNotEqual hips.length 0}}
+  <div>
+      <h2>Hip/Pouch</h2>
+      <div>2 AP to Retrieve</div>
+      <div>
+        {{#each hips as |item id|}}
+        <div data-tooltip="{{item.description}}">
+            <input type="radio" id="{{item.id}}" name="use-item" value="{{item.id}}" data-ap="2"/>
+            <label for="{{item.name}}">[{{item.amount}}] {{item.name}} - {{item.apCost}} AP</label>
+        </div>
+        {{/each}}
+      </div>
+  </div>
+  {{/ifNotEqual}}
+  {{#ifNotEqual chest.length 0}}
+  <div>
+      <h2>Chest/Backpack</h2>
+      <div>3 AP to Retrieve</div>
+      {{#each chest as |item id|}}
+      <div data-tooltip="{{item.description}}">
+          <input type="radio" id="{{item.id}}" name="use-item" value="{{item.id}}" data-ap="3"/>
+          <label for="{{item.name}}">[{{item.amount}}] {{item.name}} - {{item.apCost}} AP</label>
+      </div>
+      {{/each}}
+  </div>
+  {{/ifNotEqual}}
+</div>

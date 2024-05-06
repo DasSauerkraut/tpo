@@ -891,6 +891,17 @@
   height: 130px;
 }
 
+.tpo #scabbard-use-item.use-item {
+  background-color: #aaa89c;
+  border-radius: 3px;
+  margin-bottom: 3px;
+  padding: 1px;
+}
+
+.tpo .use-item:nth-child(2n) {
+  background-color: #c8c6b8;
+}
+
 .tpo .effects .item .effect-source,
 .tpo .effects .item .effect-duration,
 .tpo .effects .item .effect-controls {
@@ -1627,7 +1638,7 @@
 }
 
 .tpo .inventory-col {
-  height: 625px;
+  height: 480px;
   overflow-y: auto;
   scrollbar-width: thin;
 }

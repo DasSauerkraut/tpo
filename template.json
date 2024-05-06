@@ -315,7 +315,7 @@
     }
   },
   "Item": {
-    "types": ["item", "skill", "armament", "power", "ability", "zone", "mundaneWeapon", "wornItem", "effect"],
+    "types": ["item", "skill", "armament", "power", "ability", "zone", "mundaneWeapon", "wornItem", "effect", "consumable"],
     "templates": {
       "base": {
         "description": "",
@@ -348,8 +348,13 @@
         "current": 1
       }
     },
+    "consumable": {
+      "templates": ["base", "physical", "macros"],
+      "apCost": 1,
+      "isConsumed": true
+    },
     "mundaneWeapon": {
-      "templates": ["base", "physical", "macro"],
+      "templates": ["base", "physical", "macros"],
       "damage": 0,
       "splendor": 0,
       "apCost": 4
