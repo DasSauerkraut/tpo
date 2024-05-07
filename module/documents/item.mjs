@@ -139,12 +139,6 @@ export class tpoItem extends Item {
     })
     //Flexible
     description = description.replaceAll("Flexible", `<a class='rollable' title="${game.i18n.format("KEYWORD.Flexible")}"><b>Flexible</b></a>`)
-    //Leech
-    const leechRegExp = /(Leech )(\d+)/g
-    const leechMatches = [...description.matchAll(leechRegExp)]
-    leechMatches.forEach(match => {
-      description = description.replace(match[0], `<a class='rollable' title="${game.i18n.format("KEYWORD.Leech").replaceAll("NUM", match[2])}"><b>Leech ${match[2]}</b></a>`)
-    })
     //Optional
     description = description.replaceAll("Optional", `<a class='rollable' title="${game.i18n.format("KEYWORD.Optional")}"><b>Optional</b></a>`)
     //Piercing
@@ -228,6 +222,25 @@ export class tpoItem extends Item {
       }"><b>Cursed ${match[2]}</b></a>`)
     })
     
+     // LB Leech
+    const leechRegExp = /(Leech )(\d+)/g
+    const leechMatches = [...description.matchAll(leechRegExp)]
+    leechMatches.forEach(match => {
+      description = description.replace(match[0], `<a class='rollable' title="${game.i18n.format("KEYWORD.LB.Leech").replaceAll("NUM", match[2])}"><b>Leech ${match[2]}</b></a>`)
+    })
+    // LB Forfeit
+     const forfeitRegExp = /(Forfeit )(\d+)/g
+     const forfeitMatches = [...description.matchAll(forfeitRegExp)]
+     forfeitMatches.forEach(match => {
+       description = description.replace(match[0], `
+       <a class='rollable' title="${
+         game.i18n.format("KEYWORD.LB.Forfeit")
+         .replaceAll("NUM", match[2])
+       }"><b>Cursed ${match[2]}</b></a>`)
+     })
+     //LB Infected
+     description = description.replaceAll("Infected", `<a class='rollable' title="${game.i18n.format("KEYWORD.LB.Infected")}"><b>Infected</b></a>`)
+     .replaceAll("NUM", Math.floor(this.actor.system.stats.str.bonus / 2 ))
     
     
     // Weak

@@ -182,7 +182,6 @@
 
   "KEYWORD.Delay": "Declare a target. At the start of your turn, before performing any action, reduce this Power's Delay Rating by 1.\rIf the Rating is now 0, immediately perform the Power against your chosen target if you are still in range.\rOn your turn you may spend 2 AP to reduce any Delayed Power’s Rating by 1.",
   "KEYWORD.Flexible": "This power has effects that key off of the one’s place of the roll.\rFor example, it might say On Even Hit, this means that if the one’s place is even and the attack hits, the following effect will occur. You may also see On #’s where if the one’s place is that number, the effect will occur.\rMultiple effects can trigger off of a roll, for example an On Even Hit and an On 4’s Hit could both trigger if the roll was 34 and the attack hit.",
-  "KEYWORD.Leech": "You may spend up to NUM HP to increase the damage of this attack by the amount of HP spent.\rYou may also heal by reducing the damage the attack dealt by up to NUM, healing your HP by each point reduced.",
   "KEYWORD.Optional": "If the Power has you make an attack, you can choose to ignore that, and gain the other benefits the Power provides.",
   "KEYWORD.Piercing": " Damage dealt ignores any Absorption the target has.",
   "KEYWORD.Reactive": "You may use this Power when it is not currently your turn, provided you meet the use conditions.",
@@ -196,6 +195,10 @@
   "KEYWORD.GL.Phialsprite": "Phialsprites are small, autonamous, translucent manifestations of phials.\rWhen a Phialsprite is created, it occupies the same sq. as you. You may only have as many Phialsprites active as your Max Phial Capacity.\rAt the end of your turn, you may move any number of your Phialsprites your Movement, ignoring Terrain. If they end their movement in the same sq. as an enemy, or an enemy enters the sq. they occupy, they explode, destroying the Phialsprite and dealing Weak damage to the enemy.\rAll Phialsprites dissipate at the end of the Encounter.",
   "KEYWORD.CS.Combo": "This power is considered to be a NUM Combo for the sake of Combination Strike.",
   "KEYWORD.CS.Cursed": "The next time this target suffers Damage, that damage is increased by NUM.\rIf the Power does not apply Cursed, Cursed is removed from this target. Otherwise, they stack, adding their Ratings together.",
+  "KEYWORD.LB.Leech": "Gain NUM HP on hit.",
+  "KEYWORD.LB.Forfeit": "Lose NUM HP to perform the listed effect.",
+  "KEYWORD.LB.Infected": "Target suffers Damage equal to the number of Infected creatures at the end of their turn.\rWhen the target suffers damage, an adjacent creature of your choice becomes Infected for NUM rounds.\rA creature cannot become Infected twice in one encounter.",
+
 
   "TIP.Species": "Your species determines various stats bonuses and provide other effects.",
   "TIP.HP": "Your HP determines how much physical and mental punishment you can take before being Downed.",
