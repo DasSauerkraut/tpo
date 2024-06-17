@@ -70,6 +70,18 @@ Hooks.once('init', async function() {
     },
   })
 
+  game.settings.register("tpo", "refreshApAtEndOfTurn", {
+    name: 'Refresh AP at End of Turn',
+    hint: 'Refresh a combatant\'s AP at the end of their turn, rather than the start.',
+    scope: 'world',     // "world" = sync to db, "client" = local storage
+    config: true,       // false if you dont want it to show in module config
+    type: Boolean,       // Number, Boolean, String, Object
+    default: false,
+    onChange: value => { // value is the new value of the setting
+      console.log(value)
+    },
+  })
+
   // Preload Handlebars templates.
   return preloadHandlebarsTemplates();
 });

@@ -716,6 +716,8 @@ export class UtilsTPO {
     if(!game.user.isGM)
       return;
 
+    const refreshApAtEndOfTurn = game.settings.get("tpo", "refreshApAtEndOfTurn")
+    let apMessage = ''
     let actorUpdate = {}
     if(canvas.scene.tokens.get(combat.previous.tokenId)){
       const prevCombatant = canvas.scene.tokens.get(combat.previous.tokenId)
@@ -746,12 +748,19 @@ export class UtilsTPO {
         };
         ChatMessage.create(chatData, {});
       }
+
+      if(refreshApAtEndOfTurn) {
+        prevCombatant.actor.update({"system.derived.ap.value": prevCombatant.actor.system.derived.ap.max})
+        apMessage = `Previous combatant's AP refreshed to ${prevCombatant.actor.system.derived.ap.max}.`
+      }
     }
       
     let combatant = canvas.scene.tokens.get(combat.current.tokenId);
     
-    actorUpdate = {...actorUpdate, "system.derived.ap.value": combatant.actor.system.derived.ap.max}
-    let apMessage = `AP refreshed to ${combatant.actor.system.derived.ap.max}.`
+    if(!refreshApAtEndOfTurn){
+      actorUpdate = {...actorUpdate, "system.derived.ap.value": combatant.actor.system.derived.ap.max}
+      apMessage = `AP refreshed to ${combatant.actor.system.derived.ap.max}.`
+    }
     let delayedPowers = ``
     if(combatant.actor.system.delayedPowers && combatant.actor.system?.delayedPowers.length > 0){
       delayedPowers = `
