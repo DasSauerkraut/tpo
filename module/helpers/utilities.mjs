@@ -880,12 +880,10 @@ export class UtilsTPO {
         description = 'Movement reduced by 2sq.<br>Disadvantage on all physical actions'
 
       statuses += `
-        <br>
-        <b>Overencumbered ${overencumbered}</b>
-        <div style="display:flex;">
-          <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);" src="icons/svg/barrel.svg" alt="overencumbered">
-          <div style="margin:0;margin-left:4px;align-self:flex-start">${description}</div>
-        </div>
+         <div style="position: relative;display:flex;flex-direction: column;width: 45px;height: 45px;box-shadow: 0 0 0 1px silver, 0 0 0 2px grey, inset 0 0 4px rgb(0 0 0 / 50%);align-items: center;justify-content: center;margin: 2px;" 
+              data-tooltip="<h3>Overencumbered ${overencumbered}</h3><div style='text-align: left'>${description}</div>">
+              <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);cursor: pointer;" src="icons/svg/barrel.svg" alt="overencumbered">
+          </div>
       `
     }
     if(statuses !== ``)
