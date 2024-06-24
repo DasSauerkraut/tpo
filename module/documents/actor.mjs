@@ -191,6 +191,7 @@ export class tpoActor extends Actor {
   _prepareItems(actorData) {
     let basicSkills = [];
     let advancedOrGroupedSkills = [];
+    let allSkills = [];
     let armaments = [];
     let activeAbilities = [];
     let inactiveAbilities = [];
@@ -228,7 +229,9 @@ export class tpoActor extends Actor {
 
       if(i.type == "skill"){
         let skill = this.prepareSkill(i, actorData);
-        if (skill.system.grouped || skill.system.advanced)
+        if(this.type === "largenpc")
+          allSkills.push(skill)
+        else if (skill.system.grouped || skill.system.advanced)
           advancedOrGroupedSkills.push(skill)
         else
           basicSkills.push(skill);
@@ -428,6 +431,7 @@ export class tpoActor extends Actor {
 
     basicSkills = UtilsTPO.sortAlphabetically(basicSkills);
     advancedOrGroupedSkills = UtilsTPO.sortAlphabetically(advancedOrGroupedSkills);
+    allSkills = UtilsTPO.sortAlphabetically(allSkills);
     activeAbilities = UtilsTPO.sortAlphabetically(activeAbilities);
     inactiveAbilities = UtilsTPO.sortAlphabetically(inactiveAbilities);
 
@@ -479,6 +483,7 @@ export class tpoActor extends Actor {
     else if(this.type === "largenpc"){
       actorData.zones = zones;
       actorData.traits = traits;
+      actorData.skills = allSkills;
     }
   }
 

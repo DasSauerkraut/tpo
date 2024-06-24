@@ -1,3 +1,17 @@
+<div class="combat-actions">
+  <div class="action" data-action="defend">
+    <i class="fas fa-shield-alt"></i> Defend
+  </div>
+  <div class="action" data-action="disengage">
+    <i class="fas fa-walking"></i> Disengage
+  </div>
+  <div class="action" data-action="morale">
+    <i class="fas fa-exclamation-circle"></i> Morale
+  </div>
+  <div class="action" data-action="grapple">
+    <i class="fa fa-fist-raised"></i> Grapple
+  </div>
+</div>
 <div class="zone-page grid grid-3col">
   <div class="grid-span-2">
     {{#if system.unsortedPowers.length}}
@@ -87,9 +101,14 @@
               {{/ifEquals}}
               {{#each item.system.powers as |power id|}}
               <div class="power expand-popout power-draggable"
-              data-item-id="{{power._id}}">
-                <div class="header {{power.system.type}} zone-power-item-header" style="{{#ifNotEqual power.system.type 'At-Will'}} {{#if item.flags.tpo.broken}} background-color: #444; {{/if}}{{/ifNotEqual}}">
-                  <span class="name">{{power.name}}</span>
+              data-item-id="{{power._id}}" data-power-id="{{power._id}}">
+                <div class="header {{power.system.type}} zone-power-item-header powerRoll" style="{{#ifNotEqual power.system.type 'At-Will'}} {{#if item.flags.tpo.broken}} background-color: #444; {{/if}}{{/ifNotEqual}}">
+                  <span class="name" data-power-id="{{power._id}}">
+                    {{power.name}}&nbsp;<i
+                    title="Use Power"
+                    class="fas fa-dice-d20 dice"
+                  ></i>
+                  </span>
                   <span class="type">
                     {{#ifNotEqual power.system.type "At-Will"}} {{#if
                     power.system.used}}
@@ -111,10 +130,7 @@
                 <div class="popout {{power.system.type}}-border">
                   <div class="subheader {{power.system.type}}" data-power-id="{{power._id}}">
                     <span class="cost"
-                      ><i
-                        title="Use Power"
-                        class="fas fa-dice-d20 powerRoll rollable"
-                      ></i>
+                      >
                       {{power.system.apCost}} AP</span
                     >
                     <span class="target"
@@ -138,6 +154,23 @@
     </div>
   </div>
   <div class="traits">
+    <h2>Skills</h2>
+    {{#each system.skills as |skill id|}}
+    <div class="expand-popout left subheader trait-skill">
+      <div class="header trait-header skill-item-container item-container" data-item-id="{{skill._id}}">
+        <span class="name skill-item-name">{{skill.name}}</span>
+        <div>
+          <span>{{skill.system.total}}</span>
+          <i title="Delete Skill" class="fas fa-trash item-delete rollable"></i>
+        </div>
+      </div>
+        <div class="popout popout-left trait">
+          <div class="description">
+            {{{skill.system.descriptionDisplay}}}
+          </div>
+        </div>
+      </div>
+    {{/each}}
     <h2>Traits</h2>
     {{#each system.traits as |trait id|}}
     <div class="power expand-popout power-draggable left subheader"
@@ -156,4 +189,5 @@
       </div>
     {{/each}}
     </div>
+  </div>
 </div>

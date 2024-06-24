@@ -752,6 +752,7 @@ export class tpoActorSheet extends ActorSheet {
         if(this.actor.items.getName("Weapon (Mundane)"))
           skillOptions.push("Weapon (Mundane)")
         
+        skillOptions.push("Agility")
         skillOptions.push("Weapon Skill")
 
         if(1 > this.actor.system.derived.ap.value)
@@ -778,12 +779,20 @@ export class tpoActorSheet extends ActorSheet {
                   skill = this.actor.items.getName(selectedSkill);
 
                   if(skill === undefined){
-                    skill = {
-                      name: "Weapon Skill",
-                      system: {
-                          total: this.actor.system.stats.ws.value
-                        },
-                    }
+                    if(selectedSkill === "Agility")
+                      skill = {
+                        name: "Agility",
+                        system: {
+                            total: this.actor.system.stats.agi.value
+                          },
+                      }
+                    else 
+                      skill = {
+                        name: "Weapon Skill",
+                        system: {
+                            total: this.actor.system.stats.ws.value
+                          },
+                      }
                   }
                   PowersTPO.performTest(this.actor, skill, testData, 0, 0, `Defending w/ ${selectedSkill}`);
                   if(selectedSkill === "Dodge")
@@ -807,7 +816,6 @@ export class tpoActorSheet extends ActorSheet {
                 total: this.actor.system.stats.agi.value
               },
           }
-          testData.disadvantage = 1;
         }
         if(2 > this.actor.system.derived.ap.value)
           ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
@@ -856,7 +864,6 @@ export class tpoActorSheet extends ActorSheet {
                 total: this.actor.system.stats.str.value
             }
           }
-          testData.disadvantage = 1;
         }
         testData.testInfo.description = "Your ability to wrestle with an opponent. Grappling is frequently used to immobilize and restrain enemies during combat, or resist such efforts."
         PowersTPO.performTest(this.actor, skill, testData, 0, 0, "Grappling");

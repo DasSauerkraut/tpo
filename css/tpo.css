@@ -2100,6 +2100,33 @@
   padding-right: 3px;
 }
 
+.tpo .trait-skill {
+  font-size: 12px;
+}
+
+.tpo .trait-skill .trait-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.tpo .trait-skill .skill-item-name:hover {
+  cursor: pointer;
+  text-shadow: 0px 0px 10px #000000;
+}
+
+.tpo .trait-skill .name {
+  font-weight: bold;
+  padding: 3px;
+}
+
+.tpo .trait-skill:nth-child(2n) {
+  background-color: var(--color-border-light-primary);
+}
+
 .tpo .zone-power-item-header {
   cursor: pointer;
 }

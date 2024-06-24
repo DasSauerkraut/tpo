@@ -112,6 +112,7 @@ export class PowersTPO {
       testData.actor = actor
   
       if(name) testData.name = name;
+      console.log(skill)
       testData.target = skill.system.total;
   
       //Narvid Racial Bonus - is attack
