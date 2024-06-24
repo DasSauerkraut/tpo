@@ -59,7 +59,7 @@
           </div>
           <label for="system.derived.ap.value" class="resource-label">{{system.derived.ap.abrev}}</label>
         </div>
-          <div class="container" title="{{localize 'TIP.Movement'}}">
+          <div class="resource flex-group-center" title="{{localize 'TIP.Movement'}}">
             <div class="resource-content flexrow flex-center flex-between">
               {{#if system.autocalc.movement}}
               <a title="{{localize 'SYS.ToggleAutocalc'}}" id="movement" class="field">{{system.derived.movement.value}}</a>
@@ -72,24 +72,26 @@
             </div>
             <label for="system.derived.movement.value" class="resource-label">{{system.derived.movement.label}}</label>  
           </div>
-          <div class="grid-span-4">
-            <div class="grid grid-9col stats">
-              <div class="stat-container">
-                <div class="stat-header">&nbsp</div>
-                <div title="{{localize 'TIP.StatInit'}}" class="stat-header-row">Initial</div>
-                <div title="{{localize 'TIP.StatMod'}}" class="stat-header-row">Mod.</div>
-                <div title="{{localize 'TIP.StatValue'}}" class="stat-header-row">Value</div>
-              </div>
-              {{#each system.stats as |stat s|}}
-              <div class="stat-container">
-                <div class="stat-header" data-stat="{{s}}">{{localize stat.abrev}}
+          <div class="flex flexrow stat-row grid-span-4 large-npc-stats">
+            {{#each system.stats as |stat s|}}
+            <div class="stat-container">
+              <div class="input-container">
+                <span class="stat-item" data-tooltip="Improvements"><input class="input" type="text" name="system.stats.{{s}}.improvements" value="{{stat.improvements}}" data-dtype="Number" maxlength="3" /></span>
+                <span class="stat-item" data-tooltip="Modifiers"><input class="input" type="text" name="system.stats.{{s}}.modifier" value="{{stat.modifier}}" data-dtype="Number" maxlength="3" /></span>
+                <span class="stat-item" data-tooltip="Initial"><input class="input" type="text" name="system.stats.{{s}}.initial" value="{{stat.initial}}" data-dtype="Number" maxlength="3" /></span>
+                <div class="stat-item stat-header" title="Improve Stat | Cost: {{stat.cost}} XP" data-improve="{{s}}">
+                  <span class="input">{{localize stat.abrev}}</span>
+                  <span class="stat-improvement">+</span>
                 </div>
-                <input class="stat-item" type="text" name="system.stats.{{s}}.initial" value="{{stat.initial}}" data-dtype="Number"/>
-                <input class="stat-item" type="text" name="system.stats.{{s}}.modifier" value="{{stat.modifier}}" data-dtype="Number"/>
-                <div class="stat-total rollable" title="Improve Stat | Cost: {{stat.cost}} XP" data-improve="{{s}}">{{stat.value}}<span class="stat-improvement">+</span></div>
               </div>
-              {{/each}}
+              <div class="total-container" data-stat="{{s}}">
+                <span class="roll" title="Perform Test">
+                  <i class="fas fa-dice-d20 dice"></i>
+                </span>
+                <span class="total">{{stat.value}}</span>
+              </div>
             </div>
+            {{/each}}
           </div>
         </div>
       </div>

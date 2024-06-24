@@ -2393,6 +2393,10 @@
   color: #0000004d;
 }
 
+.tpo .large-npc-stats {
+  padding-top: 0 !important;
+}
+
 .tpo .stat-row {
   padding: 10px;
   -webkit-box-pack: justify;
