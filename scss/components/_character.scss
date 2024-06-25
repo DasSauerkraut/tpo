@@ -382,3 +382,14 @@
     }
   }
 }
+
+#char-roll {
+  position: absolute;
+  color: var(--color-text-dark-secondary)
+}
+
+#char-roll:hover {
+  color: #000;
+  cursor: pointer;
+  text-shadow: 0 0 10px red;
+}

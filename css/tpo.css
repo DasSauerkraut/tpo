@@ -2619,3 +2619,14 @@
 .tpo .stat-row .stat-container:nth-of-type(2n) .input-container .stat-header:hover {
   background-color: #211813;
 }
+
+.tpo #char-roll {
+  position: absolute;
+  color: var(--color-text-dark-secondary);
+}
+
+.tpo #char-roll:hover {
+  color: #000;
+  cursor: pointer;
+  text-shadow: 0 0 10px red;
+}

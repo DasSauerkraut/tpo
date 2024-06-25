@@ -1,4 +1,7 @@
 <div>
+  {{#if isGm}}
+  <i id="char-roll" class="fas fa-dice" title="Randomize this character's stats"></i>
+  {{/if}}
   <div class="flex flexrow stat-row">
     {{#each system.stats as |stat s|}}
     <div class="stat-container">
