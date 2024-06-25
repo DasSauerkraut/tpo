@@ -16,5 +16,7 @@
 
     // LargeNPC Partials
     "systems/tpo/templates/actor/parts/largenpc-features.html",
+    "systems/tpo/templates/actor/parts/actor-npc-notes.html",
+
   ]);
 };

@@ -1,5 +1,6 @@
 import { TPO } from "./config.mjs";
 import { DiceTPO } from "./dice.mjs";
+import { OpposedTPO } from "./opposed.mjs";
 
 export class UtilsTPO {
   static sortAlphabetically(toSort){
@@ -50,9 +51,6 @@ export class UtilsTPO {
     let description = TPO.statuses.filter(s => {
       return game.i18n.format(s.label) === statuses[0].label;
     });
-
-    console.log(statuses)
-    console.log(description)
 
     let label = statuses[0].label.replace(/[0-9]/g, count);
 
@@ -567,6 +565,159 @@ export class UtilsTPO {
     })
   }
 
+  static async applyDamageToLarge(id, damageArray, piercing, messageId = null, macro = null, result = {}, usesUuid = false) {
+    let actor;
+    if(usesUuid)
+      actor = await fromUuid(id);
+    else
+      actor = UtilsTPO.getActor(id);
+
+    const largeActorCallback = (zoneId) => {
+      const zone = duplicate(actor.items.get(zoneId))
+
+      const abs = zone.system.absorption;
+
+      let damageTaken = 0;
+
+      if(macro) {
+        result["messageId"] = messageId
+        const macrosToFire = UtilsTPO.getMacrosByTrigger("beforeDamage", macro)
+        macrosToFire.forEach(m => {
+          UtilsTPO.fireMacro("before-applying-damage", m.type, m.script, {result: result})
+        })
+      }
+
+      damageArray.forEach(async damage => {
+        if(typeof damage === 'object'){
+          const calculatedDamage = OpposedTPO.calculateDamage(damage.result, zone.system.elementalResistances, damage.defenderSls)
+          damage = calculatedDamage.damage
+        }
+        let damageInstance = piercing ? damage : damage - abs;
+        if (damageInstance <= 0) damageInstance = 1;
+        damageTaken += damageInstance;
+      })
+
+      if(damageTaken >= 10)
+        UtilsTPO.playContextSound({type: "damage"}, "major")
+      else if (damageTaken >= 3)
+        UtilsTPO.playContextSound({type: "damage"}, "normal")
+      else
+        UtilsTPO.playContextSound({type: "damage"}, "minor")
+      
+      const tempHp = actor.system.derived.tempHp.value
+      const coreHp = actor.system.derived.hp.value
+      const zoneHp = zone.system.hp.value
+
+      let chatContent = `<br>Inflicted ${damageTaken} ${piercing ? "Piercing ": ""}Damage to ${actor.name}'s ${zone.name}${messageId === null ? ` `: ""}!`
+      let newCoreHp = coreHp;
+      let newTempHp = tempHp;
+      let newZoneHp = zoneHp;
+
+      if(tempHp > 0){
+        if(tempHp - damageTaken >= 0){
+          newTempHp = tempHp - damageTaken;
+          chatContent += `
+          <b>${actor.name}</b><br>
+          <div>Temp. HP absorbs the blow!<br>Temp. HP: ${tempHp} → ${newTempHp}</div>
+          `
+        } else {
+          newTempHp = 0;
+          newCoreHp = coreHp - (damageTaken - tempHp)
+          newZoneHp = zoneHp - (damageTaken - zoneHp)
+          chatContent += `
+          <b>${actor.name}</b><br>
+          <div>Temp. HP softens the blow!
+          <br>Temp. HP: ${tempHp} → ${0}
+          <br>Core HP: ${coreHp} → ${newCoreHp}</div>
+          <br>Zone HP: ${zoneHp} → ${newZoneHp}</div>
+          `
+        }
+      } else {
+        newCoreHp -= damageTaken;
+        newZoneHp -= damageTaken;
+      }
+     
+      if(coreHp > 0 && newCoreHp <= 0){
+        chatContent += `
+          ${chatContent !== '' ? '<hr>': ''}<b>${actor.name} is Downed!</b><br>
+          <div>
+          They gain 3 Wounds and must roll on the Injury Table. Their allies must perform a Morale Test.
+          Furthermore, any clothing they were wearing is ruined and must be repaired or it will have -1 Splendor!
+          </div>
+          <div>
+            <button class="injury-btn" data-actor-id="${actor.id}" data-injury-type="major">Major Injury</button>
+          </div>
+          `
+        if(newCoreHp <= actor.system.derived.tempHp.max * -1){
+          chatContent += `
+            <br><b>Instant Death!</b>
+            <div>${actor.name} must succeed a <b>Hard (-20) Endurance Test</b> or immediately die.</div>
+          `
+        }
+      }
+
+      if(zoneHp > 0 && newZoneHp <= 0){
+        chatContent += `
+          <b>${actor.name}'s ${zone.name} has broken!</b><br>
+          <div>They must perform a Morale Test and cannot use Special powers from this zone!<br>
+          They also suffer the following effect(s):
+          ${zone.system.brokenEffect}
+          </div>
+        `
+      }
+
+      let chatData = {
+        content: chatContent,
+        user: game.user._id,
+      };
+      if(chatContent !== '' && !messageId)
+        ChatMessage.create(chatData, {});
+      else {
+        const message = game.messages.get(messageId);
+        message.update({content: message.content + chatContent})
+      }
+
+      zone.system.hp.value = newZoneHp;
+      actor.update({
+        [`system.derived.hp.value`]: newCoreHp,
+        [`system.derived.tempHp.value`]: newTempHp,
+      })
+      actor.updateEmbeddedDocuments("Item", [zone]);
+
+      if(macro) {
+        result["messageId"] = messageId
+        result["inflictedDamage"] = damageTaken
+        const macrosToFire = UtilsTPO.getMacrosByTrigger("afterDamage", macro)
+        macrosToFire.forEach(m => {
+          UtilsTPO.fireMacro("after-applying-damage", m.type, m.script, {result: result})
+        })
+      }
+    }
+
+    const zoneButtons = {
+        cancel: {
+          label: "Cancel",
+          callback: html => {}
+      }
+    }
+
+    actor.system.zones.forEach(zone => {
+      zoneButtons[zone._id] = {
+          label: zone.name,
+          callback: (html) => {
+            largeActorCallback(zone._id)
+          }
+      }
+    });
+
+    await new Dialog({
+      title: "Damage Zone",
+      content: "Which zone should be damaged?",
+      buttons: zoneButtons,
+      default: "cancel"
+    }).render(true);
+  }
+
   static async applyDamage(id, damageArray, piercing, messageId = null, macro = null, result = {}, usesUuid = false) {
     let actor;
     if(usesUuid)
@@ -574,7 +725,12 @@ export class UtilsTPO {
     else
       actor = UtilsTPO.getActor(id);
 
-      const abs = actor.system.derived.absorption.total;
+    if(actor.type === "largenpc") {
+      this.applyDamageToLarge(id, damageArray, piercing, messageId, macro, result, usesUuid)
+      return;
+    }
+
+    const abs = actor.system.derived.absorption.total;
 
     let damageTaken = 0;
 
@@ -587,6 +743,11 @@ export class UtilsTPO {
     }
 
     damageArray.forEach(async damage => {
+      if(typeof damage === 'object'){
+        const calculatedDamage = OpposedTPO.calculateDamage(damage.result, damage.defenderResistances, damage.defenderSls)
+        damage = calculatedDamage.damage
+      }
+
       let damageInstance = piercing ? damage : damage - abs;
       if (damageInstance <= 0) damageInstance = 1;
       damageTaken += damageInstance;
@@ -699,7 +860,7 @@ export class UtilsTPO {
   }
 
   static hasResolve(actor){
-    return (actor.system.info.resolve.resolve1 || actor.system.info.resolve.resolve2 || actor.system.info.resolve.resolve3);
+    return (actor.system.info.resolve?.resolve1 || actor.system.info.resolve?.resolve2 || actor.system.info.resolve?.resolve3);
   }
 
   static async removeResolve(actor){
@@ -790,23 +951,17 @@ export class UtilsTPO {
 
     let statuses = ``;
     let passives = ``;
+    let brokenEffects = ``
 
     if(combatant.actor.type === "largenpc"){
       combatant.actor.system.zones.forEach(zone => {
-        let brokenEffects = ``
         if(zone.flags?.tpo?.broken){
           brokenEffects += `
-          <b>Broken ${zone.name}</b>
-          ${zone.system.brokenEffect}`
+          <div style="position: relative;display:flex;flex-direction: column;width: 45px;height: 45px;box-shadow: 0 0 0 1px silver, 0 0 0 2px grey, inset 0 0 4px rgb(0 0 0 / 50%);align-items: center;justify-content: center;margin: 2px;" 
+              data-tooltip="<h3>Broken ${zone.name}</h3><div style='text-align: left'>${zone.system.brokenEffect}</div>">
+              <img style="width:40px;height:40px;border:none;filter: drop-shadow(0px 0px 7px black);cursor: pointer;" src="icons/skills/wounds/bone-broken-marrow-red.webp" alt="Broken ${zone.name}">
+          </div>`
         }
-        if(statuses !== ``)
-          statuses += brokenEffects
-        else
-        statuses = `
-        <hr>
-        <div>${combatant.actor.name} is under the following effects!<div>
-        ${brokenEffects}
-      `
       })
     }
 
@@ -886,12 +1041,13 @@ export class UtilsTPO {
           </div>
       `
     }
-    if(statuses !== ``)
+    if(statuses !== `` || brokenEffects !== ``)
       statuses = `
           <hr>
           <b>Temporary Effects: <b>
           <div class="grid grid-5col">
             ${statuses}
+            ${brokenEffects}
           </div>
         `
     if(passives !== ``)

@@ -122,7 +122,7 @@ export class OpposedTPO {
         attackerWin = attackerContext.result[resultKey].success
 
     let damageString = ``;
-    let damage = 0;
+    let damage;
     if(attackerContext.result[resultKey].damage.hasDamage && attackerWin){
       const calculatedDamage = OpposedTPO.calculateDamage(
         attackerContext.result[resultKey], 
@@ -131,7 +131,11 @@ export class OpposedTPO {
       )
 
       damageString = calculatedDamage.damageString
-      damage = calculatedDamage.damage
+      damage = {
+        result: attackerContext.result[resultKey],
+        defenderResistances: defender.system.details.elementalResistances,
+        defenderSls: defenderContext.result[0].sl,
+      }
     }
 
     let remainingOpposed = resultKey;
@@ -224,7 +228,12 @@ export class OpposedTPO {
           )
 
           damageString = calculatedDamage.damageString
-          damage = calculatedDamage.damage
+          damage = {
+            result: result,
+            defenderResistances: defender.system.details.elementalResistances,
+            defenderSls: 0,
+          }
+
           totalDamage.push(damage)
           results.push({
             attackerWin: attackerWin,
