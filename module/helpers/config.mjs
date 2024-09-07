@@ -171,6 +171,12 @@ TPO.statuses = [
     description: "A creature has marked you. The effects of which depend on what power marked you."
   },
   {
+    id: "braced",
+    label: "STATUS.Braced",
+    icon: "icons/svg/shield.svg",
+    description: "You have braced yourself against incoming attacks. The AP cost of the Defend action is reduced by 1."
+  },
+  {
     id: "hidden",
     label: "STATUS.Hidden",
     icon: "icons/svg/invisible.svg",

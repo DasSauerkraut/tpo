@@ -76,7 +76,7 @@ Hooks.once('init', async function() {
     scope: 'world',     // "world" = sync to db, "client" = local storage
     config: true,       // false if you dont want it to show in module config
     type: Boolean,       // Number, Boolean, String, Object
-    default: false,
+    default: true,
     onChange: value => { // value is the new value of the setting
       console.log(value)
     },

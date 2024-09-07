@@ -911,8 +911,19 @@ export class UtilsTPO {
       }
 
       if(refreshApAtEndOfTurn) {
-        prevCombatant.actor.update({"system.derived.ap.value": prevCombatant.actor.system.derived.ap.max})
-        apMessage = `Previous combatant's AP refreshed to ${prevCombatant.actor.system.derived.ap.max}.`
+        if(prevCombatant.actor.items.getName("Momentous")){
+          const momentous = prevCombatant.actor.items.getName("Momentous")
+          if(momentous.system.level > 1 && combat.current.round > 2){
+            prevCombatant.actor.update({"system.derived.ap.value": prevCombatant.actor.system.derived.ap.max + 1})
+            apMessage = `Previous combatant's AP refreshed to ${prevCombatant.actor.system.derived.ap.max + 1} due to <b>Momentous</b>.`
+          }else if (momentous.system.level > 0 && combat.current.round > 3){
+            prevCombatant.actor.update({"system.derived.ap.value": prevCombatant.actor.system.derived.ap.max + 1})
+            apMessage = `Previous combatant's AP refreshed to ${prevCombatant.actor.system.derived.ap.max + 1} due to <b>Momentous</b>.`
+          }
+        } else {
+          prevCombatant.actor.update({"system.derived.ap.value": prevCombatant.actor.system.derived.ap.max})
+          apMessage = `Previous combatant's AP refreshed to ${prevCombatant.actor.system.derived.ap.max}.`
+        }
       }
     }
       
@@ -971,7 +982,7 @@ export class UtilsTPO {
     combatant.actor.effects.forEach(effect => {
       if(!effect.disabled){
         const description = effect.description === "" ? "No Description." : effect.description;
-        if(effect.isTemporary && (Number.isNumeric(effect.duration.remaining) && (effect.duration.remaining <= 0))) {
+        if(effect.isTemporary && (Number.isNumeric(effect.duration.remaining) && (effect.duration.remaining <= 0)) || effect.name === "Braced") {
           statuses += `
           <div style="position: relative;display:flex;flex-direction: column;width: 45px;height: 45px;box-shadow: 0 0 0 1px silver, 0 0 0 2px grey, inset 0 0 4px rgb(0 0 0 / 50%);align-items: center;justify-content: center;margin: 2px;" 
           data-tooltip="<h3>${effect.name} Ended!</h3><div style='text-align: left'>${description}</div>">
@@ -1137,27 +1148,11 @@ export class UtilsTPO {
         actorUpdate = {...actorUpdate, "data.derived.movement.value": combatant.actor.system.derived.movement.value + 1}
       }
     }
-    
-    if(combatant.actor.items.getName("Momentous")){
-      const momentous = combatant.actor.items.getName("Momentous")
-      if(momentous.system.level > 1 && combat.current.round > 2){
-        abilities += `
-        <br><b>Momentous - Level 2</b><br>
-        <div>${game.i18n.format("ABILITY.Momentous2")}</div>
-        `
-        actorUpdate = {...actorUpdate, "data.derived.ap.value": combatant.actor.system.derived.ap.max + 1}
-        apMessage = `AP refreshed to ${combatant.actor.system.derived.ap.max + 1}.`
-      }else if (momentous.system.level > 0 && combat.current.round > 3){
-        abilities += `
-        <br><b>Momentous  - Level 1</b><br>
-        <div>${game.i18n.format("ABILITY.Momentous1")}</div>
-        `
-        actorUpdate = {...actorUpdate, "data.derived.ap.value": combatant.actor.system.derived.ap.max + 1}
-        apMessage = `AP refreshed to ${combatant.actor.system.derived.ap.max + 1}.`
-      }
-    }
 
     combatant.actor.update(actorUpdate)
+    if(combatant.actor.statuses.has('braced')) {
+      await combatant.actor.effects.getName("Braced").delete();
+    }
 
     let chatContent = `
         <h3>${combatant.actor.name}'s turn!</h3>

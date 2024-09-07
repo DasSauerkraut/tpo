@@ -241,6 +241,13 @@ export class tpoItem extends Item {
      //LB Infected
      description = description.replaceAll("Infected", `<a class='rollable' title="${game.i18n.format("KEYWORD.LB.Infected")}"><b>Infected</b></a>`)
      .replaceAll("NUM", Math.floor(this.actor.system.stats.str.bonus / 2 ))
+
+     // ARQ Reload
+    const reloadRegExp = /(Reload )(\d+)/g
+    const reloadMatches = [...description.matchAll(reloadRegExp)]
+    reloadMatches.forEach(match => {
+      description = description.replace(match[0], `<a class='rollable reload' title="${game.i18n.format("KEYWORD.ARQ.Reload").replaceAll("NUM", match[2])}" data-cost="${match[2]}"><b>Reload ${match[2]}</b></a>`)
+    })
     
     
     // Weak

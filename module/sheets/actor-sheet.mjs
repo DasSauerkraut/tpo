@@ -757,7 +757,8 @@ export class tpoActorSheet extends ActorSheet {
 
         if(1 > this.actor.system.derived.ap.value)
           ui.notifications.error(game.i18n.format('SYS.ExceedsAP'));
-        this.actor.update({[`system.derived.ap.value`]: this.actor.system.derived.ap.value - 1 })
+        const apCost = this.actor.statuses.has('braced') ? 1 : 2
+        this.actor.update({[`system.derived.ap.value`]: this.actor.system.derived.ap.value - apCost })
 
         //Narvid Ability - Defend
         if((this.actor.system.details.species.value === game.i18n.format("SPECIES.Narvid")) && UtilsTPO.isInCombat(this.actor._id)) {

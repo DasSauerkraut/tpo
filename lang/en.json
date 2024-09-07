@@ -155,6 +155,7 @@
   "STATUS.Dead": "Dead",
   "STATUS.Downed": "Downed",
   "STATUS.Marked": "Marked",
+  "STATUS.Braced": "Braced",
   "STATUS.Stabilized": "Stabilized",
   "STATUS.Hidden": "Hidden",
   "STATUS.Torpor": "Torpor",
@@ -198,6 +199,7 @@
   "KEYWORD.LB.Leech": "Gain NUM HP on hit.",
   "KEYWORD.LB.Forfeit": "Lose NUM HP to perform the listed effect.",
   "KEYWORD.LB.Infected": "Target suffers Damage equal to the number of Infected creatures at the end of their turn.\rWhen the target suffers damage, an adjacent creature of your choice becomes Infected for NUM rounds.\rA creature cannot become Infected twice in one encounter.",
+  "KEYWORD.ARQ.Reload": "Spend NUM AP to load this ammunition into your Arquebus. This Rating cannot be reduced below 1 unless otherwise noted. Reloading is treated as if it were an At-Will Power.",
 
 
   "TIP.Species": "Your species determines various stats bonuses and provide other effects.",
